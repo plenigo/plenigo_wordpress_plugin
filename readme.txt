@@ -3,11 +3,9 @@ Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, patreon, widget, give, fund, funding, crowdfunding
 Requires at least: 3.9.2
 Tested up to: 4.1
-Stable tag: 1.1.16
+Stable tag: 1.1.17
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-
-The Professional eCommerce Platform for Digital Content
 
 plenigo offers a full-featured e-commerce SaaS platform for digital products such as text, video, audio.
 
@@ -81,10 +79,10 @@ Your customer is your customer. You have full access to all information we gathe
 * See, how your subscriptions, transactions, customer database etc. grows
 
 == Installation ==
-# Install the plugin
-# Enter Plenigo\'s Company ID and Secret
-# Select paywalled tag(s) and add a managed Plenigo Product ID(s)
-# Start getting money from your hard-earned work!
+* Install the plugin
+* Enter plenigo's Company ID and Secret
+* Select paywalled tag(s) and add a managed Plenigo Product ID(s)
+* Start getting money from your hard-earned work!
 
 
 == Frequently Asked Questions ==
@@ -93,9 +91,12 @@ Q: Why are you so awesome?
 A: Because we make Chuck Norris eat all his meal
 
 == Screenshots ==
-1. Coming soon
+Coming soon
 
 == Changelog ==
+= 1.1.17 - New curtain =
+- Improved readme
+
 = 1.1.16 - New curtain =
 - Feature: New, responsive curtain design
 - Feature: New button for Subscription Renew
