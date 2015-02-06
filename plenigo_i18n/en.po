@@ -1,0 +1,326 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: plenigo_plugin\n"
+"POT-Creation-Date: 2014-12-18 17:39-0300\n"
+"PO-Revision-Date: 2014-12-18 17:42-0300\n"
+"Last-Translator: Sebastian Dieguez <sdieguez@okkralabs.com>\n"
+"Language-Team: Sebastian Dieguez <sdieguez@okkralabs.com>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.10\n"
+"X-Poedit-Basepath: ../\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _;__\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: ./plenigo_plugin\n"
+
+#: plenigo_plugin/PlenigoContentManager.php:239
+msgid "Pay with Plenigo"
+msgstr "Pay with Plenigo"
+
+#: plenigo_plugin/PlenigoContentManager.php:721
+msgid "Choose payment!"
+msgstr "Choose payment!"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:59
+#: plenigo_plugin/PlenigoLoginWidget.php:124
+#: plenigo_plugin/PlenigoLoginWidget.php:154
+msgid "Plenigo Login"
+msgstr "Plenigo Login"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:60
+msgid ""
+"This is the Plegino Login widget. Here you will find the Plenigo login "
+"button or the user profile data related to the plenigo user."
+msgstr ""
+"This is the Plegino Login widget. Here you will find the Plenigo login "
+"button or the user profile data related to the plenigo user."
+
+#: plenigo_plugin/PlenigoLoginWidget.php:119
+msgid "New title"
+msgstr "New title"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:120
+#: plenigo_plugin/PlenigoLoginWidget.php:137
+msgid "Username:"
+msgstr "User:"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:121
+#: plenigo_plugin/PlenigoLoginWidget.php:141
+msgid "Password:"
+msgstr "Pass"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:122
+#: plenigo_plugin/PlenigoLoginWidget.php:145
+msgid "Forgot password"
+msgstr "Forgot password"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:123
+#: plenigo_plugin/PlenigoLoginWidget.php:149
+msgid "WordPress Login"
+msgstr "WordPress Login"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:125
+msgid "Welcome, "
+msgstr "Welcome"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:126
+#: plenigo_plugin/PlenigoLoginWidget.php:167
+msgid "Edit Profile"
+msgstr "Edit Profile"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:127
+#: plenigo_plugin/PlenigoLoginWidget.php:171
+msgid "Logout"
+msgstr "Logout"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:130
+msgid "Title:"
+msgstr "Title:"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:163
+msgid "Welcome, <name>"
+msgstr "Welcome, <name>"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:124
+msgid "Plenigo Help"
+msgstr "Plenigo Help"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:138
+msgid "Plenigo OAuth Help"
+msgstr "Plenigo OAuth Help"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:139
+msgid "In order to configure Plenigo OAuth Login: "
+msgstr "In order to configure Plenigo OAuth Login: "
+
+#: plenigo_plugin/PlenigoSettingsPage.php:140
+msgid ""
+"1 - Add Login redirect URL to Plenigo (Usually: <b>{YOUR BLOG URL}/wp-login."
+"php</b>) "
+msgstr ""
+"1 - Add Login redirect URL to Plenigo (Usually: <b>{YOUR BLOG URL}/wp-login."
+"php</b>) "
+
+#: plenigo_plugin/PlenigoSettingsPage.php:142
+#: plenigo_plugin/PlenigoSettingsPage.php:150
+msgid "clicking this link"
+msgstr "clicking this link"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:144
+msgid "2 - Fill the same URL in the <b>OAuth redirect URL</b> below"
+msgstr "2 - Fill the same URL in the <b>OAuth redirect URL</b> below"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:145
+msgid ""
+"3 - (Optional) Fill the URL in the <b>URL After Login</b> for login "
+"redirection"
+msgstr ""
+"3 - (Optional) Fill the URL in the <b>URL After Login</b> for login "
+"redirection"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:147
+msgid ""
+"4 - Enable the Plenigo Login clicking <b>Use Plenigo Authentication "
+"Provider</b> "
+msgstr ""
+"4 - Enable the Plenigo Login clicking <b>Use Plenigo Authentication "
+"Provider</b> "
+
+#: plenigo_plugin/PlenigoSettingsPage.php:149
+msgid "5 - Put the Plenigo Login Widget in a widget area of the site "
+msgstr "5 - Put the Plenigo Login Widget in a widget area of the site "
+
+#: plenigo_plugin/PlenigoSettingsPage.php:152
+msgid "6 - Enjoy Loggin in with Plenigo! "
+msgstr "6 - Enjoy Loggin in with Plenigo! "
+
+#: plenigo_plugin/PlenigoSettingsPage.php:171
+msgid "Loading..."
+msgstr "Loading..."
+
+#: plenigo_plugin/PlenigoSettingsPage.php:179
+#: plenigo_plugin/PlenigoSettingsPage.php:297
+msgid "General"
+msgstr "General"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:183
+#: plenigo_plugin/PlenigoSettingsPage.php:310
+msgid "OAuth Login"
+msgstr "OAuth Login"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:187
+msgid "Premium Content"
+msgstr "Premium Content"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:191
+#: plenigo_plugin/PlenigoSettingsPage.php:334
+msgid "Curtain Customization"
+msgstr "Curtain Customization"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:281
+msgid "Plenigo settings saved!"
+msgstr "Plenigo settings saved!"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:284
+msgid "Data can not be empty"
+msgstr "Data can not be empty"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:322
+msgid "Premium Content settings"
+msgstr "Premium Content settings"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:359
+#, php-format
+msgid "Validation failed: %s"
+msgstr "Validation failed: %s"
+
+#: plenigo_plugin/settings/SettingCompanyId.php:65
+msgid "Company ID"
+msgstr "Company ID"
+
+#: plenigo_plugin/settings/SettingCompanySecret.php:65
+msgid "Company Private Key"
+msgstr "Company Private Key"
+
+#: plenigo_plugin/settings/SettingCurtainButtonBuy.php:58
+msgid "Sign up"
+msgstr "Sign up"
+
+#: plenigo_plugin/settings/SettingCurtainButtonBuy.php:66
+msgid "BUY Button Text"
+msgstr "BUY Button Text"
+
+#: plenigo_plugin/settings/SettingCurtainButtonCustom.php:46
+msgid "See our prices"
+msgstr "See our prices"
+
+#: plenigo_plugin/settings/SettingCurtainButtonCustom.php:54
+msgid "CUSTOM Button Text"
+msgstr "CUSTOM Button Text"
+
+#: plenigo_plugin/settings/SettingCurtainButtonCustomURL.php:54
+msgid "CUSTOM Button URL"
+msgstr "CUSTOM Button URL"
+
+#: plenigo_plugin/settings/SettingCurtainButtonLogin.php:46
+msgid "Sign in"
+msgstr "Sign in"
+
+#: plenigo_plugin/settings/SettingCurtainButtonLogin.php:54
+msgid "LOGIN Button Text"
+msgstr "LOGIN Button Text"
+
+#: plenigo_plugin/settings/SettingCurtainMode.php:65
+msgid "Curtain Button Scheme"
+msgstr "Curtain Button Scheme"
+
+#: plenigo_plugin/settings/SettingCurtainText.php:58
+msgid ""
+"In order to continue delivering <b>valuable</b> content for our readers,we "
+"ask a single everlasting fee from you.<br>Please join us and receive our "
+"premium content for ever."
+msgstr ""
+"In order to continue delivering <b>valuable</b> content for our readers,we "
+"ask a single everlasting fee from you.<br>Please join us and receive our "
+"premium content for ever."
+
+#: plenigo_plugin/settings/SettingCurtainText.php:68
+msgid "Curtain Message"
+msgstr "Curtain Message"
+
+#: plenigo_plugin/settings/SettingCurtainTextMembers.php:43
+msgid "Curtain Message (for members)"
+msgstr "Curtain Message (for members)"
+
+#: plenigo_plugin/settings/SettingCurtainTitle.php:58
+msgid "Do you want to continue reading?"
+msgstr "Do you want to continue reading?"
+
+#: plenigo_plugin/settings/SettingCurtainTitle.php:66
+msgid "Curtain Title"
+msgstr "Curtain Title"
+
+#: plenigo_plugin/settings/SettingCurtainTitleMembers.php:43
+msgid "Curtain Title (for members)"
+msgstr "Curtain Title (for members)"
+
+#: plenigo_plugin/settings/SettingLoginURL.php:54
+msgid "URL After Login"
+msgstr "URL After Login"
+
+#: plenigo_plugin/settings/SettingProductTagDB.php:70
+msgid "Premium Content Products"
+msgstr "Premium Content Products"
+
+#: plenigo_plugin/settings/SettingProductTagDB.php:79
+msgid "Enter Tag name..."
+msgstr "Enter Tag name..."
+
+#: plenigo_plugin/settings/SettingProductTagDB.php:81
+msgid "Enter Product ID(s)..."
+msgstr "Enter Product ID(s)..."
+
+#: plenigo_plugin/settings/SettingProductTagDB.php:83
+msgid "Add"
+msgstr "Add"
+
+#: plenigo_plugin/settings/SettingProductTagDB.php:141
+msgid ""
+"There is a problem with the TAG list. <br/> The correct format is lines of "
+"TAG->PRODUCTID[,PRODUCTID...] pairs"
+msgstr ""
+"There is a problem with the TAG list. <br/> The correct format is lines of "
+"TAG->PRODUCTID[,PRODUCTID...] pairs"
+
+#: plenigo_plugin/settings/SettingRedirectURL.php:66
+msgid "OAuth redirect URL"
+msgstr "OAuth redirect URL"
+
+#: plenigo_plugin/settings/SettingTestMode.php:65
+msgid "Test Mode"
+msgstr "Test Mode"
+
+#: plenigo_plugin/settings/SettingTestMode.php:85
+msgid "Test mode sandbox"
+msgstr "Test mode sandbox"
+
+#: plenigo_plugin/settings/SettingTestMode.php:88
+msgid "Production mode"
+msgstr "Production mode"
+
+#: plenigo_plugin/settings/SettingUseLogin.php:65
+msgid "Use OAuth Login"
+msgstr "Use OAuth Login"
+
+#: plenigo_plugin/settings/SettingUseLogin.php:85
+msgid "Use Plenigo Authentication Provider"
+msgstr "Use Plenigo Authentication Provider"
+
+#: plenigo_plugin/settings/SettingUseLogin.php:88
+msgid "Regular Wordpress login"
+msgstr "Regular Wordpress login"
+
+#: plenigo_plugin/settings/SettingUseWPLogin.php:65
+msgid "Enable Wordpress Login"
+msgstr "Enable Wordpress Login"
+
+#: plenigo_plugin/settings/SettingUseWPLogin.php:86
+msgid "Show the Worpress login form"
+msgstr "Show the Worpress login form"
+
+#: plenigo_plugin/settings/SettingUseWPLogin.php:89
+msgid "Only show Plenigo Login Button"
+msgstr "Only show Plenigo Login Button"
+
+#~ msgid "Login"
+#~ msgstr "Login"
+
+#~ msgid "Forgot"
+#~ msgstr "Forgot"
+
+#~ msgid "Login with Plenigo"
+#~ msgstr "Login with Plenigo"

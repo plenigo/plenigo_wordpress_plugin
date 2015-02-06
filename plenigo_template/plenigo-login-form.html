@@ -1,0 +1,21 @@
+<!--[IF_WP_LOGIN]-->
+<div id="plenigo_login_form">
+    <form name='loginform' id='loginform' action='<!--[LOGIN_FORM_URL]-->' method='post'>
+        <label for="user_login"><!--[LABEL_USERNAME]--></label><br />
+        <input type='text' name='log' id='user_login' class='input widget input' /><br />
+        <label for="user_pass"><!--[LABEL_PASSWORD]--></label><br />
+        <input type='password' name='pwd' id='user_pass' class='input widget input' />
+        <input type='submit' name='wp-submit' id='wp-submit' class='button button-small' value='<!--[LABEL_WP_LOGIN]-->' /><br />
+        <input type='button' name='wp-forgot' id='wp-forgot' class='button button-small' 
+               value='<!--[LABEL_FORGOT]-->' onclick="location.href='<!--[LOGIN_FORGOT_URL]-->';" /><br />
+        <input type='hidden' name='redirect_to' value='<!--[LOGIN_REDIRECT_URL]-->' />
+    </form>
+</div>
+<!--[IF_WP_LOGIN]-->
+<div id="plenigo_login_button">
+    <input  type="button" class="button button-primary button-small" 
+            name="plenigo-login" id="plenigo-login" value="<!--[LABEL_PL_LOGIN]-->" onclick="<!--[LOGIN_PLENIGO_ONCLICK]-->" />
+</div>
+<div id="plenigo_register_links">
+    <!--[LOGIN_REGISTER_LINKS]-->
+</div>

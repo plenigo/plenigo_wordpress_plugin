@@ -1,0 +1,349 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: plenigo_plugin 1.1.0\n"
+"POT-Creation-Date: 2015-01-16 15:18-0300\n"
+"PO-Revision-Date: 2015-01-16 15:23-0300\n"
+"Last-Translator: Sebastian Dieguez <sdieguez@okkralabs.com>\n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.10\n"
+"X-Poedit-Basepath: ../\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: plenigo_plugin/PlenigoContentManager.php:240
+msgid "Pay with Plenigo"
+msgstr "Pagar con Plenigo"
+
+#: plenigo_plugin/PlenigoContentManager.php:805
+msgid "Choose payment!"
+msgstr "Elija forma de pago!"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:59
+#: plenigo_plugin/PlenigoLoginWidget.php:124
+#: plenigo_plugin/PlenigoLoginWidget.php:154
+msgid "Plenigo Login"
+msgstr "Inicio de Sesión Plenigo"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:60
+msgid ""
+"This is the Plegino Login widget. Here you will find the Plenigo login "
+"button or the user profile data related to the plenigo user."
+msgstr ""
+"Este es el Widget de Inicio de Sesión de Plenigo. Aquí puede encontrar el "
+"boton de inicio de sesión con Plenigo, o los dateos del perfil relacionados "
+"con el usuario en Plenigo."
+
+#: plenigo_plugin/PlenigoLoginWidget.php:119
+msgid "New title"
+msgstr "Nuevo Título"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:120
+#: plenigo_plugin/PlenigoLoginWidget.php:137
+msgid "Username:"
+msgstr "Usuario:"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:121
+#: plenigo_plugin/PlenigoLoginWidget.php:141
+msgid "Password:"
+msgstr "Clave:"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:122
+#: plenigo_plugin/PlenigoLoginWidget.php:145
+msgid "Forgot password"
+msgstr "Olvide clave"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:123
+#: plenigo_plugin/PlenigoLoginWidget.php:149
+msgid "WordPress Login"
+msgstr "Inicio de Sesión de Wordpress"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:125
+msgid "Welcome, "
+msgstr "Bienvenido, "
+
+#: plenigo_plugin/PlenigoLoginWidget.php:126
+#: plenigo_plugin/PlenigoLoginWidget.php:167
+msgid "Edit Profile"
+msgstr "Editar Perfil"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:127
+#: plenigo_plugin/PlenigoLoginWidget.php:171
+msgid "Logout"
+msgstr "Cerrar Sesión"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:130
+msgid "Title:"
+msgstr "Título:"
+
+#: plenigo_plugin/PlenigoLoginWidget.php:163
+msgid "Welcome, <name>"
+msgstr "Bienvenido, <nombre>"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:133
+msgid "Plenigo Help"
+msgstr "Ayuda de Plenigo"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:147
+msgid "Plenigo OAuth Help"
+msgstr "Ayuda de Plenigo OAuth"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:148
+msgid "In order to configure Plenigo OAuth Login: "
+msgstr "Para configurar el inicio de sesión con Plenigo OAuth:"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:149
+msgid ""
+"1 - Add Login redirect URL to Plenigo (Usually: <b>{YOUR BLOG URL}/wp-login."
+"php</b>) "
+msgstr ""
+"1 - Agregar la URL de redireccionamiento en Plenigo (Usualmente <b>{TU BLOG}/"
+"wp-login.php</b>)"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:151
+#: plenigo_plugin/PlenigoSettingsPage.php:159
+msgid "clicking this link"
+msgstr "haciendo click en este link"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:153
+msgid "2 - Fill the same URL in the <b>OAuth redirect URL</b> below"
+msgstr ""
+"2 - Completa la misma URL en el casillero <b>OAuth redirect URL</b> abajo"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:154
+msgid ""
+"3 - (Optional) Fill the URL in the <b>URL After Login</b> for login "
+"redirection"
+msgstr ""
+"3 - {Opcional} Completa la URL in el casillero <b>URL After Login</b> para "
+"redireccionamiento despues del inicio de sesión"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:156
+msgid ""
+"4 - Enable the Plenigo Login clicking <b>Use Plenigo Authentication "
+"Provider</b> "
+msgstr ""
+"4 - Activa el Inicio de Sesión con Plenigo haciendo click en <b>Use Plenigo "
+"Authentication Provider</b>"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:158
+msgid "5 - Put the Plenigo Login Widget in a widget area of the site "
+msgstr ""
+"5 - Coloca el Widget de Inicio de Sesión de Plenigo en un área del sitio"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:161
+msgid "6 - Enjoy Loggin in with Plenigo! "
+msgstr "6 - Disfruta de iniciar sesión con Plenigo!"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:180
+msgid "Loading..."
+msgstr "Cargando..."
+
+#: plenigo_plugin/PlenigoSettingsPage.php:188
+#: plenigo_plugin/PlenigoSettingsPage.php:307
+msgid "General"
+msgstr "General"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:192
+#: plenigo_plugin/PlenigoSettingsPage.php:320
+msgid "OAuth Login"
+msgstr "Sesión con Oauth"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:196
+msgid "Premium Content"
+msgstr "Contenido Premium"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:200
+#: plenigo_plugin/PlenigoSettingsPage.php:344
+msgid "Curtain Customization"
+msgstr "Personalización de la cortina"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:291
+msgid "Plenigo settings saved!"
+msgstr "Preferencias de Plenigo guardadas!"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:294
+msgid "Data can not be empty"
+msgstr "Los datos no pueden estar vacíos"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:332
+msgid "Premium Content settings"
+msgstr "Preferencias de Contenido Premium"
+
+#: plenigo_plugin/PlenigoSettingsPage.php:369
+#, php-format
+msgid "Validation failed: %s"
+msgstr "Validación falló: %s"
+
+#: plenigo_plugin/settings/SettingCategoryTagDB.php:70
+msgid "Premium Content Categories"
+msgstr "Preferencias de Categorías Premium"
+
+#: plenigo_plugin/settings/SettingCategoryTagDB.php:79
+#: plenigo_plugin/settings/SettingProductTagDB.php:79
+msgid "Enter Tag name..."
+msgstr "Ingrese el nombre de la etiqueta..."
+
+#: plenigo_plugin/settings/SettingCategoryTagDB.php:81
+msgid "Enter Category ID(s)..."
+msgstr "Ingrese los ID(s) de Categoría..."
+
+#: plenigo_plugin/settings/SettingCategoryTagDB.php:83
+#: plenigo_plugin/settings/SettingProductTagDB.php:83
+msgid "Add values"
+msgstr "Agregar valores"
+
+#: plenigo_plugin/settings/SettingCategoryTagDB.php:141
+msgid ""
+"There is a problem with the Category TAG list. <br/> The correct format is "
+"lines of TAG->CATEGORYID[,CATEGORYID...] pairs"
+msgstr ""
+"Hay un problema con la lista de TAG. <br/> El formato correcto son renglones "
+"de pares TAG->ID_CATEGORIA[,ID_CATEGORIA]"
+
+#: plenigo_plugin/settings/SettingCompanyId.php:65
+msgid "Company ID"
+msgstr "Identificador de la Compañía"
+
+#: plenigo_plugin/settings/SettingCompanySecret.php:65
+msgid "Company Private Key"
+msgstr "Clave Privada de la Compañía"
+
+#: plenigo_plugin/settings/SettingCurtainButtonBuy.php:58
+msgid "Sign up"
+msgstr "Registrarse"
+
+#: plenigo_plugin/settings/SettingCurtainButtonBuy.php:66
+msgid "BUY Button Text"
+msgstr "Texto del Botón de Comprar"
+
+#: plenigo_plugin/settings/SettingCurtainButtonCustom.php:46
+msgid "See our prices"
+msgstr "Vea nuestros precios"
+
+#: plenigo_plugin/settings/SettingCurtainButtonCustom.php:54
+msgid "CUSTOM Button Text"
+msgstr "Texto del Botón Personalizado"
+
+#: plenigo_plugin/settings/SettingCurtainButtonCustomURL.php:54
+msgid "CUSTOM Button URL"
+msgstr "URL del Botón Personalizado"
+
+#: plenigo_plugin/settings/SettingCurtainButtonLogin.php:46
+msgid "Sign in"
+msgstr "Iniciar Sesión"
+
+#: plenigo_plugin/settings/SettingCurtainButtonLogin.php:54
+msgid "LOGIN Button Text"
+msgstr "Texto del botón Login"
+
+#: plenigo_plugin/settings/SettingCurtainMode.php:65
+msgid "Curtain Button Scheme"
+msgstr "Esquema de Botones de la Cortina"
+
+#: plenigo_plugin/settings/SettingCurtainText.php:58
+msgid ""
+"In order to continue delivering <b>valuable</b> content for our readers,we "
+"ask a single everlasting fee from you.<br>Please join us and receive our "
+"premium content for ever."
+msgstr ""
+"Para poder continuar entregando contenido valioso para nuestros miembros, "
+"pedimos una colaboración se ahora para siempre. <br> Por favor unase a "
+"nosotros y reciba contenido Premium para siempre."
+
+#: plenigo_plugin/settings/SettingCurtainText.php:68
+msgid "Curtain Message"
+msgstr "Mensaje de la cortina"
+
+#: plenigo_plugin/settings/SettingCurtainTextMembers.php:43
+msgid "Curtain Message (for members)"
+msgstr "Mensaje de la cortina (para miembros)"
+
+#: plenigo_plugin/settings/SettingCurtainTitle.php:58
+msgid "Do you want to continue reading?"
+msgstr "Desea seguir leyendo?"
+
+#: plenigo_plugin/settings/SettingCurtainTitle.php:66
+msgid "Curtain Title"
+msgstr "Título de la Cortina"
+
+#: plenigo_plugin/settings/SettingCurtainTitleMembers.php:43
+msgid "Curtain Title (for members)"
+msgstr "título de la cortina (para miembros)"
+
+#: plenigo_plugin/settings/SettingLoginURL.php:54
+msgid "URL After Login"
+msgstr "URL despues de login"
+
+#: plenigo_plugin/settings/SettingProductTagDB.php:70
+msgid "Premium Content Products"
+msgstr "Productos de Contenido Premium"
+
+#: plenigo_plugin/settings/SettingProductTagDB.php:81
+msgid "Enter Product ID(s)..."
+msgstr "Ingrese los ID(s) de Producto..."
+
+#: plenigo_plugin/settings/SettingProductTagDB.php:141
+msgid ""
+"There is a problem with the TAG list. <br/> The correct format is lines of "
+"TAG->PRODUCTID[,PRODUCTID...] pairs"
+msgstr ""
+"Hay un problema con la lista de TAG. <br/> El formato correcto son renglones "
+"de pares TAG->ID_PRODUCTO[,ID_PRODUCTO]"
+
+#: plenigo_plugin/settings/SettingRedirectURL.php:66
+msgid "OAuth redirect URL"
+msgstr "URL de Redireccionamiento Oauth"
+
+#: plenigo_plugin/settings/SettingTestMode.php:65
+msgid "Test Mode"
+msgstr "Modo de Pruebas"
+
+#: plenigo_plugin/settings/SettingTestMode.php:85
+msgid "Test mode sandbox"
+msgstr "Ambiente seguro de Pruebas"
+
+#: plenigo_plugin/settings/SettingTestMode.php:88
+msgid "Production mode"
+msgstr "Modo Producción"
+
+#: plenigo_plugin/settings/SettingUseLogin.php:65
+msgid "Use OAuth Login"
+msgstr "Usar Sesión con Oauth"
+
+#: plenigo_plugin/settings/SettingUseLogin.php:85
+msgid "Use Plenigo Authentication Provider"
+msgstr "Usea Proveedor de Autenticación Plenigo"
+
+#: plenigo_plugin/settings/SettingUseLogin.php:88
+msgid "Regular Wordpress login"
+msgstr "Login normal con Wordpress"
+
+#: plenigo_plugin/settings/SettingUseWPLogin.php:65
+msgid "Enable Wordpress Login"
+msgstr "Activar loguin de Wordpress"
+
+#: plenigo_plugin/settings/SettingUseWPLogin.php:86
+msgid "Show the Worpress login form"
+msgstr "Mostrar formulario de login de Wordpress"
+
+#: plenigo_plugin/settings/SettingUseWPLogin.php:89
+msgid "Only show Plenigo Login Button"
+msgstr "Solo mostrar el boton de Login con Plenigo"
+
+#~ msgid "Add"
+#~ msgstr "Agregar"
+
+#~ msgid "Login"
+#~ msgstr "Iniciar Sesión"
+
+#~ msgid "Forgot"
+#~ msgstr "Olvidé la contraseña"
+
+#~ msgid "Login with Plenigo"
+#~ msgstr "Iniciar Sesión con Plenigo"
