@@ -9,7 +9,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 The Professional eCommerce Platform for Digital Content
 
-plenigo offers a full-featured e-commerce SaaS platform for digital products such as text, video, audio etc. This plugin makes it easy to setup and run plenigo on wordpress with minimum effort.
+plenigo offers a full-featured e-commerce SaaS platform for digital products such as text, video, audio.
 
 == Description ==
 = What do I get with plenigo? =
