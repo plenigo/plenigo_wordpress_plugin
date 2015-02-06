@@ -3,7 +3,7 @@ Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, american express, credit, debit, card, patreon, widget, give, fund, funding, crowdfunding
 Requires at least: 3.9.2
 Tested up to: 4.1
-Stable tag: trunk
+Stable tag: 1.1.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
