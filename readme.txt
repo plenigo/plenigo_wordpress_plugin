@@ -1,6 +1,6 @@
 ﻿=== Plenigo ===
 Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
-Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, patreon, widget, give, fund, funding, crowdfunding
+Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want
 Requires at least: 3.9.2
 Tested up to: 4.1
 Stable tag: 1.1.17
@@ -12,11 +12,11 @@ plenigo offers a full-featured e-commerce SaaS platform for digital products suc
 == Description ==
 = What do I get with plenigo? =
 
-Basically plenigo includes all you need to run your paid content offer. No matter if your offer is a Video on Demand subscription or a pay-per-view live stream, a metered model for your digital news page or magazine. With plenigo you can run any offer you like, created just with a few mouse kicks. Don’t believe it? Just try our BASIC account, with € 0 monthly fee. 
+Basically plenigo includes all you need to run your paid content offer. No matter if your offer is a Video on Demand subscription or a pay-per-view live stream, a metered model for your digital news page or magazine. With plenigo you can run any offer you like, created just with a few mouse clicks. Don’t believe it? Just try our BASIC account, with € 0 monthly fee. 
 
 = What are the basic features? =
 
-The plenigo team aims to include all necessary functionality you need to create the best possible platform for paid content offers. This does include a user-friendly checkout process that does not derive your users but keeps them on you page. Currently six different payment methods are included and can be integrated just by clicking a checkbox. in the penigo backend you can easily create you offer and just add e.g. „Premium“ to the tag box while managing your posts - now you have created your offer. There is much more, please have a look at „features" below. 
+The plenigo team aims to include all necessary functionality you need to create the best possible platform for paid content offers. This does include a user-friendly checkout process that does not derive your users but keeps them on your page. Currently six different payment methods are included and can be integrated just by clicking a checkbox. In the penigo backend you can easily create your offer and just add e.g. „Premium“ to the tag box while managing your posts - now you have created your offer. There is much more, please have a look at „features" below. 
 
 = Pricing =
 
@@ -28,11 +28,11 @@ Beside your Wordpress account, your plenigo merchant account and the offer you c
 
 = Are there any restrictions? =
 
-plenigo highly values author’s rights, so we have to make sure only people sell through plenigo who are allowed to. I addition, we respect all legal requirements and ask you to confirm you are not violating and law. 
+plenigo highly values author’s rights, so we have to make sure only people sell through plenigo who are allowed to. I addition, we respect all legal requirements and ask you to confirm that you are not violating any laws. 
 
 = Data protection =
 
-Data security is of highest value for plenigo, so we do anything in our power to keep data save. For detailed questions pls. contact our data security team at datenschutz@plenigo.com. 
+Data security is of highest value for plenigo, so we do anything in our power to keep data save. For detailed questions pls. contact our data security team at dataprotection@plenigo.com. 
 
 = "Who owns the customer" = 
 
@@ -71,7 +71,7 @@ Your customer is your customer. You have full access to all information we gathe
 
 = Billing =
 
-* Create you own branded bill form with easy to use wizard
+* Create your own branded bill form with easy to use wizard
 * Automatic billing for subscriptions
 
 = Analytics =
@@ -80,8 +80,8 @@ Your customer is your customer. You have full access to all information we gathe
 
 == Installation ==
 * Install the plugin
-* Enter plenigo's Company ID and Secret
-* Select paywalled tag(s) and add a managed Plenigo Product ID(s)
+* Enter plenigo's company id and secret
+* Select paywalled tag(s) and add a managed plenigo product id(s)
 * Start getting money from your hard-earned work!
 
 
