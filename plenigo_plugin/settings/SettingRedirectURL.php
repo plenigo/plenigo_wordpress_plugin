@@ -75,7 +75,7 @@ class SettingRedirectURL extends PlenigoWPSetting
         $currHint = $this->getHint();
 
         printf('<input type="text" id="' . static::SETTING_ID . '" name="' . self::PLENIGO_SETTINGS_NAME
-            . '[' . static::SETTING_ID . ']" value="%s" hint="%s" size="90" />', $currValue, $currHint);
+            . '[' . static::SETTING_ID . ']" value="%s" placeholder="%s" size="90" />', $currValue, $currHint);
     }
 
     /**
