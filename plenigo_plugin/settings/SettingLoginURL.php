@@ -43,7 +43,7 @@ class SettingLoginURL extends SettingRedirectURL
         if (!is_null($current)) {
             return esc_url($current);
         }
-        return esc_url(home_url('/'));
+        return '';
     }
 
     /**
@@ -52,6 +52,25 @@ class SettingLoginURL extends SettingRedirectURL
     public function getTitle()
     {
         return __('URL After Login', parent::PLENIGO_SETTINGS_GROUP);
+    }
+    
+    /**
+     * @see SettingRedirectURL::getHint()
+     */
+    protected function getHint()
+    {
+        return __('Leave empty for no redirection...', parent::PLENIGO_SETTINGS_GROUP);
+    }
+
+    /**
+     * @see PlenigoWPSetting::getValidationForValue()
+     */
+    public function getValidationForValue($value = null)
+    {
+        if ((!is_null($value) && strlen(trim($value)) > 9) || $value === '') {
+            return true;
+        }
+        return false;
     }
 
 }

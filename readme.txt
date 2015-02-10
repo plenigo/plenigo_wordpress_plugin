@@ -94,10 +94,14 @@ A: Because we make Chuck Norris eat all his meal
 Coming soon
 
 == Changelog ==
-= 1.1.18 - New curtain =
+= 1.1.19 - Allow no redirection =
+- Feature: Leave empty the login redirect URL to return to the same page after login
+- Fixed a problem where in some cases you could edit a post but still get paywalled
+
+= 1.1.18 =
 - Fixed version
 
-= 1.1.17 - New curtain =
+= 1.1.17 =
 - Improved readme
 
 = 1.1.16 - New curtain =
