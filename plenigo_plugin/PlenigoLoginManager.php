@@ -42,6 +42,9 @@ class PlenigoLoginManager
         if (filter_input(INPUT_GET, 'code') !== null && filter_input(INPUT_GET, 'code') !== false) {
             add_action("init", array($this, 'plenigo_process_login'));
             $this->options['afterLoginUrl'] = wp_login_url();
+        } else {
+            //Just saving return URL
+            add_action('wp_footer', array($this, 'store_url'));
         }
 
         // Logout user if there is no plenigo user cookie
@@ -60,8 +63,12 @@ class PlenigoLoginManager
         $user_id = \get_user_meta(\get_current_user_id(), self::PLENIGO_META_NAME, true);
         if (\is_user_logged_in() && $user_id !== '' && $this->is_regular_user()) {
             \wp_logout();
+            $returnURL = (isset($_SESSION['plenigo_throwback_url'])) ? $_SESSION['plenigo_throwback_url'] : null;
+            if (is_null($returnURL)) {
+                $returnURL = \home_url('/');
+            }
             echo '<script type="application/javascript">';
-            echo "plenigo.logout();location.href='" . \home_url('/') . "';";
+            echo "plenigo.logout();location.href='" . $returnURL . "';";
             echo '</script>';
         }
     }
@@ -150,7 +157,7 @@ class PlenigoLoginManager
                 return $user->ID;
             }
         } else {
-            plenigo_log_message("No User found with email:" . print_r($user_upd, true));
+            plenigo_log_message("No User found with email:" . print_r($userData->getEmail(), true));
         }
 
         // We are still here so we register the user
@@ -193,10 +200,16 @@ class PlenigoLoginManager
         //TODO remember me functionality
         $rememberme = true;
         wp_set_auth_cookie($currUserID, $rememberme);
+        $homeURL = home_url('/');
+        $sessionURL = (isset($_SESSION['plenigo_throwback_url'])) ? $_SESSION['plenigo_throwback_url'] : null;
 
         // Sanitize Login URL
         if (!isset($this->options['login_url']) || empty($this->options['login_url']) || is_null($this->options['login_url'])) {
-            $this->options['login_url'] = esc_url(home_url('/'));
+            if (is_null($sessionURL)) {
+                $this->options['login_url'] = esc_url($homeURL);
+            } else {
+                $this->options['login_url'] = esc_url($sessionURL);
+            }
         }
 
         header("Location: " . $this->options['login_url']);
@@ -310,6 +323,46 @@ class PlenigoLoginManager
             $user_upd['display_name'] = $user_upd['nickname'];
             wp_update_user($user_upd);
         }
+    }
+
+    /**
+     * This method stores the last URL inside the site regardless the HTTP referrer
+     */
+    public function store_url()
+    {
+        $current_url = $this->full_url($_SERVER, true);
+        $_SESSION['plenigo_throwback_url'] = $current_url;
+    }
+
+    /**
+     * This method builds the URL based on several variables and HTTP headers
+     * 
+     * @param array $s the SERVER variable
+     * @param bool $use_fwd_host true if we want to pay attention to the HTTP_X_FORWARDED_HOST header
+     * @return string
+     */
+    private function url_origin($s, $use_fwd_host = false)
+    {
+        $ssl = is_ssl();
+        $sp = strtolower($s['SERVER_PROTOCOL']);
+        $protocol = substr($sp, 0, strpos($sp, '/')) . (($ssl) ? 's' : '');
+        $port = $s['SERVER_PORT'];
+        $port = ((!$ssl && $port == '80') || ($ssl && $port == '443')) ? '' : ':' . $port;
+        $host = ($use_fwd_host && isset($s['HTTP_X_FORWARDED_HOST'])) ? $s['HTTP_X_FORWARDED_HOST'] : (isset($s['HTTP_HOST']) ? $s['HTTP_HOST'] : null);
+        $host = isset($host) ? $host : $s['SERVER_NAME'] . $port;
+        return $protocol . '://' . $host;
+    }
+
+    /**
+     * This method adds the predicate (query string) to the origin URL and returns it
+     * 
+     * @param array $s the SERVER variable
+     * @param bool $use_fwd_host true if we want to pay attention to the HTTP_X_FORWARDED_HOST header
+     * @return string
+     */
+    private function full_url($s, $use_fwd_host = false)
+    {
+        return $this->url_origin($s, $use_fwd_host) . $s['REQUEST_URI'];
     }
 
 }

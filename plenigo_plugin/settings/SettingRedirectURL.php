@@ -72,9 +72,18 @@ class SettingRedirectURL extends PlenigoWPSetting
     public function renderCallback()
     {
         $currValue = $this->getDefaultValue($this->getStoredValue());
+        $currHint = $this->getHint();
 
         printf('<input type="text" id="' . static::SETTING_ID . '" name="' . self::PLENIGO_SETTINGS_NAME
-            . '[' . static::SETTING_ID . ']" value="%s"  size="80" />', $currValue);
+            . '[' . static::SETTING_ID . ']" value="%s" placeholder="%s" size="90" />', $currValue, $currHint);
+    }
+
+    /**
+     * Returns the text to be used as a hint for the text box
+     */
+    protected function getHint()
+    {
+        return __('http://', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
@@ -82,7 +91,7 @@ class SettingRedirectURL extends PlenigoWPSetting
      */
     public function getValidationForValue($value = null)
     {
-        if (!is_null($value) && strlen(trim($value)) > 5) {
+        if (!is_null($value) && strlen(trim($value)) > 9) {
             return true;
         }
         return false;

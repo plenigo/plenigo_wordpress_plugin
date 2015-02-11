@@ -196,7 +196,7 @@ class PlenigoContentManager
             $rType = $this->get_render_type($isFeed);
             $hasBought = $this->user_bought_content($isFeed);
             $html_curtain = null;
-            if (!$hasBought) {
+            if (!$hasBought && !current_user_can('edit_post',  get_the_ID())) {
 
                 if (isset($this->templateMap[$rType][$hasBought])) {
                     $html_curtain = $this->templateMap[$rType][$hasBought];
@@ -233,7 +233,7 @@ class PlenigoContentManager
                 }
                 $this->addGAEvent("curtain|curtain-visit");
             } else {
-                plenigo_log_message("ITS BOUGHT");
+                $this->addDebugLine("ITS BOUGHT OR THE USER CAN EDIT IT");
                 $curtain_code = $content;
             }
             $content = $curtain_code;
