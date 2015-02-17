@@ -94,6 +94,9 @@ A: Because we make Chuck Norris eat all his meal
 Coming soon
 
 == Changelog ==
+= 1.1.20 - Bug fixes and improvements =
+- Fixed a problem where in some cases a user would see a post even if metered views limit is reached
+
 = 1.1.19 - Allow no redirection =
 - Feature: Leave empty the login redirect URL to return to the same page after login
 - Fixed a problem where in some cases you could edit a post but still get paywalled
