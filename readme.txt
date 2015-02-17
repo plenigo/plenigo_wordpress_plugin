@@ -3,7 +3,7 @@ Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 3.9.2
 Tested up to: 4.1
-Stable tag: 1.1.19
+Stable tag: 1.1.20
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,9 @@ A: Because we make Chuck Norris eat all his meal
 Coming soon
 
 == Changelog ==
+= 1.1.20 - Bug fixes and improvements =
+- Fixed a problem where in some cases a user would see a post even if metered views limit is reached
+
 = 1.1.19 - Allow no redirection =
 - Feature: Leave empty the login redirect URL to return to the same page after login
 - Fixed a problem where in some cases you could edit a post but still get paywalled

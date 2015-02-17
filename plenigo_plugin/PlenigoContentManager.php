@@ -132,7 +132,7 @@ class PlenigoContentManager
         /*
         echo '<script type="application/javascript">'
         . 'var plenigo = plenigo || {};'
-          . 'plenigo.baseURI = "' . self::JS_BASE_URL_NOAUTH . '";</script>'; */
+        . 'plenigo.baseURI = "' . self::JS_BASE_URL_NOAUTH . '";</script>'; */
 
         if ($isPaywalled == true && !isset($this->reqCache["listProdId"]) && !isset($this->reqCache["lastCatId"])) {
             plenigo_log_message("PRODUCT OR CATEGORY NOT FOUND!!!", E_USER_WARNING);
@@ -190,13 +190,17 @@ class PlenigoContentManager
      */
     private function plenigo_filter_content($content, $isFeed = false)
     {
+        global $post;
         $curtain_code = '';
         if ($this->plenigo_paywalled_content()) {
             plenigo_log_message("ITS PAYWALLED");
             $rType = $this->get_render_type($isFeed);
             $hasBought = $this->user_bought_content($isFeed);
+            $canEdit = current_user_can('edit_post', $post->ID);
+            $this->addDebugLine("Post ID:" . $post->ID);
+            $this->addDebugLine("Editor visit: ". var_export($canEdit, true));
             $html_curtain = null;
-            if (!$hasBought && !current_user_can('edit_post',  get_the_ID())) {
+            if (!$hasBought && !$canEdit) {
 
                 if (isset($this->templateMap[$rType][$hasBought])) {
                     $html_curtain = $this->templateMap[$rType][$hasBought];
@@ -233,7 +237,6 @@ class PlenigoContentManager
                 }
                 $this->addGAEvent("curtain|curtain-visit");
             } else {
-                $this->addDebugLine("ITS BOUGHT OR THE USER CAN EDIT IT");
                 $curtain_code = $content;
             }
             $content = $curtain_code;
