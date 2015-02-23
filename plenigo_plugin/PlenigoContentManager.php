@@ -91,6 +91,10 @@ class PlenigoContentManager
     //Google Analytics
     const REPLACE_GA_CODE = "<!--[PLENIGO_GA_CODE]-->";
     const REPLACE_GA_EVENTS = "<!--[PLENIGO_GA_EVENTS]-->";
+    const TEASER_SHORTCODES_CONTAINER = "aesop_content,pl_checkout,pl_checkout_button,pl_renew";
+    const TEASER_SHORTCODES_SINGLE = "aesop_quote";
+    const TEASER_HTML_CONTAINER = "p,div,table";
+    const TEASER_HTML_SINGLE = "";
 
     private $templateMap = array(
         self::RENDER_FEED => array(true => null, false => 'plenigo-curtain-feed.html'),
@@ -104,8 +108,8 @@ class PlenigoContentManager
      */
     public function __construct()
     {
-        add_filter('the_content', array($this, 'plenigo_handle_main_content'), 20);
-        add_filter('the_content_feed ', array($this, 'plenigo_handle_feed_content'), 20);
+        add_filter('the_content', array($this, 'plenigo_handle_main_content'), 5);
+        add_filter('the_content_feed ', array($this, 'plenigo_handle_feed_content'), 5);
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
 
         add_action('wp_footer', array($this, 'plenigo_js_snippet'));
@@ -198,7 +202,7 @@ class PlenigoContentManager
             $hasBought = $this->user_bought_content($isFeed);
             $canEdit = current_user_can('edit_post', $post->ID);
             $this->addDebugLine("Post ID:" . $post->ID);
-            $this->addDebugLine("Editor visit: ". var_export($canEdit, true));
+            $this->addDebugLine("Editor visit: " . var_export($canEdit, true));
             $html_curtain = null;
             if (!$hasBought && !$canEdit) {
 
@@ -259,7 +263,6 @@ class PlenigoContentManager
     {
         $teaser = $this->get_teaser_from_content($content, $permisive);
         $curtain_snippet = $this->get_curtain_code($curtain_file);
-
         return $teaser . $curtain_snippet;
     }
 
@@ -573,7 +576,6 @@ class PlenigoContentManager
     {
         $res = '';
         $strBeforeMoreTag = array();
-        $strMore = 'Read more...';
 
         $strBeforeMoreTag = stristr($content, self::MORE_SPLITTER, true);
         if ($strBeforeMoreTag !== false) {
@@ -586,6 +588,8 @@ class PlenigoContentManager
             if ($permisive) {
                 $this->addDebugLine("Permisive Teaser: TRUE");
                 $res = balanceTags($content, true);
+            } else {
+                $res = $this->specialTeaserSupport($content);
             }
         }
 
@@ -913,6 +917,92 @@ class PlenigoContentManager
             $res = str_ireplace(self::REPLACE_GA_EVENTS, $strGAevents, $res);
         }
         return $res;
+    }
+
+    /**
+     * This method allow to strip a teaser tag from the content if it is starting with  one of the specified tags
+     * 
+     * @param string $content the actual post content
+     * @return string The teaser or blank if nothing is found
+     */
+    private function specialTeaserSupport($content = null)
+    {
+        $res = '';
+        if (!is_null($content) && is_string($content) && trim($content) !== '') {
+            $trimmedContent = trim($content);
+            $fstWord = strtok($trimmedContent, ' '); //get the very first work, it should be [aesop_ or any other tag
+            //if its a shortcode, check for allowed shortcodes and capture the teaser
+            if (substr($fstWord, 0, 1) == '[') {
+                $this->addDebugLine("SHORTCODE" );
+                $tag = strtolower(trim(substr($fstWord, 1)));
+                //First lets catch container tags
+                if (in_array($tag, $this->resolveArray(self::TEASER_SHORTCODES_CONTAINER))) {
+                    $needle = "[/" . $tag . "]";
+                    $this->addDebugLine("TAG:" . $tag . " NEEDLE:" . $needle);
+                    return $this->getTeaserText($trimmedContent, $needle);
+                }
+                if (in_array($tag, $this->resolveArray(self::TEASER_SHORTCODES_SINGLE))) {
+                    $needle = "]";
+                    $this->addDebugLine("TAG:" . $tag . " NEEDLE:" . $needle);
+                    return $this->getTeaserText($trimmedContent, $needle);
+                }
+            }
+            //if its a html tag, check for allowed html tags and capture the teaser
+            if (substr($fstWord, 0, 1) == '<') {
+                $this->addDebugLine("HTML" );
+                $tag = strtolower(trim(substr($fstWord, 1)));
+                //First lets catch container tags
+                if (in_array($tag, $this->resolveArray(self::TEASER_HTML_CONTAINER))) {
+                    $needle = "/" . $tag . ">";
+                    $this->addDebugLine("TAG:" . $tag . " NEEDLE:" . $needle);
+                    return $this->getTeaserText($trimmedContent, $needle);
+                }
+                if (in_array($tag, $this->resolveArray(self::TEASER_HTML_SINGLE))) {
+                    $needle = "/>";
+                    $this->addDebugLine("TAG:" . $tag . " NEEDLE:" . $needle);
+                    return $this->getTeaserText($trimmedContent, $needle);
+                }
+            }
+        }
+
+        return $res;
+    }
+
+    /**
+     * Search for the needle and returns the beggining of the content with the needle attached at the end
+     * 
+     * @param string $content
+     * @param string $needle
+     * @return string
+     */
+    private function getTeaserText($content, $needle)
+    {
+        $pos = stristr($content, $needle, TRUE);
+        if ($pos !== FALSE) {
+            $res = $pos . $needle;
+            return $res;
+        }
+        return '';
+    }
+
+    /**
+     * Sanitizes a string array to return an array, empty or with a single value as special cases
+     * 
+     * @param string $stringArray
+     * @return array
+     */
+    private function resolveArray($stringArray)
+    {
+        $separator = ",";
+        $arr = array();
+        if (trim($stringArray) !== '') {
+            if (stripos($stringArray, $separator) !== FALSE) {
+                $arr = explode($separator, $stringArray);
+            } else {
+                $arr[0] = $stringArray;
+            }
+        }
+        return $arr;
     }
 
 }

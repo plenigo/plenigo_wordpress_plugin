@@ -59,11 +59,15 @@ article .txt > p, article .txtblock > p {
     box-shadow: 10px 10px 5px 0px rgba(170,170,170,1);
 }
 
-#PlenigoLogin footer {
+#PlenigoLogin .PlenigoFooter {
     width: 100%;
     display: block;
     text-align: center;
     padding: 20px 0;
+}
+
+#PlenigoLogin .PlenigoFooter br {
+    display: none;
 }
 
 #PlenigoLogin p {
@@ -162,7 +166,7 @@ h3.Plenigo-login  {
 
 
 @media (max-width: 349px) {
-    #PlenigoLogin footer {
+    #PlenigoLogin .PlenigoFooter {
 
         text-align: center;
 
