@@ -63,16 +63,24 @@ class PlenigoContentManager
      */
     private $gaEventList = array();
 
+    /**
+     * Priority in which Plenigo will handle content. It has to be less than 10 
+     * (for shortcode processing) but more than 1.
+     */
+    const PLENIGO_CONTENT_PRIO = 5;
+    //Plenigo settings group
     const PLENIGO_SETTINGS_GROUP = 'plenigo';
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
     const BOUGHT_STRING_FORMAT = "%s <p><p>Content bought with %s Thank you for your support";
     const MORE_SPLITTER = '<span id="more-';
     const JS_BASE_URL = "https://www.plenigo.com";
     const JS_BASE_URL_NOAUTH = "https://www.plenigo.com";
+    // Render types
     const RENDER_FEED = 0;
     const RENDER_SINGLE = 1;
     const RENDER_SEARCH = 2;
     const RENDER_OTHER = 3;
+    //Replacement tags
     const REPLACE_PLUGIN_DIR = "<!--[PLUGIN_DIR]-->";
     const REPLACE_PRODUCT_NAME = "<!--[PRODUCT_NAME]-->";
     const REPLACE_PRODUCT_PRICE = "<!--[PRODUCT_PRICE]-->";
@@ -91,6 +99,7 @@ class PlenigoContentManager
     //Google Analytics
     const REPLACE_GA_CODE = "<!--[PLENIGO_GA_CODE]-->";
     const REPLACE_GA_EVENTS = "<!--[PLENIGO_GA_EVENTS]-->";
+    // Teaser smart detection
     const TEASER_SHORTCODES_CONTAINER = "aesop_content,pl_checkout,pl_checkout_button,pl_renew";
     const TEASER_SHORTCODES_SINGLE = "aesop_quote";
     const TEASER_HTML_CONTAINER = "p,div,table";
@@ -108,8 +117,8 @@ class PlenigoContentManager
      */
     public function __construct()
     {
-        add_filter('the_content', array($this, 'plenigo_handle_main_content'), 5);
-        add_filter('the_content_feed ', array($this, 'plenigo_handle_feed_content'), 5);
+        add_filter('the_content', array($this, 'plenigo_handle_main_content'), self::PLENIGO_CONTENT_PRIO);
+        add_filter('the_content_feed ', array($this, 'plenigo_handle_feed_content'), self::PLENIGO_CONTENT_PRIO);
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
 
         add_action('wp_footer', array($this, 'plenigo_js_snippet'));
@@ -933,7 +942,7 @@ class PlenigoContentManager
             $fstWord = strtok($trimmedContent, ' '); //get the very first work, it should be [aesop_ or any other tag
             //if its a shortcode, check for allowed shortcodes and capture the teaser
             if (substr($fstWord, 0, 1) == '[') {
-                $this->addDebugLine("SHORTCODE" );
+                $this->addDebugLine("SHORTCODE");
                 $tag = strtolower(trim(substr($fstWord, 1)));
                 //First lets catch container tags
                 if (in_array($tag, $this->resolveArray(self::TEASER_SHORTCODES_CONTAINER))) {
@@ -949,7 +958,7 @@ class PlenigoContentManager
             }
             //if its a html tag, check for allowed html tags and capture the teaser
             if (substr($fstWord, 0, 1) == '<') {
-                $this->addDebugLine("HTML" );
+                $this->addDebugLine("HTML");
                 $tag = strtolower(trim(substr($fstWord, 1)));
                 //First lets catch container tags
                 if (in_array($tag, $this->resolveArray(self::TEASER_HTML_CONTAINER))) {
