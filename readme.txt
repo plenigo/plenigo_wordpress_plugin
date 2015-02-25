@@ -3,7 +3,7 @@ Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 3.9.2
 Tested up to: 4.1
-Stable tag: 1.1.21
+Stable tag: 1.1.22
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,11 @@ A: Because we make Chuck Norris eat all his meal
 Coming soon
 
 == Changelog ==
+= 1.1.22 - Aesop and other plugin support =
+- Feature: Now supporting Aesop tags to be shown before showing the curtain
+- Fixed: a possible bug involving the footer tag in the HTML template
+- Note: now the content processing has more priority, please check your templates to avoid problems in the HTML
+
 = 1.1.21 - Fixes for URL redirect =
 - Fixed a problem with URL parameters being stored as a return URL
 
