@@ -1,10 +1,10 @@
-<?php
+ <?php
 
 /*
   Plugin Name: Plenigo
   Plugin URI: http://wordpress.org/plugins/plenigo/
   Description: So far, the technical implementation of paid content has been time-consuming and costly for publishing houses and media companies. plenigo puts an end to this.
-  Version: 1.1.22
+  Version: 1.1.23
   Author: Plenigo
   Author URI: https://www.plenigo.com
   Text Domain: plenigo
