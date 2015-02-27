@@ -73,8 +73,8 @@ class PlenigoContentManager
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
     const BOUGHT_STRING_FORMAT = "%s <p><p>Content bought with %s Thank you for your support";
     const MORE_SPLITTER = '<span id="more-';
-    const JS_BASE_URL = "https://plenigo:Testb4Integration@test-system.s-develop.com";
-    const JS_BASE_URL_NOAUTH = "https://test-system.s-develop.com";
+    const JS_BASE_URL = "https://www.plenigo.com";
+    const JS_BASE_URL_NOAUTH = "https://www.plenigo.com";
     // Render types
     const RENDER_FEED = 0;
     const RENDER_SINGLE = 1;
@@ -142,10 +142,10 @@ class PlenigoContentManager
     {
         PlenigoSDKManager::get()->getPlenigoSDK();
         $isPaywalled = $this->plenigo_paywalled_content();
-        /* */
+        /*
         echo '<script type="application/javascript">'
         . 'var plenigo = plenigo || {};'
-        . 'plenigo.baseURI = "' . self::JS_BASE_URL_NOAUTH . '";</script>';
+        . 'plenigo.baseURI = "' . self::JS_BASE_URL_NOAUTH . '";</script>'; */
 
         if ($isPaywalled == true && !isset($this->reqCache["listProdId"]) && !isset($this->reqCache["lastCatId"])) {
             plenigo_log_message("PRODUCT OR CATEGORY NOT FOUND!!!", E_USER_WARNING);

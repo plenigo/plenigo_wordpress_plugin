@@ -236,7 +236,7 @@ class PlenigoLoginManager
     {
         $errorCode = filter_input(INPUT_GET, "error");
         $errorMessage = filter_input(INPUT_GET, "error_description");
-        $finalMsg = sprintf("<p>%s<b>:</b> %s</p>", $errorCode, $errorMessage);
+        $finalMsg = sprintf("<div id='login_error'><strong>%s:</strong> %s</div>", $errorCode, $errorMessage);
         if (empty($message)) {
             return $finalMsg . "";
         } else {
