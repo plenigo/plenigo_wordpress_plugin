@@ -38,6 +38,7 @@ require_once __DIR__ . '/settings/SettingCurtainTitleMembers.php';
 require_once __DIR__ . '/settings/SettingGACode.php';
 require_once __DIR__ . '/settings/SettingCurtainTextMembers.php';
 require_once __DIR__ . '/settings/SettingCurtainMode.php';
+require_once __DIR__ . '/settings/SettingPreventTag.php';
 require_once __DIR__ . '/settings/SettingCurtainButtonBuy.php';
 require_once __DIR__ . '/settings/SettingCurtainButtonLogin.php';
 require_once __DIR__ . '/settings/SettingCurtainButtonCustom.php';
@@ -97,6 +98,7 @@ class PlenigoSettingsPage
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainTitleMembers());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainTextMembers());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainMode());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingPreventTag());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonBuy());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCustom());
