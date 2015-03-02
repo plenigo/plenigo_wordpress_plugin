@@ -139,9 +139,9 @@ class PlenigoContentManager {
         PlenigoSDKManager::get()->getPlenigoSDK();
         $isPaywalled = $this->plenigo_paywalled_content();
         /*
-        echo '<script type="application/javascript">'
-        . 'var plenigo = plenigo || {};'
-        . 'plenigo.baseURI = "' . self::JS_BASE_URL_NOAUTH . '";</script>'; */
+          echo '<script type="application/javascript">'
+          . 'var plenigo = plenigo || {};'
+          . 'plenigo.baseURI = "' . self::JS_BASE_URL_NOAUTH . '";</script>'; */
 
         if ($isPaywalled == true && !isset($this->reqCache["listProdId"]) && !isset($this->reqCache["lastCatId"])) {
             plenigo_log_message("PRODUCT OR CATEGORY NOT FOUND!!!", E_USER_WARNING);
@@ -287,10 +287,10 @@ class PlenigoContentManager {
 
         //Prevent tag takes precedense
         $hasPreventTag = $this->hasPreventTag();
-        if($hasPreventTag){
+        if ($hasPreventTag) {
             return false;
         }
-        
+
         // Do not paywall if nothing is configured
         if (trim($plenigoTagDB) === '' && trim($plenigoCatTagDB) === '') {
             plenigo_log_message("NO TAGS CONFIGURED");
@@ -369,7 +369,7 @@ class PlenigoContentManager {
     /**
      * Check if the prevent tags is present, and returns the flag indicating it
      * 
-     * @return boolean
+     * @return boolean TRUE if the prevent tag is present and thus the curtain shouldn't
      */
     public function hasPreventTag() {
         if (isset($this->reqCache["hasPreventTag"])) {

@@ -94,8 +94,8 @@ A: Because we make Chuck Norris eat all his meal
 Coming soon
 
 == Changelog ==
-= 1.1.22 - New cool freebie tag! =
-- Feature: Now you can create and configura a tag to prevent the payment curtain to appear. This allows you to give freebies from your site even if they have the payment tags installed. I=Great for flash sales and special discounts.
+= 1.1.23 - New cool freebie tag! =
+- Feature: Now you can create and configure a tag to prevent the payment curtain to appear. This allows you to give freebies from your site even if they have the payment tags installed. I=Great for flash sales and special discounts.
 
 = 1.1.22 - Aesop and other plugin support =
 - Feature: Now supporting Aesop tags to be shown before showing the curtain
