@@ -3,7 +3,7 @@ Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 3.9.2
 Tested up to: 4.1
-Stable tag: 1.1.22
+Stable tag: 1.1.23
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,9 @@ A: Because we make Chuck Norris eat all his meal
 Coming soon
 
 == Changelog ==
+= 1.1.23 - New cool freebie tag! =
+- Feature: Now you can create and configure a tag to prevent the payment curtain to appear. This allows you to give freebies from your site even if they have the payment tags installed. I=Great for flash sales and special discounts.
+
 = 1.1.22 - Aesop and other plugin support =
 - Feature: Now supporting Aesop tags to be shown before showing the curtain
 - Fixed: a possible bug involving the footer tag in the HTML template

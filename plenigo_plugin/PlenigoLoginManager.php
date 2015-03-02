@@ -52,6 +52,11 @@ class PlenigoLoginManager
             add_action('wp_footer', array($this, 'store_url'));
         }
 
+        if (filter_input(INPUT_GET, 'error') !== null && filter_input(INPUT_GET, 'error') !== false &&
+            filter_input(INPUT_GET, 'error_description') !== null && filter_input(INPUT_GET, 'error_description') !== false) {
+            add_filter('login_message', array($this, 'login_error'));
+        }
+
         // Logout user if there is no plenigo user cookie
         PlenigoSDKManager::get()->getPlenigoSDK();
         $loggedIn = UserService::isLoggedIn();
@@ -219,6 +224,24 @@ class PlenigoLoginManager
 
         header("Location: " . $this->options['login_url']);
         exit;
+    }
+
+    /**
+     * Provides a custom message to the login screen if the server returned errors on login redirect
+     * 
+     * @param string $message An optional message that may came from other plugin or Wordpress
+     * @return string The final string HTML message
+     */
+    public function login_error($message)
+    {
+        $errorCode = filter_input(INPUT_GET, "error");
+        $errorMessage = filter_input(INPUT_GET, "error_description");
+        $finalMsg = sprintf("<div id='login_error'><strong>%s:</strong> %s</div>", $errorCode, $errorMessage);
+        if (empty($message)) {
+            return $finalMsg . "";
+        } else {
+            return $finalMsg . $message;
+        }
     }
 
     /**
