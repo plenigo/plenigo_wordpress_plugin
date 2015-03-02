@@ -135,8 +135,7 @@ class PlenigoContentManager {
      * This is only for testing purposes, the snipet here allows to change the
      * baseURL of the JS and PHP SDKs at the same time
      */
-    public function plenigo_js_snippet()
-    {
+    public function plenigo_js_snippet() {
         PlenigoSDKManager::get()->getPlenigoSDK();
         $isPaywalled = $this->plenigo_paywalled_content();
         /*
@@ -286,7 +285,7 @@ class PlenigoContentManager {
             $this->reqCache["listCatId"] = array();
         }
 
-        //Prevent tag takes presedence
+        //Prevent tag takes precedense
         $hasPreventTag = $this->hasPreventTag();
         if($hasPreventTag){
             return false;
