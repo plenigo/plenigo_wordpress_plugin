@@ -36,8 +36,6 @@ namespace plenigo_plugin;
  */
 class PlenigoContentManager {
 
-    private $plenigoSDK = null;
-
     /**
      * Holds the values to be used in the fields callbacks
      */
