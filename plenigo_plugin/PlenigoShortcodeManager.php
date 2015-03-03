@@ -14,8 +14,7 @@ namespace plenigo_plugin;
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class PlenigoShortcodeManager
-{
+class PlenigoShortcodeManager {
 
     const PLENIGO_SETTINGS_GROUP = 'plenigo';
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
@@ -29,8 +28,7 @@ class PlenigoShortcodeManager
     /**
      * Default constructor , called from the main php file
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
 
         //Adding the shortcodes
@@ -46,13 +44,20 @@ class PlenigoShortcodeManager
 
         // Enqueue TinyMCE CSS
         add_action('admin_enqueue_scripts', array($this, 'add_scripts'));
+        add_action('admin_init', array($this, 'plenigo_add_editor_styles'));
+    }
+
+    /**
+     * Adding the editor css style for the Plenigo custom tags
+     */
+    function plenigo_add_editor_styles() {
+        add_editor_style(plugins_url('plenigo_css/pl_tinymce.css', dirname(__FILE__)));
     }
 
     /**
      * Add Javascript/CSS imports
      */
-    public function add_scripts()
-    {
+    public function add_scripts() {
         wp_register_style('plenigo-tinymce-css', plugins_url('plenigo_css/pl_tinymce.css', dirname(__FILE__)));
         wp_enqueue_style('plenigo-tinymce-css');
     }
@@ -63,21 +68,20 @@ class PlenigoShortcodeManager
      * @param array $buttons The current list of buttons
      * @return array The new list of buttons
      */
-    function plenigo_register_buttons($buttons)
-    {
+    function plenigo_register_buttons($buttons) {
         // We are attempting to only allow the shortcode appearance to editors.
         if (\current_user_can('edit_posts') || \current_user_can('edit_pages')) {
             if (\get_user_option('rich_editing') == 'true') {
-                array_push($buttons, 'separator', 'plenigo', 'plenigo_renew');
+                array_push($buttons, 'separator', 'plenigo', 'plenigo_renew', 'plenigo_separator');
             }
         }
         return $buttons;
     }
 
-    function plenigo_register_tinymce_js($plugin_array)
-    {
+    function plenigo_register_tinymce_js($plugin_array) {
         $plugin_array['plenigo'] = plugins_url('../plenigo_js/tinymce-plenigo-plugin.js', __file__);
         $plugin_array['plenigo_renew'] = plugins_url('../plenigo_js/tinymce-plenigo_renew-plugin.js', __file__);
+        $plugin_array['plenigo_separator'] = plugins_url('../plenigo_js/tinymce-plenigo_separator-plugin.js', __file__);
         return $plugin_array;
     }
 
@@ -91,13 +95,12 @@ class PlenigoShortcodeManager
      * @param  string $tag     the shortcode tag, useful for shared callback functions
      * @return string the contents of the shortcode or a button to pay for it
      */
-    public function plenigo_handle_shortcode($atts, $content = null, $tag = null)
-    {
+    public function plenigo_handle_shortcode($atts, $content = null, $tag = null) {
         $a = shortcode_atts(array(
             'title' => "",
             'prod_id' => "",
             'class' => "",
-            ), $atts);
+                ), $atts);
 
         $btnTitle = $a['title'];
         $cssClass = $a['class'];
@@ -123,11 +126,11 @@ class PlenigoShortcodeManager
 
                 // creating a Plenigo-managed product
                 $product = new \plenigo\models\ProductBase($prodId);
-                
-                if($tag === 'pl_renew'){
-                    $product->setSubscriptionRenewal(true);                        
+
+                if ($tag === 'pl_renew') {
+                    $product->setSubscriptionRenewal(true);
                 }
-                
+
                 // getting the CSRF Token
                 $csrfToken = PlenigoSDKManager::get()->get_csrf_token();
                 try {
@@ -150,9 +153,9 @@ class PlenigoShortcodeManager
                 }
             }
             return '<input type="button" id="submit" '
-                . ' class="button button-primary ' . $cssClass . '" '
-                . ' value="' . $btnTitle . '" '
-                . ' onclick="' . $btnOnClick . '" />';
+                    . ' class="button button-primary ' . $cssClass . '" '
+                    . ' value="' . $btnTitle . '" '
+                    . ' onclick="' . $btnOnClick . '" />';
         }
     }
 
@@ -162,8 +165,7 @@ class PlenigoShortcodeManager
      * @param type $prodId
      * @return type
      */
-    private function getButtonTitle($prodId)
-    {
+    private function getButtonTitle($prodId) {
         // get product data
         $productData = \plenigo\services\ProductService::getProductData($prodId);
         $prodName = $productData->getTitle();
