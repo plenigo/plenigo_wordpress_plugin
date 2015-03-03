@@ -3,5 +3,17 @@
     Author     : Sebastian Dieguez <s.dieguez@plenigo.com>
 */
 .mce-i-pl-tinymce{
-	background-image: url('https://www.plenigo.com/assets/favicon.ico')  !important;
+    background-image: url('https://www.plenigo.com/assets/favicon.ico')  !important;
+}
+
+/* TinyMCE Editor specific styles */
+body#tinymce.wp-editor img.pl-separator {
+    content:url("https://www.plenigo.com/assets/favicon.ico");
+    padding: 4px 400px 4px 4px;
+    vertical-align:  middle;
+    text-align: left;
+    background-color: #eee;
+    -webkit-box-shadow: 5px 5px 2px 0px rgba(170,170,170,1);
+    -moz-box-shadow: 5px 5px 2px 0px rgba(170,170,170,1);
+    box-shadow: 5px 5px 2px 0px rgba(170,170,170,1);
 }
