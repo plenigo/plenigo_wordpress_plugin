@@ -95,10 +95,10 @@ Coming soon
 
 == Changelog ==
 = 1.1.24 - Teaser customization =
-- Feature: Now you can customize how many tags / shortcodes you want to show to the user before showing the curtain.
+- Feature: Now you can customize how much content you want to show before the curtain is displayed. This takes precedence over the More Tag and doesn't have its side effects.
 
 = 1.1.23 - New cool freebie tag! =
-- Feature: Now you can create and configure a tag to prevent the payment curtain to appear. This allows you to give freebies from your site even if they have the payment tags installed. I=Great for flash sales and special discounts.
+- Feature: Now you can create and configure a tag to prevent the payment curtain to appear. This allows you to give freebies from your site even if they have the payment tags installed. Great for giveaways and special discounts.
 
 = 1.1.22 - Aesop and other plugin support =
 - Feature: Now supporting Aesop tags to be shown before showing the curtain

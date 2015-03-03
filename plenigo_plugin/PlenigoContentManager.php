@@ -72,6 +72,7 @@ class PlenigoContentManager {
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
     const BOUGHT_STRING_FORMAT = "%s <p><p>Content bought with %s Thank you for your support";
     const MORE_SPLITTER = '<span id="more-';
+    const PLENIGO_SEPARATOR = '<!-- {{PLENIGO_SEPARATOR}} -->';
     const JS_BASE_URL = "https://www.plenigo.com";
     const JS_BASE_URL_NOAUTH = "https://www.plenigo.com";
     // Render types
@@ -601,24 +602,28 @@ class PlenigoContentManager {
      */
     private function get_teaser_from_content($content, $permisive = false) {
         $res = '';
-        $strBeforeMoreTag = array();
-
         $strBeforeMoreTag = stristr($content, self::MORE_SPLITTER, true);
-        if ($strBeforeMoreTag !== false) {
-            plenigo_log_message("MORE TAG FOUND");
-            $this->addDebugLine("Teaser source: MORE TAG");
-            $res = balanceTags($strBeforeMoreTag, true);
+        $strBeforeSeparatorTag = stristr($content, self::PLENIGO_SEPARATOR, true);
+        if ($strBeforeSeparatorTag !== false) {
+                plenigo_log_message("PLENIGO SEPARATOR FOUND");
+                $this->addDebugLine("Teaser source: PLENIGO SEPARATOR");
+                $res = balanceTags($strBeforeSeparatorTag, true);
         } else {
-            plenigo_log_message("MORE TAG NOT FOUND");
-            $this->addDebugLine("Teaser source: ENTIRE POST");
-            if ($permisive) {
-                $this->addDebugLine("Permisive Teaser: TRUE");
-                $res = balanceTags($content, true);
+            if ($strBeforeMoreTag !== false) {
+                plenigo_log_message("MORE TAG FOUND");
+                $this->addDebugLine("Teaser source: MORE TAG");
+                $res = balanceTags($strBeforeMoreTag, true);
             } else {
-                $res = $this->specialTeaserSupport($content);
+                plenigo_log_message("MORE TAG NOT FOUND");
+                $this->addDebugLine("Teaser source: ENTIRE POST");
+                if ($permisive) {
+                    $this->addDebugLine("Permisive Teaser: TRUE");
+                    $res = balanceTags($content, true);
+                } else {
+                    $res = $this->specialTeaserSupport($content);
+                }
             }
         }
-
         return $res;
     }
 
