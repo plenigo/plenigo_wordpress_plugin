@@ -21,18 +21,18 @@
 namespace plenigo_plugin\settings;
 
 /**
- * Setting class for use_login
+ * Setting class for noscript_enabled
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class SettingUseLogin extends PlenigoWPSetting {
+class SettingUseNoscript extends SettingUseLogin {
 
     //These should be overriden
-    const SECTION_ID = 'plenigo_login_section';
-    const SETTING_ID = 'use_login';
+    const SECTION_ID = 'plenigo_general';
+    const SETTING_ID = 'noscript_enabled';
 
     /**
      * @see PlenigoWPSetting::getSanitizedValue()
@@ -51,37 +51,32 @@ class SettingUseLogin extends PlenigoWPSetting {
         if (!is_null($current)) {
             return $current;
         }
-        return 0;
+        return 1;
     }
 
     /**
      * @see PlenigoWPSetting::getTitle()
      */
     public function getTitle() {
-        return __('Use OAuth Login', parent::PLENIGO_SETTINGS_GROUP);
+        return __('Notify non-JavaScript users', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
-     * @see PlenigoWPSetting::renderCallback()
+     * Returns the title of the ON option
+     * 
+     * @return string
      */
-    public function renderCallback() {
-        $currValue = $this->getDefaultValue($this->getStoredValue());
-        $useLoginValue = '';
-        $useNormalValue = '';
-        if (is_null($currValue) || ($currValue === 0 )) {
-            $useLoginValue = '';
-            $useNormalValue = ' checked';
-        } else {
-            $useLoginValue = ' checked';
-            $useNormalValue = '';
-        }
+    protected function getOnTitle() {
+        return __('Show the no-Javacript overlay', parent::PLENIGO_SETTINGS_GROUP);
+    }
 
-        echo '<input type="radio" id="' . static::SETTING_ID . '" name="' . self::PLENIGO_SETTINGS_NAME
-        . '[' . static::SETTING_ID . ']" value="1" ' . $useLoginValue . '><label for="' . static::SETTING_ID . '">'
-        . $this->getOnTitle() . '</label><br>'
-        . '<input type="radio" id="not_' . static::SETTING_ID . '" name="' . self::PLENIGO_SETTINGS_NAME
-        . '[' . static::SETTING_ID . ']" value="0" ' . $useNormalValue . '><label for="not_' . static::SETTING_ID . '">'
-        . $this->getOffTitle() . '</label>';
+    /**
+     * Returns the tiele of the OFF option
+     * 
+     * @return string
+     */
+    protected function getOffTitle() {
+        return __('Allow users to deactivate Javascript', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
@@ -93,24 +88,6 @@ class SettingUseLogin extends PlenigoWPSetting {
         } else {
             return false;
         }
-    }
-
-    /**
-     * Returns the title of the ON option
-     * 
-     * @return string
-     */
-    protected function getOnTitle() {
-        return __('Use plenigo Authentication Provider', parent::PLENIGO_SETTINGS_GROUP);
-    }
-
-    /**
-     * Returns the tiele of the OFF option
-     * 
-     * @return string
-     */
-    protected function getOffTitle() {
-        return __('Regular Wordpress login', parent::PLENIGO_SETTINGS_GROUP);
     }
 
 }
