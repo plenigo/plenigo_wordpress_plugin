@@ -72,7 +72,7 @@ class SettingCurtainButtonBuy extends PlenigoWPSetting
     public function renderCallback()
     {
         $currValue = $this->getDefaultValue($this->getStoredValue());
-        printf('<input type="text" id="' . static::SETTING_ID . '" name="' . self::PLENIGO_SETTINGS_NAME
+        printf('<input type="text" size="40" id="' . static::SETTING_ID . '" name="' . self::PLENIGO_SETTINGS_NAME
             . '[' . static::SETTING_ID . ']" value="%s" />', $currValue);
     }
 
