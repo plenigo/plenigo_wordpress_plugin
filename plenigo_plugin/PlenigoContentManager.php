@@ -163,7 +163,7 @@ class PlenigoContentManager {
         echo'<script type="application/javascript" '
         . 'src="' . self::JS_BASE_URL . '/static_resources/javascript/'
         . $this->options["company_id"] . '/plenigo_sdk.min.js" '
-        . $disableText . '>' . $strNoScript . '</script>';
+        . $disableText . '></script>' . $strNoScript;
 
         $this->printGoogleAnalytics();
 
@@ -941,11 +941,13 @@ class PlenigoContentManager {
      */
     public function replace_noscript_tags($htmlText) {
         $res = '';
-        if (isset($this->options['noscript_enable']) && $this->options['noscript_enable'] === 1) {
+        if (isset($this->options['noscript_enabled']) && $this->options['noscript_enabled'] === 1) {
             $strTitle = (isset($this->options['noscript_title'])) ? $this->options['noscript_title'] : __("You need JavaScript", self::PLENIGO_SETTINGS_GROUP);
-            $strMessage = (isset($this->options['noscript_message'])) ? $this->options['noscript_message'] : __("To view this page you need JavaScript enabled", self::PLENIGO_SETTINGS_GROUP);
-            $res = str_ireplace(self::REPLACE_NS_TITLE, $strTitle, $htmlText);
-            $res = str_ireplace(self::REPLACE_NS_MESSAGE, $strMessage, $res);
+            $strMessage = (isset($this->options['noscript_message'])) ? $this->options['noscript_message'] : __("In order to provide you with the best experience, "
+                            . "this site requires that you allow JavaScript to run. "
+                            . "Please correct that and try again", self::PLENIGO_SETTINGS_GROUP);
+            $res = str_ireplace(self::REPLACE_NS_TITLE, trim(wp_kses_post($strTitle)), $htmlText);
+            $res = str_ireplace(self::REPLACE_NS_MESSAGE, trim(wp_kses_post(wpautop($strMessage))), $res);
         }
         return $res;
     }

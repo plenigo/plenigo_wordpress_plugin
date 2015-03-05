@@ -20,31 +20,21 @@
 
 namespace plenigo_plugin\settings;
 
-require_once __DIR__ . '/SettingUseLogin.php';
+require_once __DIR__ . '/SettingCurtainButtonBuy.php';
 
 /**
- * Setting class for noscript_enabled
+ * Setting class for noscript_title
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class SettingUseNoscript extends SettingUseLogin {
+class SettingNoscriptTitle extends SettingCurtainButtonBuy {
 
     //These should be overriden
     const SECTION_ID = 'plenigo_general';
-    const SETTING_ID = 'noscript_enabled';
-
-    /**
-     * @see PlenigoWPSetting::getSanitizedValue()
-     */
-    protected function getSanitizedValue($value = null) {
-        if (is_null($value)) {
-            return $this->getDefaultValue();
-        }
-        return intval(trim($value));
-    }
+    const SETTING_ID = 'noscript_title';
 
     /**
      * @see PlenigoWPSetting::getDefaultValue()
@@ -53,43 +43,14 @@ class SettingUseNoscript extends SettingUseLogin {
         if (!is_null($current)) {
             return $current;
         }
-        return 1;
+        return __("You need JavaScript", parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
      * @see PlenigoWPSetting::getTitle()
      */
     public function getTitle() {
-        return __('Notify non-JavaScript users', parent::PLENIGO_SETTINGS_GROUP);
-    }
-
-    /**
-     * Returns the title of the ON option
-     * 
-     * @return string
-     */
-    protected function getOnTitle() {
-        return __('Show the no-Javacript overlay', parent::PLENIGO_SETTINGS_GROUP);
-    }
-
-    /**
-     * Returns the tiele of the OFF option
-     * 
-     * @return string
-     */
-    protected function getOffTitle() {
-        return __('Allow users to deactivate Javascript', parent::PLENIGO_SETTINGS_GROUP);
-    }
-
-    /**
-     * @see PlenigoWPSetting::getValidationForValue()
-     */
-    public function getValidationForValue($value = null) {
-        if (!is_null($value) && (intval(trim($value)) === 1 || intval(trim($value)) === 0)) {
-            return true;
-        } else {
-            return false;
-        }
+        return __('no-Javacript overlay Title', parent::PLENIGO_SETTINGS_GROUP);
     }
 
 }
