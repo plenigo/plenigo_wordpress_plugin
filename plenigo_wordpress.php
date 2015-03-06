@@ -4,14 +4,14 @@
   Plugin Name: Plenigo
   Plugin URI: http://wordpress.org/plugins/plenigo/
   Description: So far, the technical implementation of paid content has been time-consuming and costly for publishing houses and media companies. plenigo puts an end to this.
-  Version: 1.1.24
+  Version: 1.1.25
   Author: Plenigo
   Author URI: https://www.plenigo.com
   Text Domain: plenigo
   License: GPLv2
  */
 /*
-  Copyright (C) 2014 Plenigo
+  Copyright (C) 2014 plenigo
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License

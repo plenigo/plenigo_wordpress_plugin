@@ -20,27 +20,37 @@
 
 namespace plenigo_plugin\settings;
 
+require_once __DIR__ . '/SettingCurtainButtonBuy.php';
+
 /**
- * Setting class for curtain_title_members
+ * Setting class for noscript_title
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class SettingCurtainTitleMembers extends SettingCurtainTitle
-{
+class SettingNoscriptTitle extends SettingCurtainButtonBuy {
 
     //These should be overriden
-    const SECTION_ID = 'plenigo_curtain_section';
-    const SETTING_ID = 'curtain_title_members';
+    const SECTION_ID = 'plenigo_general';
+    const SETTING_ID = 'noscript_title';
+
+    /**
+     * @see PlenigoWPSetting::getDefaultValue()
+     */
+    public function getDefaultValue($current = null) {
+        if (!is_null($current)) {
+            return $current;
+        }
+        return __("You need JavaScript", parent::PLENIGO_SETTINGS_GROUP);
+    }
 
     /**
      * @see PlenigoWPSetting::getTitle()
      */
-    public function getTitle()
-    {
-        return __('Curtain Title (for members)', parent::PLENIGO_SETTINGS_GROUP);
+    public function getTitle() {
+        return __('no-Javacript overlay Title', parent::PLENIGO_SETTINGS_GROUP);
     }
 
 }

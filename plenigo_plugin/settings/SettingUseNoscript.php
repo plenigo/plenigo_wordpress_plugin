@@ -20,71 +20,76 @@
 
 namespace plenigo_plugin\settings;
 
+require_once __DIR__ . '/SettingUseLogin.php';
+
 /**
- * Setting class for curtain_buy
+ * Setting class for noscript_enabled
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class SettingCurtainButtonBuy extends PlenigoWPSetting
-{
+class SettingUseNoscript extends SettingUseLogin {
 
     //These should be overriden
-    const SECTION_ID = 'plenigo_curtain_section';
-    const SETTING_ID = 'curtain_buy';
+    const SECTION_ID = 'plenigo_general';
+    const SETTING_ID = 'noscript_enabled';
 
     /**
      * @see PlenigoWPSetting::getSanitizedValue()
      */
-    protected function getSanitizedValue($value = null)
-    {
-        $tempValue = trim($value);
-        if (is_null($value) && !empty($tempValue)) {
+    protected function getSanitizedValue($value = null) {
+        if (is_null($value)) {
             return $this->getDefaultValue();
         }
-        return trim(strip_tags($value));
+        return intval(trim($value));
     }
 
     /**
      * @see PlenigoWPSetting::getDefaultValue()
      */
-    public function getDefaultValue($current = null)
-    {
+    public function getDefaultValue($current = null) {
         if (!is_null($current)) {
             return $current;
         }
-        return __("Sign up", parent::PLENIGO_SETTINGS_GROUP);
+        return 1;
     }
 
     /**
      * @see PlenigoWPSetting::getTitle()
      */
-    public function getTitle()
-    {
-        return __('BUY Button Text', parent::PLENIGO_SETTINGS_GROUP);
+    public function getTitle() {
+        return __('Notify non-JavaScript users', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
-     * @see PlenigoWPSetting::renderCallback()
+     * Returns the title of the ON option
+     * 
+     * @return string
      */
-    public function renderCallback()
-    {
-        $currValue = $this->getDefaultValue($this->getStoredValue());
-        printf('<input type="text" size="40" id="' . static::SETTING_ID . '" name="' . self::PLENIGO_SETTINGS_NAME
-            . '[' . static::SETTING_ID . ']" value="%s" />', $currValue);
+    protected function getOnTitle() {
+        return __('Show the no-Javacript overlay', parent::PLENIGO_SETTINGS_GROUP);
+    }
+
+    /**
+     * Returns the title of the OFF option
+     * 
+     * @return string
+     */
+    protected function getOffTitle() {
+        return __('Allow users to deactivate Javascript', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
      * @see PlenigoWPSetting::getValidationForValue()
      */
-    public function getValidationForValue($value = null)
-    {
-        if (!is_null($value) && strlen(trim($value)) > 5) {
+    public function getValidationForValue($value = null) {
+        if (!is_null($value) && (intval(trim($value)) === 1 || intval(trim($value)) === 0)) {
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
 }

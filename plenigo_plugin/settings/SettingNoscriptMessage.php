@@ -20,57 +20,48 @@
 
 namespace plenigo_plugin\settings;
 
+require_once __DIR__ . '/SettingCurtainButtonBuy.php';
+
 /**
- * Setting class for login_url
+ * Setting class for noscript_message
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class SettingLoginURL extends SettingRedirectURL
-{
+class SettingNoscriptMessage extends SettingCurtainButtonBuy {
 
     //These should be overriden
-    const SECTION_ID = 'plenigo_login_section';
-    const SETTING_ID = 'login_url';
+    const SECTION_ID = 'plenigo_general';
+    const SETTING_ID = 'noscript_message';
 
     /**
      * @see PlenigoWPSetting::getDefaultValue()
      */
-    public function getDefaultValue($current = null)
-    {
+    public function getDefaultValue($current = null) {
         if (!is_null($current)) {
-            return esc_url($current);
+            return $current;
         }
-        return '';
+        return __("In order to provide you with the best experience, "
+                . "this site requires that you allow JavaScript to run. "
+                . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
      * @see PlenigoWPSetting::getTitle()
      */
-    public function getTitle()
-    {
-        return __('URL After Login', parent::PLENIGO_SETTINGS_GROUP);
-    }
-    
-    /**
-     * @see SettingRedirectURL::getHint()
-     */
-    protected function getHint()
-    {
-        return __('Leave empty for no redirection...', parent::PLENIGO_SETTINGS_GROUP);
+    public function getTitle() {
+        return __('no-Javacript overlay Message', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
-     * @see PlenigoWPSetting::getValidationForValue()
+     * @see PlenigoWPSetting::renderCallback()
      */
-    public function getValidationForValue($value = null)
-    {
-        if ((!is_null($value) && strlen(trim($value)) > 9) || $value === '') {
-            return true;
-        }
-        return false;
+    public function renderCallback() {
+        $currValue = $this->getDefaultValue($this->getStoredValue());
+        printf('<textarea cols="70" rows="5" id="%s" name="%s">%s</textarea>', static::SETTING_ID
+                , self::PLENIGO_SETTINGS_NAME . '[' . static::SETTING_ID . ']', $currValue);
     }
 
 }
