@@ -1,7 +1,7 @@
 <?php
 
 /*
-  Copyright (C) 2014 Plenigo
+  Copyright (C) 2014 plenigo
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License
@@ -25,6 +25,10 @@ require_once __DIR__ . '/settings/SettingTestMode.php';
 require_once __DIR__ . '/settings/SettingCompanyId.php';
 require_once __DIR__ . '/settings/SettingCompanySecret.php';
 require_once __DIR__ . '/settings/SettingCheckMetered.php';
+require_once __DIR__ . '/settings/SettingGACode.php';
+require_once __DIR__ . '/settings/SettingUseNoscript.php';
+require_once __DIR__ . '/settings/SettingNoscriptTitle.php';
+require_once __DIR__ . '/settings/SettingNoscriptMessage.php';
 require_once __DIR__ . '/settings/SettingUseLogin.php';
 require_once __DIR__ . '/settings/SettingUseWPLogin.php';
 require_once __DIR__ . '/settings/SettingOverrideProfiles.php';
@@ -35,7 +39,6 @@ require_once __DIR__ . '/settings/SettingCategoryTagDB.php';
 require_once __DIR__ . '/settings/SettingCurtainTitle.php';
 require_once __DIR__ . '/settings/SettingCurtainText.php';
 require_once __DIR__ . '/settings/SettingCurtainTitleMembers.php';
-require_once __DIR__ . '/settings/SettingGACode.php';
 require_once __DIR__ . '/settings/SettingCurtainTextMembers.php';
 require_once __DIR__ . '/settings/SettingCurtainMode.php';
 require_once __DIR__ . '/settings/SettingPreventTag.php';
@@ -56,8 +59,7 @@ require_once __DIR__ . '/settings/SettingCurtainButtonCustomURL.php';
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class PlenigoSettingsPage
-{
+class PlenigoSettingsPage {
 
     /**
      * Holds the values to be used in the fields callbacks
@@ -73,8 +75,7 @@ class PlenigoSettingsPage
     /**
      * Start up
      */
-    public function __construct()
-    {
+    public function __construct() {
         add_action('admin_menu', array($this, 'add_plugin_page'));
         add_action('admin_init', array($this, 'page_init'));
         add_action('admin_enqueue_scripts', array($this, 'add_scripts'));
@@ -86,6 +87,10 @@ class PlenigoSettingsPage
         array_push($this->settings, new \plenigo_plugin\settings\SettingCompanyId());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCompanySecret());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCheckMetered());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingGACode());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingUseNoscript());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingNoscriptTitle());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingNoscriptMessage());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseWPLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingOverrideProfiles());
@@ -103,44 +108,38 @@ class PlenigoSettingsPage
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCustom());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCustomURL());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingGACode());
     }
 
     /**
      * Add options page
      */
-    public function add_plugin_page()
-    {
+    public function add_plugin_page() {
         // This page will be under "Settings"
-        add_menu_page('Plenigo Options', 'Plenigo', 'manage_options', self::PLENIGO_SETTINGS_PAGE,
-            array($this, 'create_admin_page'), plugins_url('plenigo_img/favicon.ico', dirname(__FILE__)), 79);
+        add_menu_page('Plenigo Options', 'Plenigo', 'manage_options', self::PLENIGO_SETTINGS_PAGE, array($this, 'create_admin_page'), plugins_url('plenigo_img/favicon.ico', dirname(__FILE__)), 79);
     }
 
     /**
      * Add Javascript imports
      */
-    public function add_scripts()
-    {
+    public function add_scripts() {
         wp_enqueue_script('jquery-ui-autocomplete');
         wp_enqueue_script('jquery-ui-tabs');
         wp_enqueue_style("jquery-ui");
         wp_enqueue_style("jquery-ui-core");
         wp_enqueue_style("jquery-ui-tabs");
-        wp_enqueue_style("jquery-ui",
-            "//ajax.googleapis.com/ajax/libs/jqueryui/"
-            . "1.10.4"
-            . "/themes/smoothness/jquery-ui.min.css");
+        wp_enqueue_style("jquery-ui", "//ajax.googleapis.com/ajax/libs/jqueryui/"
+                . "1.10.4"
+                . "/themes/smoothness/jquery-ui.min.css");
     }
 
-    public function add_help_tab()
-    {
+    public function add_help_tab() {
         plenigo_log_message("CREATIGN HELP TAB");
         $screen = get_current_screen();
         $screen->add_help_tab(array(
             'id' => 'plenigo_help_tab',
             'title' => __('Plenigo Help', self::PLENIGO_SETTINGS_GROUP),
-            'content' => '<p>In order to configure the Plenigo Paywall, '
-            . 'first got to the Plenigo Website and register as a business. '
+            'content' => '<p>In order to configure the plenigo Paywall, '
+            . 'first got to the plenigo Website and register as a business. '
             . '</p>'
             . '<p>Obtain your <b>Company ID</b> and <b>Private Key</b>, we are almost there...'
             . '</p>'
@@ -148,38 +147,32 @@ class PlenigoSettingsPage
             . '/company/product/create">create one or more managed product</a> and copy the Product ID'
             . ', type the TAG, paste the product ID into the text field below and click ADD to append it to the tag list.'
             . '</p>'
-            ,
+                ,
         ));
         $screen->add_help_tab(array(
             'id' => 'plenigo_help_login',
-            'title' => __('Plenigo OAuth Help', self::PLENIGO_SETTINGS_GROUP),
-            'content' => '<p>' . __('In order to configure Plenigo OAuth Login: ', self::PLENIGO_SETTINGS_GROUP)
-            . __('1 - Add Login redirect URL to Plenigo (Usually: <b>{YOUR BLOG URL}/wp-login.php</b>) ',
-                self::PLENIGO_SETTINGS_GROUP)
-            . ' <a target="_blank" href="' . PlenigoContentManager::JS_BASE_URL_NOAUTH . '/company/account/urls/show">' . __('clicking this link',
-                self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
+            'title' => __('plenigo OAuth Help', self::PLENIGO_SETTINGS_GROUP),
+            'content' => '<p>' . __('In order to configure plenigo OAuth Login: ', self::PLENIGO_SETTINGS_GROUP)
+            . __('1 - Add Login redirect URL to plenigo (Usually: <b>{YOUR BLOG URL}/wp-login.php</b>) ', self::PLENIGO_SETTINGS_GROUP)
+            . ' <a target="_blank" href="' . PlenigoContentManager::JS_BASE_URL_NOAUTH . '/company/account/urls/show">' . __('clicking this link', self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
             . __('2 - Fill the same URL in the <b>OAuth redirect URL</b> below', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
-            . __('3 - (Optional) Fill the URL in the <b>URL After Login</b> for login redirection',
-                self::PLENIGO_SETTINGS_GROUP) . '<br/>'
-            . __('4 - Enable the Plenigo Login clicking <b>Use Plenigo Authentication Provider</b> ',
-                self::PLENIGO_SETTINGS_GROUP) . '<br/>'
-            . __('5 - Put the Plenigo Login Widget in a widget area of the site ', self::PLENIGO_SETTINGS_GROUP)
-            . ' <a target="_blank" href="' . admin_url('/widgets.php') . '">' . __('clicking this link',
-                self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
-            . __('6 - Enjoy Loggin in with Plenigo! ', self::PLENIGO_SETTINGS_GROUP)
+            . __('3 - (Optional) Fill the URL in the <b>URL After Login</b> for login redirection', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
+            . __('4 - Enable the plenigo Login clicking <b>Use plenigo Authentication Provider</b> ', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
+            . __('5 - Put the plenigo Login Widget in a widget area of the site ', self::PLENIGO_SETTINGS_GROUP)
+            . ' <a target="_blank" href="' . admin_url('/widgets.php') . '">' . __('clicking this link', self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
+            . __('6 - Enjoy Loggin in with plenigo! ', self::PLENIGO_SETTINGS_GROUP)
             . '</p>'
-            ,
+                ,
         ));
     }
 
     /**
      * Options page callback
      */
-    public function create_admin_page()
-    {
+    public function create_admin_page() {
         echo '<div class="wrap">';
         screen_icon();
-        echo '<h2>Plenigo integration</h2>';
+        echo '<h2>plenigo integration</h2>';
         settings_errors(self::PLENIGO_SETTINGS_PAGE);
 
         //Loading
@@ -226,56 +219,55 @@ class PlenigoSettingsPage
     /**
      * Register and add settings
      */
-    public function page_init()
-    {
+    public function page_init() {
         register_setting(
-            self::PLENIGO_SETTINGS_GROUP, // Option group
-            self::PLENIGO_SETTINGS_NAME, // Option name
-            array($this, 'sanitize') // Sanitize / Validate
+                self::PLENIGO_SETTINGS_GROUP, // Option group
+                self::PLENIGO_SETTINGS_NAME, // Option name
+                array($this, 'sanitize') // Sanitize / Validate
         );
 
         add_settings_section(
-            'plenigo_general', // ID
-            "", // Title
-            array($this, 'print_section_general'), // Callback
-            self::PLENIGO_SETTINGS_PAGE // Page
+                'plenigo_general', // ID
+                "", // Title
+                array($this, 'print_section_general'), // Callback
+                self::PLENIGO_SETTINGS_PAGE // Page
         );
 
         add_settings_section(
-            'plenigo_login_section', // ID
-            "", // Title
-            array($this, 'print_section_login'), // Callback
-            self::PLENIGO_SETTINGS_PAGE // Page
+                'plenigo_login_section', // ID
+                "", // Title
+                array($this, 'print_section_login'), // Callback
+                self::PLENIGO_SETTINGS_PAGE // Page
         );
 
         add_settings_section(
-            'plenigo_content_section', // ID
-            "", // Title
-            array($this, 'print_section_content'), // Callback
-            self::PLENIGO_SETTINGS_PAGE // Page
+                'plenigo_content_section', // ID
+                "", // Title
+                array($this, 'print_section_content'), // Callback
+                self::PLENIGO_SETTINGS_PAGE // Page
         );
 
         add_settings_section(
-            'plenigo_curtain_section', // ID
-            "", // Title
-            array($this, 'print_section_curtain'), // Callback
-            self::PLENIGO_SETTINGS_PAGE // Page
+                'plenigo_curtain_section', // ID
+                "", // Title
+                array($this, 'print_section_curtain'), // Callback
+                self::PLENIGO_SETTINGS_PAGE // Page
         );
 
         add_settings_section(
-            'plenigo_footer_section', // ID
-            "", // Title
-            array($this, 'print_section_footer'), // Callback
-            self::PLENIGO_SETTINGS_PAGE // Page
+                'plenigo_footer_section', // ID
+                "", // Title
+                array($this, 'print_section_footer'), // Callback
+                self::PLENIGO_SETTINGS_PAGE // Page
         );
 
         foreach ($this->settings as $setInstance) {
             add_settings_field(
-                $setInstance::SETTING_ID, // ID
-                $setInstance->getTitle(), // Title
-                array($setInstance, 'renderCallback'), // Callback
-                self::PLENIGO_SETTINGS_PAGE, // pAge
-                $setInstance::SECTION_ID // Section
+                    $setInstance::SETTING_ID, // ID
+                    $setInstance->getTitle(), // Title
+                    array($setInstance, 'renderCallback'), // Callback
+                    self::PLENIGO_SETTINGS_PAGE, // pAge
+                    $setInstance::SECTION_ID // Section
             );
         }
     }
@@ -285,8 +277,7 @@ class PlenigoSettingsPage
      *
      * @param array $input Contains all settings fields as array keys
      */
-    public function sanitize($input)
-    {
+    public function sanitize($input) {
         $message.= '';
         $type = 'updated';
         $new_input = array();
@@ -309,56 +300,51 @@ class PlenigoSettingsPage
     /**
      * Print the Section text
      */
-    public function print_section_general()
-    {
+    public function print_section_general() {
         print '<div role="tabpanel" class="tab-pane active" id="plenigo_general">'
-            . '<h3>' . __('General', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
-            . 'These are the basic settings for using plenigo Services. '
-            . 'It allow you to set your Company ID, your encryption secret code, '
-            . 'working in the test environment and also disabling '
-            . 'the entire plenigo functionality alltogether.';
+                . '<h3>' . __('General', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
+                . 'These are the basic settings for using plenigo Services. '
+                . 'It allows you to set your Company ID, your encryption secret code, '
+                . 'working in the test environment and also disabling '
+                . 'the entire plenigo functionality alltogether.';
     }
 
     /**
      * Print the Section text
      */
-    public function print_section_login()
-    {
+    public function print_section_login() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_login_section">'
-            . '<h3>' . __('OAuth Login', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
-            . "This section allows this Wordpress's users to login using plenigo authentication. "
-            . "The data will be stored in the Wordpress database. If you disable this, "
-            . "users may need to recover their passwords.";
+                . '<h3>' . __('OAuth Login', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
+                . "This section allows the Wordpress's users to login using plenigo authentication. "
+                . "The data will be stored in the Wordpress database. If you disable this, "
+                . "users may need to recover their passwords.";
     }
 
     /**
      * Print the Section text
      */
-    public function print_section_content()
-    {
+    public function print_section_content() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_content_section">'
-            . '<h3>' . __('Premium Content settings', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
-            . 'Here you configure how plenigo detects the content that is behind a Paywall. '
-            . 'Here you can set a TAG to use as &quot;Payable&quot; marker, and also you can configure the '
-            . 'plenigo managed product(s) that represents the paywall for that particular tag.';
+                . '<h3>' . __('Premium Content settings', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
+                . 'Here you configure how plenigo detects the content that is behind a Paywall. '
+                . 'Here you can set a TAG to use as &quot;Payable&quot; marker, and also you can configure the '
+                . 'plenigo managed product(s) that represents the paywall for that particular tag.';
     }
 
     /**
      * Print the Section text
      */
-    public function print_section_curtain()
-    {
+    public function print_section_curtain() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_curtain_section">'
-            . '<h3>' . __('Curtain Customization', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
-            . 'Here you can customize the curtain text and buttons. This is usefull to incentivize your customers to '
-            . 'buy your product or join your blog. Be creative and personalize the existing templates.';
+                . '<h3>' . __('Curtain Customization', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
+                . 'Here you can customize the curtain text and buttons. This is usefull to incentivize your customers to '
+                . 'buy your product or join your blog. Be creative and personalize the existing templates.';
     }
 
     /**
      * Print the Section text
      */
-    public function print_section_footer()
-    {
+    public function print_section_footer() {
         print '</div>';
     }
 
@@ -367,15 +353,12 @@ class PlenigoSettingsPage
      * 
      * @param array $inputOptions the options sanitized as it comes from the settings page
      */
-    private function plenigo_settings_validation($inputOptions)
-    {
+    private function plenigo_settings_validation($inputOptions) {
         foreach ($this->settings as $setInstance) {
             if (isset($inputOptions[$setInstance::SETTING_ID])) {
                 $resValid = $setInstance->getValidationForValue($inputOptions[$setInstance::SETTING_ID]);
                 if ($resValid === false) {
-                    add_settings_error(self::PLENIGO_SETTINGS_PAGE, "plenigo",
-                        sprintf(__('Validation failed: %s', self::PLENIGO_SETTINGS_GROUP), $setInstance->getTitle()),
-                        'error');
+                    add_settings_error(self::PLENIGO_SETTINGS_PAGE, "plenigo", sprintf(__('Validation failed: %s', self::PLENIGO_SETTINGS_GROUP), $setInstance->getTitle()), 'error');
                 }
             }
         }

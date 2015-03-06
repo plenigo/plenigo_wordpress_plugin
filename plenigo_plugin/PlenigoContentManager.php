@@ -1,7 +1,7 @@
 <?php
 
 /*
-  Copyright (C) 2014 Plenigo
+  Copyright (C) 2014 plenigo
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License
@@ -99,6 +99,9 @@ class PlenigoContentManager {
     //Google Analytics
     const REPLACE_GA_CODE = "<!--[PLENIGO_GA_CODE]-->";
     const REPLACE_GA_EVENTS = "<!--[PLENIGO_GA_EVENTS]-->";
+    //NoScript
+    const REPLACE_NS_TITLE = "<!--[NOSCRIPT_TITLE]-->";
+    const REPLACE_NS_MESSAGE = "<!--[NOSCRIPT_MESSAGE]-->";
     // Teaser smart detection
     const TEASER_SHORTCODES_CONTAINER = "aesop_content,pl_checkout,pl_checkout_button,pl_renew";
     const TEASER_SHORTCODES_SINGLE = "aesop_quote";
@@ -156,10 +159,11 @@ class PlenigoContentManager {
             $disableText = 'data-disable-metered="true"';
         }
 
+        $strNoScript = $this->getNoScriptTag();
         echo'<script type="application/javascript" '
         . 'src="' . self::JS_BASE_URL . '/static_resources/javascript/'
         . $this->options["company_id"] . '/plenigo_sdk.min.js" '
-        . $disableText . '></script>';
+        . $disableText . '></script>' . $strNoScript;
 
         $this->printGoogleAnalytics();
 
@@ -289,6 +293,7 @@ class PlenigoContentManager {
         //Prevent tag takes precedense
         $hasPreventTag = $this->hasPreventTag();
         if ($hasPreventTag) {
+            $this->addGAEvent("curtain|curtain-prevented");
             return false;
         }
 
@@ -304,10 +309,14 @@ class PlenigoContentManager {
             //Checking for Category IDs
             $hasAnyCatTag = $this->hasAnyCategoryTag();
             if ($hasAnyCatTag) {
+                $this->addGAEvent("curtain|category-matched");
                 return true;
             } else {
                 //Checking for Product IDs
                 $hasAnyProdTag = $this->hasAnyProductTag();
+                if ($hasAnyProdTag) {
+                    $this->addGAEvent("curtain|product-matched");
+                }
                 return $hasAnyProdTag;
             }
         }
@@ -361,7 +370,6 @@ class PlenigoContentManager {
         }
         if ($res === true) {
             $this->addDebugLine("Categories: " . var_export($this->reqCache["listCatId"], true));
-            $this->addGAEvent("curtain|category-matched");
         }
         $this->reqCache["hasAnyCategoryTag"] = $res;
         return $res;
@@ -389,7 +397,6 @@ class PlenigoContentManager {
 
         if ($res === true) {
             $this->addDebugLine("Curtain display prevented by Tag");
-            $this->addGAEvent("curtain|curtain-prevented");
         }
         $this->reqCache["hasPreventTag"] = $res;
         return $res;
@@ -439,7 +446,6 @@ class PlenigoContentManager {
         }
         if ($res === true) {
             $this->addDebugLine("Products: " . var_export($this->reqCache["listProdId"], true));
-            $this->addGAEvent("curtain|product-matched");
         }
         $this->reqCache["hasAnyProductTag"] = $res;
         return $res;
@@ -605,9 +611,9 @@ class PlenigoContentManager {
         $strBeforeMoreTag = stristr($content, self::MORE_SPLITTER, true);
         $strBeforeSeparatorTag = stristr($content, self::PLENIGO_SEPARATOR, true);
         if ($strBeforeSeparatorTag !== false) {
-                plenigo_log_message("PLENIGO SEPARATOR FOUND");
-                $this->addDebugLine("Teaser source: PLENIGO SEPARATOR");
-                $res = balanceTags($strBeforeSeparatorTag, true);
+            plenigo_log_message("PLENIGO SEPARATOR FOUND");
+            $this->addDebugLine("Teaser source: PLENIGO SEPARATOR");
+            $res = balanceTags($strBeforeSeparatorTag, true);
         } else {
             if ($strBeforeMoreTag !== false) {
                 plenigo_log_message("MORE TAG FOUND");
@@ -903,7 +909,7 @@ class PlenigoContentManager {
     /**
      * Outputs the Javascript representing the Google Analytics plugin and the event list for this page
      */
-    public function printGoogleAnalytics() {
+    private function printGoogleAnalytics() {
         $templateGAfile = $this->locate_plenigo_template("plenigo-ga-include.html");
         $strGAhtml = file_get_contents($templateGAfile);
         if ($strGAhtml !== FALSE) {
@@ -913,9 +919,38 @@ class PlenigoContentManager {
     }
 
     /**
+     * Returns the &lt;noscript&gt; tag found in the plugin or theme directory
      * 
-     * @param string $strGAhtml The HTML to be replaced
+     * @return string the HTML to render or empty if no template has been found
      */
+    private function getNoScriptTag() {
+        $templateNoScriptFile = $this->locate_plenigo_template("plenigo-noscript-msg.html");
+        $strNoScripthtml = file_get_contents($templateNoScriptFile);
+        if ($strNoScripthtml !== FALSE) {
+            $strNoScriptFinal = $this->replace_noscript_tags($strNoScripthtml);
+            return $strNoScriptFinal;
+        }
+        return "";
+    }
+
+    /**
+     * Replaces the template tags for the NOSCRIPT overlay
+     * 
+     * @param string $htmlText The template HTML text
+     * @return string The template HTML text with the replacement tags or empty if the NOSCRIPT functionality is disabled
+     */
+    public function replace_noscript_tags($htmlText) {
+        $res = '';
+        if (isset($this->options['noscript_enabled']) && $this->options['noscript_enabled'] === 1) {
+            $strTitle = (isset($this->options['noscript_title'])) ? $this->options['noscript_title'] : __("You need JavaScript", self::PLENIGO_SETTINGS_GROUP);
+            $strMessage = (isset($this->options['noscript_message'])) ? $this->options['noscript_message'] : __("In order to provide you with the best experience, "
+                            . "this site requires that you allow JavaScript to run. "
+                            . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
+            $res = str_ireplace(self::REPLACE_NS_TITLE, trim(wp_kses_post($strTitle)), $htmlText);
+            $res = str_ireplace(self::REPLACE_NS_MESSAGE, trim(wp_kses_post(wpautop($strMessage))), $res);
+        }
+        return $res;
+    }
 
     /**
      * Replaces the tags in the Google Analytics HTML with the actual values to configure GA

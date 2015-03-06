@@ -2,8 +2,8 @@
 Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 3.9.2
-Tested up to: 4.1
-Stable tag: 1.1.24
+Tested up to: 4.1.1
+Stable tag: 1.1.25
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,9 @@ A: Because we make Chuck Norris eat all his meal
 Coming soon
 
 == Changelog ==
+= 1.1.25 - no-Javascript overlay =
+- Feature: Plenigo works best with Javascript enable. Now we provide you a nice overlay you can customize (or event theme it yourself) to show your users that the best experience is with Javascript enabled. 
+
 = 1.1.24 - Teaser customization =
 - Feature: Now you can customize how much content you want to show before the curtain is displayed. This takes precedence over the More Tag and doesn't have its side effects.
 

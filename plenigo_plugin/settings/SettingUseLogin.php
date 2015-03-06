@@ -1,7 +1,7 @@
 <?php
 
 /*
-  Copyright (C) 2014 Plenigo
+  Copyright (C) 2014 plenigo
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License
@@ -28,8 +28,7 @@ namespace plenigo_plugin\settings;
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class SettingUseLogin extends PlenigoWPSetting
-{
+class SettingUseLogin extends PlenigoWPSetting {
 
     //These should be overriden
     const SECTION_ID = 'plenigo_login_section';
@@ -38,8 +37,7 @@ class SettingUseLogin extends PlenigoWPSetting
     /**
      * @see PlenigoWPSetting::getSanitizedValue()
      */
-    protected function getSanitizedValue($value = null)
-    {
+    protected function getSanitizedValue($value = null) {
         if (is_null($value)) {
             return $this->getDefaultValue();
         }
@@ -49,8 +47,7 @@ class SettingUseLogin extends PlenigoWPSetting
     /**
      * @see PlenigoWPSetting::getDefaultValue()
      */
-    public function getDefaultValue($current = null)
-    {
+    public function getDefaultValue($current = null) {
         if (!is_null($current)) {
             return $current;
         }
@@ -60,16 +57,14 @@ class SettingUseLogin extends PlenigoWPSetting
     /**
      * @see PlenigoWPSetting::getTitle()
      */
-    public function getTitle()
-    {
+    public function getTitle() {
         return __('Use OAuth Login', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
      * @see PlenigoWPSetting::renderCallback()
      */
-    public function renderCallback()
-    {
+    public function renderCallback() {
         $currValue = $this->getDefaultValue($this->getStoredValue());
         $useLoginValue = '';
         $useNormalValue = '';
@@ -81,24 +76,41 @@ class SettingUseLogin extends PlenigoWPSetting
             $useNormalValue = '';
         }
 
-        echo '<input type="radio" id="use_login" name="' . self::PLENIGO_SETTINGS_NAME
-        . '[use_login]" value="1" ' . $useLoginValue . '><label for="use_login">' . __('Use plenigo Authentication Provider',
-            parent::PLENIGO_SETTINGS_GROUP) . '</label><br>'
-        . '<input type="radio" id="not_use_login" name="' . self::PLENIGO_SETTINGS_NAME
-        . '[use_login]" value="0" ' . $useNormalValue . '><label for="not_use_login">' . __('Regular Wordpress login',
-            parent::PLENIGO_SETTINGS_GROUP) . '</label>';
+        echo '<input type="radio" id="' . static::SETTING_ID . '" name="' . self::PLENIGO_SETTINGS_NAME
+        . '[' . static::SETTING_ID . ']" value="1" ' . $useLoginValue . '><label for="' . static::SETTING_ID . '">'
+        . $this->getOnTitle() . '</label><br>'
+        . '<input type="radio" id="not_' . static::SETTING_ID . '" name="' . self::PLENIGO_SETTINGS_NAME
+        . '[' . static::SETTING_ID . ']" value="0" ' . $useNormalValue . '><label for="not_' . static::SETTING_ID . '">'
+        . $this->getOffTitle() . '</label>';
     }
 
     /**
      * @see PlenigoWPSetting::getValidationForValue()
      */
-    public function getValidationForValue($value = null)
-    {
+    public function getValidationForValue($value = null) {
         if (!is_null($value) && (intval(trim($value)) === 1 || intval(trim($value)) === 0)) {
             return true;
         } else {
             return false;
         }
+    }
+
+    /**
+     * Returns the title of the ON option
+     * 
+     * @return string
+     */
+    protected function getOnTitle() {
+        return __('Use plenigo Authentication Provider', parent::PLENIGO_SETTINGS_GROUP);
+    }
+
+    /**
+     * Returns the tiele of the OFF option
+     * 
+     * @return string
+     */
+    protected function getOffTitle() {
+        return __('Regular Wordpress login', parent::PLENIGO_SETTINGS_GROUP);
     }
 
 }
