@@ -1,7 +1,7 @@
 <?php
 
 /*
-  Copyright (C) 2014 Plenigo
+  Copyright (C) 2014 plenigo
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License
@@ -45,14 +45,14 @@ class SettingNoscriptMessage extends SettingCurtainButtonBuy {
         }
         return __("In order to provide you with the best experience, "
                 . "this site requires that you allow JavaScript to run. "
-                . "Please correct that and try again", self::PLENIGO_SETTINGS_GROUP);
+                . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
      * @see PlenigoWPSetting::getTitle()
      */
     public function getTitle() {
-        return __('no-Javacript overlay Mesage', parent::PLENIGO_SETTINGS_GROUP);
+        return __('no-Javacript overlay Message', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
 /*
-  Copyright (C) 2014 Plenigo
+  Copyright (C) 2014 plenigo
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License
@@ -138,8 +138,8 @@ class PlenigoSettingsPage {
         $screen->add_help_tab(array(
             'id' => 'plenigo_help_tab',
             'title' => __('Plenigo Help', self::PLENIGO_SETTINGS_GROUP),
-            'content' => '<p>In order to configure the Plenigo Paywall, '
-            . 'first got to the Plenigo Website and register as a business. '
+            'content' => '<p>In order to configure the plenigo Paywall, '
+            . 'first got to the plenigo Website and register as a business. '
             . '</p>'
             . '<p>Obtain your <b>Company ID</b> and <b>Private Key</b>, we are almost there...'
             . '</p>'
@@ -151,16 +151,16 @@ class PlenigoSettingsPage {
         ));
         $screen->add_help_tab(array(
             'id' => 'plenigo_help_login',
-            'title' => __('Plenigo OAuth Help', self::PLENIGO_SETTINGS_GROUP),
-            'content' => '<p>' . __('In order to configure Plenigo OAuth Login: ', self::PLENIGO_SETTINGS_GROUP)
-            . __('1 - Add Login redirect URL to Plenigo (Usually: <b>{YOUR BLOG URL}/wp-login.php</b>) ', self::PLENIGO_SETTINGS_GROUP)
+            'title' => __('plenigo OAuth Help', self::PLENIGO_SETTINGS_GROUP),
+            'content' => '<p>' . __('In order to configure plenigo OAuth Login: ', self::PLENIGO_SETTINGS_GROUP)
+            . __('1 - Add Login redirect URL to plenigo (Usually: <b>{YOUR BLOG URL}/wp-login.php</b>) ', self::PLENIGO_SETTINGS_GROUP)
             . ' <a target="_blank" href="' . PlenigoContentManager::JS_BASE_URL_NOAUTH . '/company/account/urls/show">' . __('clicking this link', self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
             . __('2 - Fill the same URL in the <b>OAuth redirect URL</b> below', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
             . __('3 - (Optional) Fill the URL in the <b>URL After Login</b> for login redirection', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
-            . __('4 - Enable the Plenigo Login clicking <b>Use Plenigo Authentication Provider</b> ', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
-            . __('5 - Put the Plenigo Login Widget in a widget area of the site ', self::PLENIGO_SETTINGS_GROUP)
+            . __('4 - Enable the plenigo Login clicking <b>Use plenigo Authentication Provider</b> ', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
+            . __('5 - Put the plenigo Login Widget in a widget area of the site ', self::PLENIGO_SETTINGS_GROUP)
             . ' <a target="_blank" href="' . admin_url('/widgets.php') . '">' . __('clicking this link', self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
-            . __('6 - Enjoy Loggin in with Plenigo! ', self::PLENIGO_SETTINGS_GROUP)
+            . __('6 - Enjoy Loggin in with plenigo! ', self::PLENIGO_SETTINGS_GROUP)
             . '</p>'
                 ,
         ));
@@ -172,7 +172,7 @@ class PlenigoSettingsPage {
     public function create_admin_page() {
         echo '<div class="wrap">';
         screen_icon();
-        echo '<h2>Plenigo integration</h2>';
+        echo '<h2>plenigo integration</h2>';
         settings_errors(self::PLENIGO_SETTINGS_PAGE);
 
         //Loading
@@ -304,7 +304,7 @@ class PlenigoSettingsPage {
         print '<div role="tabpanel" class="tab-pane active" id="plenigo_general">'
                 . '<h3>' . __('General', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
                 . 'These are the basic settings for using plenigo Services. '
-                . 'It allow you to set your Company ID, your encryption secret code, '
+                . 'It allows you to set your Company ID, your encryption secret code, '
                 . 'working in the test environment and also disabling '
                 . 'the entire plenigo functionality alltogether.';
     }
@@ -315,7 +315,7 @@ class PlenigoSettingsPage {
     public function print_section_login() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_login_section">'
                 . '<h3>' . __('OAuth Login', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
-                . "This section allows this Wordpress's users to login using plenigo authentication. "
+                . "This section allows the Wordpress's users to login using plenigo authentication. "
                 . "The data will be stored in the Wordpress database. If you disable this, "
                 . "users may need to recover their passwords.";
     }

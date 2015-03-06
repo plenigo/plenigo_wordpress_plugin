@@ -1,7 +1,7 @@
 <?php
 
 /*
-  Copyright (C) 2014 Plenigo
+  Copyright (C) 2014 plenigo
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License
@@ -921,7 +921,7 @@ class PlenigoContentManager {
     /**
      * Returns the &lt;noscript&gt; tag found in the plugin or theme directory
      * 
-     * @return string the HTML to render or empty if no teplate has been found
+     * @return string the HTML to render or empty if no template has been found
      */
     private function getNoScriptTag() {
         $templateNoScriptFile = $this->locate_plenigo_template("plenigo-noscript-msg.html");
@@ -945,7 +945,7 @@ class PlenigoContentManager {
             $strTitle = (isset($this->options['noscript_title'])) ? $this->options['noscript_title'] : __("You need JavaScript", self::PLENIGO_SETTINGS_GROUP);
             $strMessage = (isset($this->options['noscript_message'])) ? $this->options['noscript_message'] : __("In order to provide you with the best experience, "
                             . "this site requires that you allow JavaScript to run. "
-                            . "Please correct that and try again", self::PLENIGO_SETTINGS_GROUP);
+                            . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
             $res = str_ireplace(self::REPLACE_NS_TITLE, trim(wp_kses_post($strTitle)), $htmlText);
             $res = str_ireplace(self::REPLACE_NS_MESSAGE, trim(wp_kses_post(wpautop($strMessage))), $res);
         }

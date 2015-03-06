@@ -1,7 +1,7 @@
 <?php
 
 /*
-  Copyright (C) 2014 Plenigo
+  Copyright (C) 2014 plenigo
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License
@@ -73,7 +73,7 @@ class SettingUseNoscript extends SettingUseLogin {
     }
 
     /**
-     * Returns the tiele of the OFF option
+     * Returns the title of the OFF option
      * 
      * @return string
      */
