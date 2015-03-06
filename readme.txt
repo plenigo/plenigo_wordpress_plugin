@@ -95,7 +95,7 @@ Coming soon
 
 == Changelog ==
 = 1.1.25 - no-Javascript overlay =
-- Feature: Plenigo works best with Javascript enable. Now we provide you a nice overlay you can customize (or event theme it yourself) to show your users that the best experience is with Javascript enaled. 
+- Feature: Plenigo works best with Javascript enable. Now we provide you a nice overlay you can customize (or event theme it yourself) to show your users that the best experience is with Javascript enabled. 
 
 = 1.1.24 - Teaser customization =
 - Feature: Now you can customize how much content you want to show before the curtain is displayed. This takes precedence over the More Tag and doesn't have its side effects.
