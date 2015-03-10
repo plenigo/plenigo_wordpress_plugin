@@ -71,8 +71,6 @@ class PlenigoContentManager {
     const BOUGHT_STRING_FORMAT = "%s <p><p>Content bought with %s Thank you for your support";
     const MORE_SPLITTER = '<span id="more-';
     const PLENIGO_SEPARATOR = '<!-- {{PLENIGO_SEPARATOR}} -->';
-    const JS_BASE_URL = "https://www.plenigo.com";
-    const JS_BASE_URL_NOAUTH = "https://www.plenigo.com";
     // Render types
     const RENDER_FEED = 0;
     const RENDER_SINGLE = 1;
@@ -123,6 +121,20 @@ class PlenigoContentManager {
 
         add_action('wp_footer', array($this, 'plenigo_js_snippet'));
         add_action('wp_enqueue_scripts', array($this, 'add_scripts'));
+        add_action('wp_head', array($this, 'add_metatags'), 0);
+    }
+
+    /**
+     * Check if the curtain has to be rendered and injects a meta tag for search engine robots
+     * 
+     */
+    public function add_metatags() {
+        global $post;
+        $paywalled = $this->paywalled_check();
+        $rType = $this->get_render_type(is_feed());
+        if ($paywalled === true && $rType === self::RENDER_SINGLE) {
+            echo PHP_EOL . '<meta name="robots" content="NOARCHIVE" />' . PHP_EOL . PHP_EOL;
+        }
     }
 
     /**
@@ -143,7 +155,7 @@ class PlenigoContentManager {
         /*
           echo '<script type="application/javascript">'
           . 'var plenigo = plenigo || {};'
-          . 'plenigo.baseURI = "' . self::JS_BASE_URL_NOAUTH . '";</script>'; */
+          . 'plenigo.baseURI = "' . PLENIGO_SVC_URL . '";</script>'; */
 
         if ($isPaywalled == true && !isset($this->reqCache["listProdId"]) && !isset($this->reqCache["lastCatId"])) {
             plenigo_log_message("PRODUCT OR CATEGORY NOT FOUND!!!", E_USER_WARNING);
@@ -159,7 +171,7 @@ class PlenigoContentManager {
 
         $strNoScript = $this->getNoScriptTag();
         echo'<script type="application/javascript" '
-        . 'src="' . self::JS_BASE_URL . '/static_resources/javascript/'
+        . 'src="' . PLENIGO_JSSDK_URL . '/static_resources/javascript/'
         . $this->options["company_id"] . '/plenigo_sdk.min.js" '
         . $disableText . '></script>' . $strNoScript;
 
