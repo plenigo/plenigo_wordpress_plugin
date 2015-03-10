@@ -4,7 +4,7 @@
   Plugin Name: Plenigo
   Plugin URI: http://wordpress.org/plugins/plenigo/
   Description: So far, the technical implementation of paid content has been time-consuming and costly for publishing houses and media companies. plenigo puts an end to this.
-  Version: 1.1.25
+  Version: 1.1.26
   Author: Plenigo
   Author URI: https://www.plenigo.com
   Text Domain: plenigo
@@ -37,13 +37,16 @@ if (PLENIGO_DEBUG === true) {
     error_reporting(E_ALL | E_STRICT);
 }
 
+// Plenigo JavaScript SDK / Services
+define('PLENIGO_SVC_URL', "https://www.plenigo.com");
+define('PLENIGO_JSSDK_URL', "https://www.plenigo.com");
+
 // Plenigo PHP SDK
 require_once dirname(__FILE__) . '/plenigo_sdk/plenigo/Plenigo.php';
 require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoSDKManager.php';
 
 // Internationalization and upgrade
-add_action('plugins_loaded',
-    function() {
+add_action('plugins_loaded', function() {
     load_plugin_textdomain('plenigo', FALSE, basename(dirname(__FILE__)) . '/plenigo_i18n/');
     $upgraded = plenigo_plugin_upgrade();
     if ($upgraded) {
@@ -86,8 +89,7 @@ if (isset($plenigoOptions['use_login']) && ($plenigoOptions['use_login'] == 1 ))
  * 
  * @return boolean true if it was upgraded
  */
-function plenigo_plugin_upgrade()
-{
+function plenigo_plugin_upgrade() {
     $options = get_option('plenigo_settings');
     $res = false;
 
@@ -131,8 +133,7 @@ function plenigo_plugin_upgrade()
  * @param string $message
  * @param string $error_type
  */
-function plenigo_log_message($message, $error_type = E_USER_NOTICE)
-{
+function plenigo_log_message($message, $error_type = E_USER_NOTICE) {
     if (PLENIGO_DEBUG === true) {
         trigger_error($message, $error_type);
     }
