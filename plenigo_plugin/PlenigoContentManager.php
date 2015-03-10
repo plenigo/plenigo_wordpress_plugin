@@ -133,14 +133,9 @@ class PlenigoContentManager {
     public function add_metatags() {
         global $post;
         $paywalled = $this->paywalled_check();
-        $hasBought = $this->user_bought_content(is_feed());
         $rType = $this->get_render_type(is_feed());
-        $canEdit = current_user_can('edit_post', $post->ID);
-        if ($paywalled===true && $rType === self::RENDER_SINGLE) {
-
-            if (!$hasBought && !$canEdit) {
-                echo PHP_EOL . '<meta name="robots" content="NOARCHIVE" />' . PHP_EOL . PHP_EOL;
-            }
+        if ($paywalled === true && $rType === self::RENDER_SINGLE) {
+            echo PHP_EOL . '<meta name="robots" content="NOARCHIVE" />' . PHP_EOL . PHP_EOL;
         }
     }
 
