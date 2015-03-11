@@ -3,7 +3,7 @@ Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 3.9.2
 Tested up to: 4.1.1
-Stable tag: 1.1.26
+Stable tag: 1.1.27
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,9 @@ A: Because we make Chuck Norris eat all his meal
 Coming soon
 
 == Changelog ==
+= 1.1.27 - Hot fix release =
+- Fixed: Some interface breaking stuff, data is ok. Sorry about that!
+
 = 1.1.26 - Google bot magic =
 - Feature: Whenever the paywall is shown, tell Google bot not to store the page in its archive, nice one.
 
