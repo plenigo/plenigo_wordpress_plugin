@@ -94,7 +94,7 @@ A: Because we make Chuck Norris eat all his meal
 Coming soon
 
 == Changelog ==
-= 1.1.26 - Hot fix release =
+= 1.1.27 - Hot fix release =
 - Fixed: Some interface breaking stuff, data is ok. Sorry about that!
 
 = 1.1.26 - Google bot magic =
