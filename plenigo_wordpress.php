@@ -61,6 +61,9 @@ if (is_admin()) {
     $settingsPage = new \plenigo_plugin\PlenigoSettingsPage();
 }
 
+// URL Manager
+require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoURLManager.php';
+
 //ContentManager
 require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoContentManager.php';
 
