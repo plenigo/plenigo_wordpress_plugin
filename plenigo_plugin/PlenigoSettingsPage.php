@@ -143,7 +143,7 @@ class PlenigoSettingsPage {
             . '</p>'
             . '<p>Obtain your <b>Company ID</b> and <b>Private Key</b>, we are almost there...'
             . '</p>'
-            . '<p>Ok, last step, <a target="_blank" href="' . PlenigoContentManager::JS_BASE_URL_NOAUTH
+            . '<p>Ok, last step, <a target="_blank" href="' . PLENIGO_SVC_URL
             . '/company/product/create">create one or more managed product</a> and copy the Product ID'
             . ', type the TAG, paste the product ID into the text field below and click ADD to append it to the tag list.'
             . '</p>'
@@ -154,7 +154,7 @@ class PlenigoSettingsPage {
             'title' => __('plenigo OAuth Help', self::PLENIGO_SETTINGS_GROUP),
             'content' => '<p>' . __('In order to configure plenigo OAuth Login: ', self::PLENIGO_SETTINGS_GROUP)
             . __('1 - Add Login redirect URL to plenigo (Usually: <b>{YOUR BLOG URL}/wp-login.php</b>) ', self::PLENIGO_SETTINGS_GROUP)
-            . ' <a target="_blank" href="' . PlenigoContentManager::JS_BASE_URL_NOAUTH . '/company/account/urls/show">' . __('clicking this link', self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
+            . ' <a target="_blank" href="' . PLENIGO_SVC_URL . '/company/account/urls/show">' . __('clicking this link', self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
             . __('2 - Fill the same URL in the <b>OAuth redirect URL</b> below', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
             . __('3 - (Optional) Fill the URL in the <b>URL After Login</b> for login redirection', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
             . __('4 - Enable the plenigo Login clicking <b>Use plenigo Authentication Provider</b> ', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
