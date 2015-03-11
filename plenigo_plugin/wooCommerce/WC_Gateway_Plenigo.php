@@ -76,20 +76,20 @@ class WC_Gateway_Plenigo extends WC_Payment_Gateway {
         $order = new WC_Order($order_id);
 
         // Mark as on-hold (we're awaiting the payment)
-        $order->update_status('processing', __('Awaiting Plenigo payment', self::PLENIGO_SETTINGS_GROUP));
+        $order->update_status('on-hold', __('Awaiting Plenigo payment', self::PLENIGO_SETTINGS_GROUP));
 
         // Reduce stock levels
         // $order->reduce_order_stock();
         // Remove cart
         // $woocommerce->cart->empty_cart();
-        
+
         $checkout_url = \plenigo_plugin\PlenigoURLManager::get()->getSanitizedURL();
-        if(stristr($checkout_url, '?')===FALSE){
+        if (stristr($checkout_url, '?') === FALSE) {
             $checkout_url.='?';
-        }else{
+        } else {
             $checkout_url.='&';
         }
-        $checkout_url.='plenigoWooPay='.$order_id;
+        $checkout_url.='plenigoWooPay=' . $order_id;
 
         return array(
             'result' => 'success',
@@ -98,10 +98,18 @@ class WC_Gateway_Plenigo extends WC_Payment_Gateway {
     }
 
     /**
-     * 
+     * After the JavaScript SDk is loaded, if we have to process an order, let's enerate the checkout snippet and execute it...
      */
     public function plenigo_checkout_process() {
-        
+        global $woocommerce;
+        $checkout_param = filter_input(INPUT_GET, "plenigoWooPay");
+        if (!is_null($checkout_param) && $checkout_param !== FALSE) {
+            $order = new WC_Order($checkout_param);
+            // Mark as processing (checkout process)
+            $order->update_status('processing', __('Plenigo checkout stating', self::PLENIGO_SETTINGS_GROUP));
+            
+            //Let's create a unmanaged Plenigo Product for this order
+        }
     }
 
 }
