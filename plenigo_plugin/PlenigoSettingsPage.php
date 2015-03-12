@@ -278,7 +278,7 @@ class PlenigoSettingsPage {
      * @param array $input Contains all settings fields as array keys
      */
     public function sanitize($input) {
-        $message.= '';
+        $message = '';
         $type = 'updated';
         $new_input = array();
         if (!is_null($new_input)) {
