@@ -106,8 +106,8 @@ class SettingCategoryTagDB extends PlenigoWPSetting
      */
     public function getValidationForValue($value = null)
     {
-        if (is_null($value)) {
-            return false;
+        if (empty($value)) {
+            return true;
         }
         $booDBFormatError = false;
         if (stristr("\n", $value)) {
@@ -120,14 +120,14 @@ class SettingCategoryTagDB extends PlenigoWPSetting
         } else {
             foreach ($arrRows as $row) {
                 $arrRow = explode("->", $row);
-                if ($arrRow === false || count($arrRow) < 1) {
+                if ($arrRow === false || count($arrRow) < 2 || empty($arrRow[0]) || empty($arrRow[1])) {
                     $booDBFormatError = true;
                     break;
                 }
-                if (stristr(',', $arrRow)) {
-                    $arrCID = explode(",", $row);
-                    foreach ($arrCID as $cid) {
-                        if (empty($cid)) {
+                if (stristr(',', $arrRow[1])) {
+                    $arrPID = explode(",", $arrRow[1]);
+                    foreach ($arrPID as $pid) {
+                        if (empty($pid)) {
                             $booDBFormatError = true;
                             break;
                         }
