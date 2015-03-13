@@ -3,7 +3,7 @@ Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 3.9.2
 Tested up to: 4.1.1
-Stable tag: 1.1.27
+Stable tag: 1.1.28
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,6 +79,15 @@ Your customer is your customer. You have full access to all information we gathe
 * See, how your subscriptions, transactions, customer database etc. grows
 
 == Installation ==
+
+= Pre Requirements=
+
+* PHP version must be 5.3 or higher
+* PHP cURL
+* PHP mcrypt
+
+= Installation Steps =
+
 * Install the plugin
 * Enter plenigo's company id and secret
 * Select paywalled tag(s) and add a managed plenigo product id(s)
@@ -86,14 +95,43 @@ Your customer is your customer. You have full access to all information we gathe
 
 
 == Frequently Asked Questions ==
-Q: Why are you so awesome?
 
-A: Because we make Chuck Norris eat all his meal
+= Available Shortcodes =
+
+Creates a checkout button with optional title and optional css class.
+If the product is bought, the button won't e shown and the contents
+will be shown instead.
+Note: You can use shotcodes and all formating inside the button shortcode
+
+[pl_checkout prod_id="{{PRODUCT ID}}" title="{{BUTTON TITLE}}"
+class="{{CSS CLASS}}"]{{DISPLAY TEXT AFTER PURCHASE}}[/pl_checkout]
+
+Same as pl_checkout but it will show the checkout button even if the
+product is bought.
+
+[pl_checkout_button prod_id="{{PRODUCT ID}}" title="{{BUTTON TITLE}}"
+class="{{CSS CLASS}}"][/pl_checkout_button]
+
+Same as pl_checkout but it will set the "Subcription Renew" flag for
+this purchase.
+
+[pl_renew prod_id="{{PRODUCT ID}}" title="{{BUTTON TITLE}}"
+class="{{CSS CLASS}}"]{{DISPLAY TEXT AFTER PURCHASE}}[/pl_renew]
+
+This hidden HTML tag will let plenigo know where the plugin should trim
+the contents of the post and show the payment curtain. This allows to
+manually slice the post without interferring with the "More..."
+separator, native Wordpress tag.
+
+<!-- {{PLENIGO_SEPARATOR}} -->
 
 == Screenshots ==
 Coming soon
 
 == Changelog ==
+= 1.1.28 - Validation problems = 
+- Fixed: Validation errors in settings
+
 = 1.1.27 - Hot fix release =
 - Fixed: Some interface breaking stuff, data is ok. Sorry about that!
 
