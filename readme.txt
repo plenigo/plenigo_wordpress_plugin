@@ -80,7 +80,7 @@ Your customer is your customer. You have full access to all information we gathe
 
 == Installation ==
 
-= Pre Requirements=
+= Pre Requirements =
 
 * PHP version must be 5.3 or higher
 * PHP cURL

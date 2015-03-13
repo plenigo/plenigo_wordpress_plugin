@@ -157,7 +157,8 @@ class PlenigoContentManager {
         /*
           echo '<script type="application/javascript">'
           . 'var plenigo = plenigo || {};'
-          . 'plenigo.baseURI = "' . PLENIGO_SVC_URL . '";</script>'; */
+          . 'plenigo.baseURI = "' . PLENIGO_SVC_URL . '";';
+          . 'plenigo.baseStaticURI = "' . PLENIGO_SVC_URL . '";</script>'; */
 
         if ($isPaywalled == true && !isset($this->reqCache["listProdId"]) && !isset($this->reqCache["lastCatId"])) {
             plenigo_log_message("PRODUCT OR CATEGORY NOT FOUND!!!", E_USER_WARNING);
@@ -725,8 +726,8 @@ class PlenigoContentManager {
                     $btnOnClick = $checkoutBuilder->build($coSettings);
                 }
                 if (stristr($html, self::REPLACE_PRODUCT_NAME) !== false ||
-                        stristr($html, self::REPLACE_PRODUCT_PRICE) !== false ||
-                        stristr($html, self::REPLACE_PRODUCT_DETAILS) !== false) {
+                    stristr($html, self::REPLACE_PRODUCT_PRICE) !== false ||
+                    stristr($html, self::REPLACE_PRODUCT_DETAILS) !== false) {
                     // get product data
                     $productData = \plenigo\services\ProductService::getProductData($product->getId());
                 }
@@ -752,7 +753,7 @@ class PlenigoContentManager {
                 }
                 //If we should show Product details
                 $prodDetails = '<table class="plenigo-product"><tr><td><b>' . $prodName . '</b></td>'
-                        . '<td width="170" style="text-align: right;"><b>' . $prodPrice . '</b></td></tr></table>';
+                    . '<td width="170" style="text-align: right;"><b>' . $prodPrice . '</b></td></tr></table>';
             }
         }
 
@@ -956,8 +957,8 @@ class PlenigoContentManager {
         if (isset($this->options['noscript_enabled']) && $this->options['noscript_enabled'] === 1) {
             $strTitle = (isset($this->options['noscript_title'])) ? $this->options['noscript_title'] : __("You need JavaScript", self::PLENIGO_SETTINGS_GROUP);
             $strMessage = (isset($this->options['noscript_message'])) ? $this->options['noscript_message'] : __("In order to provide you with the best experience, "
-                            . "this site requires that you allow JavaScript to run. "
-                            . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
+                    . "this site requires that you allow JavaScript to run. "
+                    . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
             $res = str_ireplace(self::REPLACE_NS_TITLE, trim(wp_kses_post($strTitle)), $htmlText);
             $res = str_ireplace(self::REPLACE_NS_MESSAGE, trim(wp_kses_post(wpautop($strMessage))), $res);
         }
