@@ -67,7 +67,7 @@ class PlenigoWooCManager {
     }
 
     public function add_gateway_class($methods) {
-        $methods[] = 'WC_Gateway_Plenigo';
+        $methods[] = '\plenigo_plugin\wooCommerceWC_Gateway_Plenigo';
         return $methods;
     }
 

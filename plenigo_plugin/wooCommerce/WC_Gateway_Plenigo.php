@@ -28,7 +28,7 @@ namespace plenigo_plugin\wooCommerce;
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class WC_Gateway_Plenigo extends WC_Payment_Gateway {
+class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
 
     /**
      * Holds the values to be used in the fields callbacks
@@ -39,6 +39,13 @@ class WC_Gateway_Plenigo extends WC_Payment_Gateway {
     //Plenigo settings group
     const PLENIGO_SETTINGS_GROUP = 'plenigo';
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
+    //Order Title Replacements
+    const ORDER_SITE_TITLE = '%%SITE_TITLE%%';
+    const ORDER_ORDER_ID = '%%ORDER_ID%%';
+    const ORDER_ORDER_NO = '%%ORDER_NO%%';
+    const ORDER_PROD_NAMES = '%%PROD_NAMES%%';
+    const ORDER_PROD_IDS = '%%PROD_IDS%%';
+    const ORDER_PROD_SKUS = '%%PROD_SKUS%%';
 
     public function __construct() {
         //Plenigo Options
@@ -51,8 +58,10 @@ class WC_Gateway_Plenigo extends WC_Payment_Gateway {
         $this->id = 'plenigo_gateway';
         $this->icon = "https://www.plenigo.com/assets/favicon.ico";
         $this->has_fields = true;
-        $this->method_title = __('Payment with Plenigo', self::PLENIGO_SETTINGS_GROUP);
-        $this->method_description = __('WooCommerce', self::PLENIGO_SETTINGS_GROUP);
+        $this->enabled = true;
+        $this->title = __('Payment with plenigo', self::PLENIGO_SETTINGS_GROUP);
+        $this->description = __('WooCommerce', self::PLENIGO_SETTINGS_GROUP);
+        $this->order_button_text = __('Pay with plenigo', self::PLENIGO_SETTINGS_GROUP);
 
         // Initialize administration
         $this->init_form_fields();
@@ -107,9 +116,131 @@ class WC_Gateway_Plenigo extends WC_Payment_Gateway {
             $order = new WC_Order($checkout_param);
             // Mark as processing (checkout process)
             $order->update_status('processing', __('Plenigo checkout stating', self::PLENIGO_SETTINGS_GROUP));
-            
+
             //Let's create a unmanaged Plenigo Product for this order
+            $sdk = PlenigoSDKManager::get()->getPlenigoSDK();
+            if (!is_null($sdk) && ($sdk instanceof \plenigo\PlenigoManager)) {
+                if (!isset($this->options['use_login']) || ($this->options['use_login'] == 0 )) {
+                    $useOauthLogin = false;
+                } else {
+                    $useOauthLogin = true;
+                }
+                $csrfToken = PlenigoSDKManager::get()->get_csrf_token();
+                $product = $this->get_product_checkout($order);
+                // creating the checkout snippet for this product
+                $checkoutBuilder = new \plenigo\builders\CheckoutSnippetBuilder($product);
+
+                $coSettings = array('csrfToken' => $csrfToken);
+                if ($useOauthLogin) {
+                    // this url must be registered in plenigo
+                    $coSettings['oauth2RedirectUrl'] = $this->options['redirect_url'];
+                }
+
+                // checkout snippet
+                $checkoutSnippet = '';
+                try {
+                    $checkoutSnippet.= $checkoutBuilder->build($coSettings);
+                } catch (Exception $exc) {
+                    plenigo_log_message($exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING);
+                    error_log($exc->getMessage() . ': ' . $exc->getTraceAsString());
+                }
+                
+                echo '<script>'.$checkoutSnippet.'</script>';
+            }
         }
+    }
+
+    /**
+     * Creates a plenigo unmanaged product with the last Product ID as the order ID. 
+     * 
+     * @param \WooCommerce\Classes\WC_Order $order the order to create the Product from
+     * @return \plenigo\models\ProductBase The Plenigo Product Object
+     */
+    private function get_product_checkout($order = null) {
+        $res = null;
+
+        if (!is_null($order) && ($order instanceof \WooCommerce\Classes\WC_Order)) {
+            $prodID = $order->id;
+            $title = $this->get_order_title($order);
+            $total = $order->get_total();
+            $prodType = ($order->has_downloadable_item() === true) ? \plenigo\models\ProductBase::TYPE_DOWNLOAD : null;
+            $currency = $order->get_order_currency();
+
+            $res = new \plenigo\models\ProductBase($prodID, $title, $total, $currency);
+            if (!is_null($prodType)) {
+                $res->setType($prodType);
+            }
+        }
+        return $res;
+    }
+
+    /**
+     * 
+
+     */
+
+    /**
+     * 
+     * @param \WooCommerce\Classes\WC_Order $order the order to create the title
+     * @return string the generated Title
+     */
+    private function get_order_title($order) {
+        $blog_title = get_bloginfo('name');
+        $res = '(' . $blog_title . ') WooCommerce order ID:' . $order->id;
+        if (isset($this->options['woo_order_title']) && ($this->options['woo_order_title'] != '')) {
+            $format = trim($this->options['woo_order_title']);
+
+            if (stristr($format, '%%') !== FALSE) {
+                $rtags = array(
+                    self::ORDER_SITE_TITLE,
+                    self::ORDER_ORDER_ID,
+                    self::ORDER_ORDER_NO,
+                    self::ORDER_PROD_IDS,
+                    self::ORDER_PROD_NAMES,
+                    self::ORDER_PROD_SKUS);
+                $rvalues = array(
+                    $blog_title,
+                    $order->id,
+                    $order->get_order_number(),
+                    $this->get_product_list(0, $order),
+                    $this->get_product_list(1, $order),
+                    $this->get_product_list(2, $order));
+
+                $res = str_replace($rtags, $rvalues, $format);
+            }
+        }
+        return $res;
+    }
+
+    /**
+     * 
+     * @param int $field
+     * @param \WooCommerce\Classes\WC_Order $order the order to create the title
+     * @return string the generated List
+     */
+    public function get_product_list($field, $order) {
+        $res = '';
+        $items = $order->get_items();
+        foreach ($items as $curr_item) {
+            $curr_prod = $order->get_product_from_item($items);
+            if (!is_null($curr_prod)) {
+                if ($res != '') {
+                    $res.=',';
+                }
+                switch ($field) {
+                    case 1:
+                        $res.=$curr_prod->get_title();
+                        break;
+                    case 2:
+                        $res.=$curr_prod->get_sku();
+                        break;
+                    default:
+                        $res.=$curr_prod->id;
+                        break;
+                }
+            }
+        }
+        return $res;
     }
 
 }

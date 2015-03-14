@@ -852,7 +852,7 @@ class PlenigoContentManager {
      * @global WP_Post $post The Wordpress Post Object
      * @return \plenigo\models\ProductBase The Plenigo Product Object
      */
-    public function get_product_checkout() {
+    private function get_product_checkout() {
         global $post;
         $prodID = null;
         $title = null;
