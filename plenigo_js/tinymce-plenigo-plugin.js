@@ -3,7 +3,7 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
     // Add a button that opens a setup window and configures the checkout button
     editor.addButton('plenigo', {
         text: '',
-        icon: 'pl-tinymce',
+        icon: 'pl-checkout',
         onclick: function () {
             // Open setup window
             editor.windowManager.open({
