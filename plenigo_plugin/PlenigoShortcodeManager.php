@@ -100,7 +100,7 @@ class PlenigoShortcodeManager {
             'title' => "",
             'prod_id' => "",
             'class' => "",
-                ), $atts);
+            ), $atts);
 
         $btnTitle = $a['title'];
         $cssClass = $a['class'];
@@ -153,26 +153,33 @@ class PlenigoShortcodeManager {
                 }
             }
             return '<input type="button" id="submit" '
-                    . ' class="button button-primary ' . $cssClass . '" '
-                    . ' value="' . $btnTitle . '" '
-                    . ' onclick="' . $btnOnClick . '" />';
+                . ' class="button button-primary ' . $cssClass . '" '
+                . ' value="' . $btnTitle . '" '
+                . ' onclick="' . $btnOnClick . '" />';
         }
     }
 
     /**
      * Fancy method to get the Button Title from the Product with a backend call to obtain the managed product's information
      * 
-     * @param type $prodId
-     * @return type
+     * @param string $prodId
+     * @return string
      */
     private function getButtonTitle($prodId) {
+        $prodName = 'Unknown Product';
+        $prodPrice = '??.??';
         // get product data
-        $productData = \plenigo\services\ProductService::getProductData($prodId);
-        $prodName = $productData->getTitle();
-        if ($productData->isPriceChosen()) {
-            $prodPrice = __('Choose payment!', self::PLENIGO_SETTINGS_GROUP);
-        } else {
-            $prodPrice = $productData->getCurrency() . ' ' . sprintf("%06.2f", $productData->getPrice());
+        try {
+            $productData = \plenigo\services\ProductService::getProductData($prodId);
+            $prodName = $productData->getTitle();
+            if ($productData->isPriceChosen()) {
+                $prodPrice = __('Choose payment!', self::PLENIGO_SETTINGS_GROUP);
+            } else {
+                $prodPrice = $productData->getCurrency() . ' ' . sprintf("%06.2f", $productData->getPrice());
+            }
+        } catch (\Exception $exc) {
+            plenigo_log_message($exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING);
+            error_log($exc->getMessage() . ': ' . $exc->getTraceAsString());
         }
         return $prodName . " (" . $prodPrice . ")";
     }

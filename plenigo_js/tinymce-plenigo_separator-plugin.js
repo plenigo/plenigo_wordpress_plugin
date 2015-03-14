@@ -7,8 +7,8 @@ tinymce.PluginManager.add('plenigo_separator', function (editor, url) {
 
     // Add a button that opens a setup window and configures the checkout button
     editor.addButton('plenigo_separator', {
-        text: '-P---',
-        icon: '',
+        text: '',
+        icon: 'pl-splitter',
         onclick: function () {
             // show alert
             editor.windowManager.alert('This will split the teaser from the paywalled content!');
