@@ -3,21 +3,21 @@
     Author     : Sebastian Dieguez <s.dieguez@plenigo.com>
 */
 .mce-i-pl-checkout {
-    background-image: url('https://www.plenigo.com/static_resources/images/icon-checkout-cart-transp.png')  !important;
+    background-image: url('https://static.plenigo.com/static_resources/images/icon-checkout-cart-transp.png')  !important;
 }
 .mce-i-pl-checkout:hover {
-    background-image: url('https://www.plenigo.com/static_resources/images/icon-checkout-cart.png')  !important;
+    background-image: url('https://static.plenigo.com/static_resources/images/icon-checkout-cart.png')  !important;
 }
 
 .mce-i-pl-renew {
-    background-image: url('https://www.plenigo.com/static_resources/images/icon-recycle-transp.png')  !important;
+    background-image: url('https://static.plenigo.com/static_resources/images/icon-recycle-transp.png')  !important;
 }
 .mce-i-pl-renew:hover {
-    background-image: url('https://www.plenigo.com/static_resources/images/icon-recycle.png')  !important;
+    background-image: url('https://static.plenigo.com/static_resources/images/icon-recycle.png')  !important;
 }
 
 .mce-i-pl-splitter {
-    background-image: url('https://www.plenigo.com/static_resources/images/icon-seperator-vertical-16x16.png')  !important;
+    background-image: url('https://static.plenigo.com/static_resources/images/icon-seperator-vertical-16x16.png')  !important;
 }
 
 /* TinyMCE Editor specific styles */
