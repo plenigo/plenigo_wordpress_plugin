@@ -3,7 +3,7 @@ Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 4.0.0
 Tested up to: 4.1.1
-Stable tag: 1.1.29
+Stable tag: 1.1.30
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -129,6 +129,10 @@ separator, native Wordpress tag.
 Coming soon
 
 == Changelog ==
+= 1.1.30 - WooCommerce support, w00t!! = 
+- Feature: If you have WooCommerce, you can enable the Plenigo Payment Gateway just like that!
+- Feature: You can even customize the text that will appear in the customer's bill. With replacement tags!
+
 = 1.1.29 - Fixes and Improvements = 
 - Fixed: Some warnings that were resulting fatal to som of our customers
 - Fixed: Some error catching realted issues
