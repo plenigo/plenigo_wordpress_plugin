@@ -14,8 +14,7 @@ namespace plenigo_plugin;
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class PlenigoSDKManager
-{
+class PlenigoSDKManager {
 
     const PLENIGO_SETTINGS_GROUP = 'plenigo';
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
@@ -45,8 +44,7 @@ class PlenigoSDKManager
     /**
      * Default constructor , called from the main php file
      */
-    private function __construct()
-    {
+    private function __construct() {
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
     }
 
@@ -55,8 +53,7 @@ class PlenigoSDKManager
      * 
      * @return PlenigoSDKManager The SDK Manager
      */
-    public static function get()
-    {
+    public static function get() {
         if (self::$instance === null) {
             self::$instance = new PlenigoSDKManager();
         }
@@ -69,8 +66,7 @@ class PlenigoSDKManager
      * 
      * @return \plenigo\PlenigoManager the new or reused instance of the PlenigoManager
      */
-    public function getPlenigoSDK()
-    {
+    public function getPlenigoSDK() {
         if (is_null($this->plenigoSDK)) {
             $testValue = false;
             if (!isset($this->options['test_mode']) || ($this->options['test_mode'] == 1 )) {
@@ -78,7 +74,7 @@ class PlenigoSDKManager
             }
             $this->plenigoSDK = \plenigo\PlenigoManager::configure(
                     $this->options["company_secret"], $this->options["company_id"], $testValue
-                    , PLENIGO_JSSDK_URL
+                    , PLENIGO_SVC_URL
             );
         }
         $this->plenigoSDK->setDebug((PLENIGO_DEBUG === true));
@@ -90,8 +86,7 @@ class PlenigoSDKManager
      * 
      * @return string the CSRF token generated or otherwise cached in user session
      */
-    public function get_csrf_token()
-    {
+    public function get_csrf_token() {
         $this->start_session();
 
         if (isset($_SESSION['plenigo_csrf'])) {
@@ -109,8 +104,7 @@ class PlenigoSDKManager
      * @param  string  $products the product Id string or an Array of Product Ids
      * @return boolean true if the user has bought the product
      */
-    public function plenigo_bought($products = null)
-    {
+    public function plenigo_bought($products = null) {
         if (is_null($products)) {
             return false;
         }
@@ -153,14 +147,13 @@ class PlenigoSDKManager
 
         return $result;
     }
-    
+
     /**
      * Checks if the user has free views in a metered environment
      *
      * @return boolean true if the user has metered views left
      */
-    public function plenigo_has_free_views()
-    {
+    public function plenigo_has_free_views() {
         // cached
         if (isset($this->reqCache['freeViews'])) {
             plenigo_log_message("frreViews cached: " . ($this->reqCache['freeViews'] ? 'true' : 'false'));
@@ -190,8 +183,7 @@ class PlenigoSDKManager
      *
      * @return boolean TRUE if the Paywall is enabled from the server side, false if not
      */
-    public function isPayWallEnabled()
-    {
+    public function isPayWallEnabled() {
         // cached
         if (isset($this->reqCache['payWallEnabled'])) {
             return $this->reqCache['payWallEnabled'];
@@ -212,12 +204,11 @@ class PlenigoSDKManager
 
         return $result;
     }
-    
+
     /**
      * Checks if a session is already started (with PHP compatibility) and starts it if there isnt one
      */
-    private function start_session()
-    {
+    private function start_session() {
         $res = false;
         if (php_sapi_name() !== 'cli') {
             if (version_compare(phpversion(), '5.4.0', '>=')) {
@@ -226,7 +217,7 @@ class PlenigoSDKManager
                 $res = session_id() === '' ? FALSE : TRUE;
             }
         }
-        if ($res === FALSE) {
+        if ($res === FALSE && !headers_sent()) {
             session_start();
         }
     }
