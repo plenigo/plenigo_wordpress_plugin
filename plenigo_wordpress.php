@@ -39,7 +39,7 @@ if (PLENIGO_DEBUG === true) {
 
 // Plenigo JavaScript SDK / Services
 define('PLENIGO_SVC_URL', "https://www.plenigo.com");
-define('PLENIGO_JSSDK_URL', "https://www.plenigo.com");
+define('PLENIGO_JSSDK_URL', "https://static.plenigo.com");
 
 // Plenigo PHP SDK
 require_once dirname(__FILE__) . '/plenigo_sdk/plenigo/Plenigo.php';

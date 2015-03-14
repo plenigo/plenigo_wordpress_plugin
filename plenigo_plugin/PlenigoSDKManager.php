@@ -74,7 +74,7 @@ class PlenigoSDKManager {
             }
             $this->plenigoSDK = \plenigo\PlenigoManager::configure(
                     $this->options["company_secret"], $this->options["company_id"], $testValue
-                    , PLENIGO_JSSDK_URL
+                    , PLENIGO_SVC_URL
             );
         }
         $this->plenigoSDK->setDebug((PLENIGO_DEBUG === true));
