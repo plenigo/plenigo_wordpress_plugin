@@ -129,10 +129,6 @@ separator, native Wordpress tag.
 Coming soon
 
 == Changelog ==
-= 1.1.30 - Coming soon! WooCommerce support, w00t!! = 
-- Feature: If you have WooCommerce, you can enable the Plenigo Payment Gateway just like that!
-- Feature: You can even customize the text that will appear in the customer's bill. With replacement tags!
-
 = 1.1.29 - Fixes and Improvements = 
 - Improved: a better CDN with less tracking cookies, nice!
 - Feature: Now you can customize a URL toexplain about metered views

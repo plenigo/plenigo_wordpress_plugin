@@ -38,8 +38,8 @@ if (PLENIGO_DEBUG === true) {
 }
 
 // Plenigo JavaScript SDK / Services
-define('PLENIGO_SVC_URL', "https://plenigo:Testb4Integration@test-system.s-develop.com");
-define('PLENIGO_JSSDK_URL', "https://test-system.s-develop.com");
+define('PLENIGO_SVC_URL', "https://www.plenigo.com");
+define('PLENIGO_JSSDK_URL', "https://static.plenigo.com");
 
 // Plenigo PHP SDK
 require_once dirname(__FILE__) . '/plenigo_sdk/plenigo/Plenigo.php';
@@ -89,11 +89,12 @@ if (isset($plenigoOptions['use_login']) && ($plenigoOptions['use_login'] == 1 ))
 }
 
 //WooCommerce
-if (isset($plenigoOptions['use_woo']) && ($plenigoOptions['use_woo'] == 1 )) {
+/*if (isset($plenigoOptions['use_woo']) && ($plenigoOptions['use_woo'] == 1 )) {
     require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoWooCManager.php';
 
     $wooCommerceManager = new \plenigo_plugin\PlenigoWooCManager();
 }
+ */
 
 /**
  * Upgrades settings from older versions to current
