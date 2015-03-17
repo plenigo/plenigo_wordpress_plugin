@@ -25,10 +25,11 @@ require_once __DIR__ . '/settings/SettingTestMode.php';
 require_once __DIR__ . '/settings/SettingCompanyId.php';
 require_once __DIR__ . '/settings/SettingCompanySecret.php';
 require_once __DIR__ . '/settings/SettingCheckMetered.php';
-require_once __DIR__ . '/settings/SettingGACode.php';
+require_once __DIR__ . '/settings/SettingMeteredURL.php';
 require_once __DIR__ . '/settings/SettingUseNoscript.php';
 require_once __DIR__ . '/settings/SettingNoscriptTitle.php';
 require_once __DIR__ . '/settings/SettingNoscriptMessage.php';
+require_once __DIR__ . '/settings/SettingGACode.php';
 require_once __DIR__ . '/settings/SettingUseLogin.php';
 require_once __DIR__ . '/settings/SettingUseWPLogin.php';
 require_once __DIR__ . '/settings/SettingOverrideProfiles.php';
@@ -46,8 +47,8 @@ require_once __DIR__ . '/settings/SettingCurtainButtonBuy.php';
 require_once __DIR__ . '/settings/SettingCurtainButtonLogin.php';
 require_once __DIR__ . '/settings/SettingCurtainButtonCustom.php';
 require_once __DIR__ . '/settings/SettingCurtainButtonCustomURL.php';
-require_once __DIR__ . '/settings/SettingUseWoo.php';
-require_once __DIR__ . '/settings/SettingWooOrderTitle.php';
+//require_once __DIR__ . '/settings/SettingUseWoo.php';
+//require_once __DIR__ . '/settings/SettingWooOrderTitle.php';
 
 /**
  * PlenigoSettingsPage
@@ -89,10 +90,11 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingCompanyId());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCompanySecret());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCheckMetered());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingGACode());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingMeteredURL());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseNoscript());
         array_push($this->settings, new \plenigo_plugin\settings\SettingNoscriptTitle());
         array_push($this->settings, new \plenigo_plugin\settings\SettingNoscriptMessage());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingGACode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseWPLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingOverrideProfiles());
@@ -110,8 +112,8 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCustom());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCustomURL());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingUseWoo());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingWooOrderTitle());
+        //array_push($this->settings, new \plenigo_plugin\settings\SettingUseWoo());
+        //array_push($this->settings, new \plenigo_plugin\settings\SettingWooOrderTitle());
     }
 
     /**

@@ -4,7 +4,7 @@
   Plugin Name: Plenigo
   Plugin URI: http://wordpress.org/plugins/plenigo/
   Description: So far, the technical implementation of paid content has been time-consuming and costly for publishing houses and media companies. plenigo puts an end to this.
-  Version: 1.1.30
+  Version: 1.1.29
   Author: Plenigo
   Author URI: https://www.plenigo.com
   Text Domain: plenigo
@@ -38,8 +38,8 @@ if (PLENIGO_DEBUG === true) {
 }
 
 // Plenigo JavaScript SDK / Services
-define('PLENIGO_SVC_URL', "https://www.plenigo.com");
-define('PLENIGO_JSSDK_URL', "https://static.plenigo.com");
+define('PLENIGO_SVC_URL', "https://plenigo:Testb4Integration@test-system.s-develop.com");
+define('PLENIGO_JSSDK_URL', "https://test-system.s-develop.com");
 
 // Plenigo PHP SDK
 require_once dirname(__FILE__) . '/plenigo_sdk/plenigo/Plenigo.php';
