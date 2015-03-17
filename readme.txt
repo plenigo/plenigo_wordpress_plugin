@@ -130,9 +130,10 @@ Coming soon
 
 == Changelog ==
 = 1.1.29 - Fixes and Improvements = 
+- Improved: a better CDN with less tracking cookies, nice!
+- Feature: Now you can customize a URL toexplain about metered views
 - Fixed: Some warnings that were resulting fatal to som of our customers
 - Fixed: Some error catching realted issues
-- Improved: a better CDN with less tracking cookies, nice!
 
 = 1.1.28 - Validation problems = 
 - Fixed: Validation errors in settings

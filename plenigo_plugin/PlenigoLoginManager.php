@@ -19,17 +19,11 @@ use plenigo\services\UserService;
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class PlenigoLoginManager
-{
+class PlenigoLoginManager {
 
     const PLENIGO_SETTINGS_GROUP = 'plenigo';
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
     const PLENIGO_META_NAME = 'plenigo_uid';
-
-    /**
-     * Holds the list of forbidden URL query parameters
-     */
-    const FORBIDDEN_PARAMS = "plppsuccess,plppfailure,token,PayerID,plsofortsuccess,plsofortfailure,plpfsuccess,plpffailure";
 
     /**
      * Holds the values to be used in the fields callbacks
@@ -40,8 +34,7 @@ class PlenigoLoginManager
     /**
      * Default constructor , called from the main php file
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
         //If this pageload isn't supposed to be handing a login, just stop here.
         if (filter_input(INPUT_GET, 'code') !== null && filter_input(INPUT_GET, 'code') !== false) {
@@ -53,7 +46,7 @@ class PlenigoLoginManager
         }
 
         if (filter_input(INPUT_GET, 'error') !== null && filter_input(INPUT_GET, 'error') !== false &&
-            filter_input(INPUT_GET, 'error_description') !== null && filter_input(INPUT_GET, 'error_description') !== false) {
+                filter_input(INPUT_GET, 'error_description') !== null && filter_input(INPUT_GET, 'error_description') !== false) {
             add_filter('login_message', array($this, 'login_error'));
         }
 
@@ -68,8 +61,7 @@ class PlenigoLoginManager
     /**
      * Provokes the logout of the user. It is assumed that the logged out users will be the default role
      */
-    public function trigger_logout()
-    {
+    public function trigger_logout() {
         $user_id = \get_user_meta(\get_current_user_id(), self::PLENIGO_META_NAME, true);
         if (\is_user_logged_in() && $user_id !== '' && $this->is_regular_user()) {
             \wp_logout();
@@ -89,8 +81,7 @@ class PlenigoLoginManager
      * 
      * @return void only returns abruptly if no code is found on the request
      */
-    public function plenigo_process_login()
-    {
+    public function plenigo_process_login() {
         $code = filter_input(INPUT_GET, 'code');
 
         // Double check
@@ -136,8 +127,7 @@ class PlenigoLoginManager
      * @param plenigo\models\UserData $userData the user data returned by the API call
      * @return int the new or existant Wordpress User ID
      */
-    private function perform_register($userData)
-    {
+    private function perform_register($userData) {
         $plenigoArgs = array('meta_key' => self::PLENIGO_META_NAME, 'meta_value' => $userData->getId());
         // User with meta found
         $plenigoUsers = get_users($plenigoArgs);
@@ -204,8 +194,7 @@ class PlenigoLoginManager
      * 
      * @param int $currUserID the Wordpress User ID 
      */
-    private function perform_login($currUserID)
-    {
+    private function perform_login($currUserID) {
         //Log them in
         //TODO remember me functionality
         $rememberme = true;
@@ -232,8 +221,7 @@ class PlenigoLoginManager
      * @param string $message An optional message that may came from other plugin or Wordpress
      * @return string The final string HTML message
      */
-    public function login_error($message)
-    {
+    public function login_error($message) {
         $errorCode = filter_input(INPUT_GET, "error");
         $errorMessage = filter_input(INPUT_GET, "error_description");
         $finalMsg = sprintf("<div id='login_error'><strong>%s:</strong> %s</div>", $errorCode, $errorMessage);
@@ -253,8 +241,7 @@ class PlenigoLoginManager
      * @param plenigo\models\UserData $userData the data that comes from the API call
      * @return string the resolved username to create
      */
-    private function generateUserName($userData)
-    {
+    private function generateUserName($userData) {
         plenigo_log_message("USER RETURNED: \n" . print_r($userData, true));
 
         if (is_null($userData)) {
@@ -304,8 +291,7 @@ class PlenigoLoginManager
      * 
      * @return bool
      */
-    private function is_regular_user()
-    {
+    private function is_regular_user() {
         $defaultRole = \get_option('default_role');
 
         return $this->check_user_role($defaultRole);
@@ -319,8 +305,7 @@ class PlenigoLoginManager
      * @param int $user_id (Optional) The ID of a user. Defaults to the current user.
      * @return bool
      */
-    private function check_user_role($role, $user_id = null)
-    {
+    private function check_user_role($role, $user_id = null) {
         plenigo_log_message("Checking current user for Auto-logout!", E_USER_NOTICE);
         if (!is_null($user_id)) {
             $user = \get_userdata($user_id);
@@ -339,8 +324,7 @@ class PlenigoLoginManager
      * @param int $id the User ID to modify
      * @param plenigo\models\UserData $userData the data that comes from the API call
      */
-    public function update_with_plenigo_user($id, $userData)
-    {
+    public function update_with_plenigo_user($id, $userData) {
         if (isset($this->options['override_profiles']) && $this->options['override_profiles'] == 1) {
             $user_upd = array();
             $user_upd['ID'] = $id;
@@ -356,90 +340,9 @@ class PlenigoLoginManager
     /**
      * This method stores the last URL inside the site regardless the HTTP referrer
      */
-    public function store_url()
-    {
-        $current_url = $this->full_url($_SERVER, true);
-        $current_url = $this->sanitize_url($current_url);
+    public function store_url() {
+        $current_url = PlenigoURLManager::get()->getSanitizedURL();
         $_SESSION['plenigo_throwback_url'] = $current_url;
-    }
-
-    /**
-     * This method builds the URL based on several variables and HTTP headers
-     * 
-     * @param array $s the SERVER variable
-     * @param bool $use_fwd_host true if we want to pay attention to the HTTP_X_FORWARDED_HOST header
-     * @return string
-     */
-    private function url_origin($s, $use_fwd_host = false)
-    {
-        $ssl = is_ssl();
-        $sp = strtolower($s['SERVER_PROTOCOL']);
-        $protocol = substr($sp, 0, strpos($sp, '/')) . (($ssl) ? 's' : '');
-        $port = $s['SERVER_PORT'];
-        $port = ((!$ssl && $port == '80') || ($ssl && $port == '443')) ? '' : ':' . $port;
-        $host = ($use_fwd_host && isset($s['HTTP_X_FORWARDED_HOST'])) ? $s['HTTP_X_FORWARDED_HOST'] : (isset($s['HTTP_HOST']) ? $s['HTTP_HOST'] : null);
-        $host = isset($host) ? $host : $s['SERVER_NAME'] . $port;
-        return $protocol . '://' . $host;
-    }
-
-    /**
-     * This method adds the predicate (query string) to the origin URL and returns it
-     * 
-     * @param array $s the SERVER variable
-     * @param bool $use_fwd_host true if we want to pay attention to the HTTP_X_FORWARDED_HOST header
-     * @return string
-     */
-    private function full_url($s, $use_fwd_host = false)
-    {
-        return $this->url_origin($s, $use_fwd_host) . $s['REQUEST_URI'];
-    }
-
-    /**
-     * Strip certain parameters from the URL for the sake of cohesive experience for the users.
-     * @param string $current_url the URL to strip from the query parameters
-     */
-    private function sanitize_url($current_url)
-    {
-        $res = $current_url; // a safe default
-        $arrParsedURL = parse_url($current_url);
-        $arrParsedQuery = array();
-        if ($arrParsedURL !== FALSE && !is_null($arrParsedURL)) {
-            parse_str($arrParsedURL['query'], $arrParsedQuery);
-            plenigo_log_message("QueryString:" . var_export($arrParsedQuery, true), E_USER_NOTICE);
-            $arrFilteredQuery = array_diff_key($arrParsedQuery, array_flip(explode(",", self::FORBIDDEN_PARAMS)));
-            plenigo_log_message("QueryString Filtered:" . var_export($arrFilteredQuery, true), E_USER_NOTICE);
-            $arrParsedURL['query'] = http_build_query($arrFilteredQuery);
-            plenigo_log_message("URL Filtered:" . var_export($arrParsedURL, true), E_USER_NOTICE);
-            $res = $this->unparse_url($arrParsedURL);
-            plenigo_log_message("URL Filtered:" . $res, E_USER_NOTICE);
-        }
-        return $res;
-    }
-
-    /**
-     * Manual replacement of http_build_url() to avoid PECL library requirement
-     * 
-     * @param type $parsed_url
-     * @return type
-     */
-    private function unparse_url($parsed_url)
-    {
-        //unset blank values
-        foreach ($parsed_url as $key => $value) {
-            if (isset($parsed_url[$key]) && trim($parsed_url[$key]) === '') {
-                unset($parsed_url[$key]);
-            }
-        }
-        $scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
-        $host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
-        $port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
-        $user = isset($parsed_url['user']) ? $parsed_url['user'] : '';
-        $pass = isset($parsed_url['pass']) ? ':' . $parsed_url['pass'] : '';
-        $pass = ($user || $pass) ? $pass . "@" : '';
-        $path = isset($parsed_url['path']) ? $parsed_url['path'] : '';
-        $query = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
-        $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
-        return $scheme . $user . $pass . $host . $port . $path . $query . $fragment . '';
     }
 
 }

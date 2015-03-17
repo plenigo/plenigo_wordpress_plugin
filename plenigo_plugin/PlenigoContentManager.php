@@ -36,8 +36,6 @@ namespace plenigo_plugin;
  */
 class PlenigoContentManager {
 
-    private $plenigoSDK = null;
-
     /**
      * Holds the values to be used in the fields callbacks
      */
@@ -169,14 +167,18 @@ class PlenigoContentManager {
 
         $disableText = '';
         if ($isPaywalled === false || $userBought === true || $hasFreeViews === false || $rType !== self::RENDER_SINGLE) {
-            $disableText = 'data-disable-metered="true"';
+            $disableText = ' data-disable-metered="true" ';
+        }
+        $meteredURLText = '';
+        if (isset($this->options['metered_url']) && filter_var($this->options['metered_url'], FILTER_VALIDATE_URL) !== FALSE) {
+            $meteredURLText = ' data-metered-description-url="' . esc_url(trim($this->options['metered_url'])) . '" ';
         }
 
         $strNoScript = $this->getNoScriptTag();
         echo'<script type="application/javascript" '
         . 'src="' . PLENIGO_JSSDK_URL . '/static_resources/javascript/'
         . $this->options["company_id"] . '/plenigo_sdk.min.js" '
-        . $disableText . '></script>' . $strNoScript;
+        . $disableText . $meteredURLText . '></script>' . $strNoScript;
 
         $this->printGoogleAnalytics();
 
@@ -726,8 +728,8 @@ class PlenigoContentManager {
                     $btnOnClick = $checkoutBuilder->build($coSettings);
                 }
                 if (stristr($html, self::REPLACE_PRODUCT_NAME) !== false ||
-                    stristr($html, self::REPLACE_PRODUCT_PRICE) !== false ||
-                    stristr($html, self::REPLACE_PRODUCT_DETAILS) !== false) {
+                        stristr($html, self::REPLACE_PRODUCT_PRICE) !== false ||
+                        stristr($html, self::REPLACE_PRODUCT_DETAILS) !== false) {
                     // get product data
                     $productData = \plenigo\services\ProductService::getProductData($product->getId());
                 }
@@ -753,7 +755,7 @@ class PlenigoContentManager {
                 }
                 //If we should show Product details
                 $prodDetails = '<table class="plenigo-product"><tr><td><b>' . $prodName . '</b></td>'
-                    . '<td width="170" style="text-align: right;"><b>' . $prodPrice . '</b></td></tr></table>';
+                        . '<td width="170" style="text-align: right;"><b>' . $prodPrice . '</b></td></tr></table>';
             }
         }
 
@@ -854,7 +856,7 @@ class PlenigoContentManager {
      * @global WP_Post $post The Wordpress Post Object
      * @return \plenigo\models\ProductBase The Plenigo Product Object
      */
-    public function get_product_checkout() {
+    private function get_product_checkout() {
         global $post;
         $prodID = null;
         $title = null;
@@ -957,8 +959,8 @@ class PlenigoContentManager {
         if (isset($this->options['noscript_enabled']) && $this->options['noscript_enabled'] === 1) {
             $strTitle = (isset($this->options['noscript_title'])) ? $this->options['noscript_title'] : __("You need JavaScript", self::PLENIGO_SETTINGS_GROUP);
             $strMessage = (isset($this->options['noscript_message'])) ? $this->options['noscript_message'] : __("In order to provide you with the best experience, "
-                    . "this site requires that you allow JavaScript to run. "
-                    . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
+                            . "this site requires that you allow JavaScript to run. "
+                            . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
             $res = str_ireplace(self::REPLACE_NS_TITLE, trim(wp_kses_post($strTitle)), $htmlText);
             $res = str_ireplace(self::REPLACE_NS_MESSAGE, trim(wp_kses_post(wpautop($strMessage))), $res);
         }

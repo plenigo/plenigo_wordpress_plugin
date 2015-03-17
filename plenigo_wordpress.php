@@ -62,6 +62,9 @@ if (is_admin()) {
     $settingsPage = new \plenigo_plugin\PlenigoSettingsPage();
 }
 
+// URL Manager
+require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoURLManager.php';
+
 //ContentManager
 require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoContentManager.php';
 
@@ -84,6 +87,14 @@ if (isset($plenigoOptions['use_login']) && ($plenigoOptions['use_login'] == 1 ))
 
     $loginManager = new \plenigo_plugin\PlenigoLoginManager();
 }
+
+//WooCommerce
+/*if (isset($plenigoOptions['use_woo']) && ($plenigoOptions['use_woo'] == 1 )) {
+    require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoWooCManager.php';
+
+    $wooCommerceManager = new \plenigo_plugin\PlenigoWooCManager();
+}
+ */
 
 /**
  * Upgrades settings from older versions to current

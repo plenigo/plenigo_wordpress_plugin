@@ -25,10 +25,11 @@ require_once __DIR__ . '/settings/SettingTestMode.php';
 require_once __DIR__ . '/settings/SettingCompanyId.php';
 require_once __DIR__ . '/settings/SettingCompanySecret.php';
 require_once __DIR__ . '/settings/SettingCheckMetered.php';
-require_once __DIR__ . '/settings/SettingGACode.php';
+require_once __DIR__ . '/settings/SettingMeteredURL.php';
 require_once __DIR__ . '/settings/SettingUseNoscript.php';
 require_once __DIR__ . '/settings/SettingNoscriptTitle.php';
 require_once __DIR__ . '/settings/SettingNoscriptMessage.php';
+require_once __DIR__ . '/settings/SettingGACode.php';
 require_once __DIR__ . '/settings/SettingUseLogin.php';
 require_once __DIR__ . '/settings/SettingUseWPLogin.php';
 require_once __DIR__ . '/settings/SettingOverrideProfiles.php';
@@ -46,6 +47,8 @@ require_once __DIR__ . '/settings/SettingCurtainButtonBuy.php';
 require_once __DIR__ . '/settings/SettingCurtainButtonLogin.php';
 require_once __DIR__ . '/settings/SettingCurtainButtonCustom.php';
 require_once __DIR__ . '/settings/SettingCurtainButtonCustomURL.php';
+//require_once __DIR__ . '/settings/SettingUseWoo.php';
+//require_once __DIR__ . '/settings/SettingWooOrderTitle.php';
 
 /**
  * PlenigoSettingsPage
@@ -87,10 +90,11 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingCompanyId());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCompanySecret());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCheckMetered());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingGACode());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingMeteredURL());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseNoscript());
         array_push($this->settings, new \plenigo_plugin\settings\SettingNoscriptTitle());
         array_push($this->settings, new \plenigo_plugin\settings\SettingNoscriptMessage());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingGACode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseWPLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingOverrideProfiles());
@@ -108,6 +112,8 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCustom());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCustomURL());
+        //array_push($this->settings, new \plenigo_plugin\settings\SettingUseWoo());
+        //array_push($this->settings, new \plenigo_plugin\settings\SettingWooOrderTitle());
     }
 
     /**
@@ -200,6 +206,10 @@ class PlenigoSettingsPage {
         . 'aria-controls="plenigo_curtain_section" role="tab" data-toggle="tab">'
         . __('Curtain Customization', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
 
+        echo '<li role="presentation" class="active"><a href="#plenigo_woo_section" '
+        . 'aria-controls="plenigo_woo_section" role="tab" data-toggle="tab">'
+        . __('WooCommerce', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
+
         echo '</ul>';
 
         echo '<form method="post" action="options.php">';
@@ -251,6 +261,13 @@ class PlenigoSettingsPage {
                 'plenigo_curtain_section', // ID
                 "", // Title
                 array($this, 'print_section_curtain'), // Callback
+                self::PLENIGO_SETTINGS_PAGE // Page
+        );
+
+        add_settings_section(
+                'plenigo_woo_section', // ID
+                "", // Title
+                array($this, 'print_section_woo'), // Callback
                 self::PLENIGO_SETTINGS_PAGE // Page
         );
 
@@ -339,6 +356,18 @@ class PlenigoSettingsPage {
                 . '<h3>' . __('Curtain Customization', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
                 . 'Here you can customize the curtain text and buttons. This is usefull to incentivize your customers to '
                 . 'buy your product or join your blog. Be creative and personalize the existing templates.';
+    }
+
+    /**
+     * Print the Section text
+     */
+    public function print_section_woo() {
+        print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_woo_section">'
+                . '<h3>' . __('Woo Commerce', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
+                . 'Here you can control the way Plenigo integrates with '
+            . '<a href="http://www.woothemes.com/woocommerce/" target="_blank">WooCommerce</a>. '
+            . 'It allows you to use the powerful features in <a href="http://www.woothemes.com/woocommerce/" target="_blank">'
+            . 'WooCommerce</a> and use Plenigo as payment method.';
     }
 
     /**
