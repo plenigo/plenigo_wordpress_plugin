@@ -44,8 +44,6 @@ if git show-ref --tags --quiet --verify -- "refs/tags/$NEWVERSION1"
 fi
  
 cd $GITPATH
-echo -e "Enter a commit message for this new version: \c"
-read COMMITMSG
 git commit -am "Version $NEWVERSION1"
  
 echo "Tagging new version in git"
