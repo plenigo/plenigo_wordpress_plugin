@@ -46,7 +46,7 @@ fi
 cd $GITPATH
 echo -e "Enter a commit message for this new version: \c"
 read COMMITMSG
-git commit -am "$COMMITMSG"
+git commit -am "Version $NEWVERSION1"
  
 echo "Tagging new version in git"
 git tag -a "$NEWVERSION1" -m "Tagging version $NEWVERSION1"
