@@ -1,5 +1,4 @@
 <?php
-
 /*
   Copyright (C) 2014 Plenigo
 
@@ -71,13 +70,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
 
         // Processing the redirection
         add_action('wp_footer', array($this, 'plenigo_checkout_process'), 20);
-    }
-
-    /**
-     * Process the administration option fields and store them somehow
-     */
-    public function process_admin_options() {
-        
+        add_action('woocommerce_receipt_' . $this->id, array($this, 'receipt_page'));
     }
 
     public function process_payment($order_id) {
@@ -87,22 +80,16 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         // Mark as on-hold (we're awaiting the payment)
         $order->update_status('on-hold', __('Awaiting Plenigo payment', self::PLENIGO_SETTINGS_GROUP));
 
-        // Reduce stock levels
-        // $order->reduce_order_stock();
-        // Remove cart
-        // $woocommerce->cart->empty_cart();
+        /* // Reduce stock levels
+          // $order->reduce_order_stock();
+          // Remove cart
+          // $woocommerce->cart->empty_cart();
+         */
 
-        $checkout_url = \plenigo_plugin\PlenigoURLManager::get()->getSanitizedURL();
-        if (stristr($checkout_url, '?') === FALSE) {
-            $checkout_url.='?';
-        } else {
-            $checkout_url.='&';
-        }
-        $checkout_url.='plenigoWooPay=' . $order_id;
-
+        // Return thank you (receipt) page redirect
         return array(
             'result' => 'success',
-            'redirect' => $checkout_url
+            'redirect' => $this->get_return_url($order)
         );
     }
 
@@ -111,11 +98,10 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
      */
     public function plenigo_checkout_process() {
         global $woocommerce;
-        $checkout_param = filter_input(INPUT_GET, "plenigoWooPay");
+
+        $checkout_param = defined('PLENIGO_WOO_RECEIPT_ORDER') ? PLENIGO_WOO_RECEIPT_ORDER : FALSE;
         if (!is_null($checkout_param) && $checkout_param !== FALSE) {
             $order = new WC_Order($checkout_param);
-            // Mark as processing (checkout process)
-            $order->update_status('processing', __('Plenigo checkout stating', self::PLENIGO_SETTINGS_GROUP));
 
             //Let's create a unmanaged Plenigo Product for this order
             $sdk = PlenigoSDKManager::get()->getPlenigoSDK();
@@ -143,9 +129,82 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                 } catch (Exception $exc) {
                     plenigo_log_message($exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING);
                     error_log($exc->getMessage() . ': ' . $exc->getTraceAsString());
+                    wc_add_notice($exc->getMessage(), 'error');
                 }
-                
-                echo '<script>'.$checkoutSnippet.'</script>';
+
+                echo '<script>' . $checkoutSnippet . '</script>';
+            }
+        }
+    }
+
+    /**
+     * Hendles the hook for the receipt page, this will allow the Javscript to be shown. 
+     * Also, if the paymenState parameter is present, it will trigger the user 
+     * boiught check for plenigo
+     * @param int $order_id the order id being shown
+     */
+    public function receipt_page($order_id) {
+        define('PLENIGO_WOO_RECEIPT_ORDER', $order_id);
+        $order = new WC_Order($order_id);
+        // Mark as processing (checkout process)
+        $order->update_status('processing', __('Plenigo checkout stating', self::PLENIGO_SETTINGS_GROUP));
+        if (filter_input(INPUT_GET, 'paymentState') !== FALSE) {
+            $this->plenigo_buy_confirm($order_id);
+        }
+    }
+
+    /**
+     * Check if this gateway is enabled and available in the user's country
+     *
+     * @return bool
+     */
+    public function is_valid_for_use() {
+        return in_array(get_woocommerce_currency(), array('AUD', 'BRL', 'CAD', 'MXN', 'NZD', 'HKD', 'SGD', 'USD', 'EUR', 'JPY', 'TRY', 'NOK', 'CZK', 'DKK', 'HUF', 'ILS', 'MYR', 'PHP', 'PLN', 'SEK', 'CHF', 'TWD', 'THB', 'GBP', 'RMB', 'RUB'));
+    }
+
+    /**
+     * Check if the payment gateway is available and shows the options form
+     * 
+     */
+    public function admin_options() {
+        if ($this->is_valid_for_use()) {
+            parent::admin_options();
+        } else {
+            ?>
+            <div class="inline error"><p><strong><?php _e('Gateway Disabled', self::PLENIGO_SETTINGS_GROUP); ?></strong>: <?php _e('PayPal does not support your store currency.', self::PLENIGO_SETTINGS_GROUP); ?></p></div>
+            <?php
+        }
+    }
+
+    /**
+     * set the form fields
+     */
+    public function init_form_fields() {
+        $this->form_fields = array(
+            'enabled' => array(
+                'title' => __('Enable/Disable', self::PLENIGO_SETTINGS_GROUP),
+                'type' => 'checkbox',
+                'label' => __('Enable Cheque Payment', self::PLENIGO_SETTINGS_GROUP),
+                'default' => 'yes'
+            )
+        );
+    }
+
+    /**
+     * Detectes if the icheckout process finished and then marks the order as paid if necessary
+     * @param int $order_id The order ID to check for pleigo user bought
+     */
+    public function plenigo_buy_confirm($order_id) {
+        global $woocommerce;
+        $user_ID = get_current_user_id();
+        $count = wc_get_customer_order_count($user_ID);
+        if ($user_ID > 0 && $count > 0) {
+            $order = new WC_Order($order_id);
+            $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order_id);
+            if ($user_bought === true) {
+                $order->add_order_note(__('Plenigo payment complete. Thank you!', self::PLENIGO_SETTINGS_GROUP));
+                // Set Order as complete
+                $order->payment_complete();
             }
         }
     }
@@ -173,11 +232,6 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         }
         return $res;
     }
-
-    /**
-     * 
-
-     */
 
     /**
      * 
