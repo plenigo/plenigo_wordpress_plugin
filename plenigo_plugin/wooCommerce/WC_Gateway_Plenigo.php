@@ -58,8 +58,10 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         $this->icon = "https://www.plenigo.com/assets/favicon.ico";
         $this->has_fields = true;
         $this->enabled = true;
-        $this->title = __('Payment with plenigo', self::PLENIGO_SETTINGS_GROUP);
-        $this->description = __('WooCommerce', self::PLENIGO_SETTINGS_GROUP);
+        $this->title = __('Plenigo Payment', self::PLENIGO_SETTINGS_GROUP);
+        $this->method_title = __('Plenigo Payment', self::PLENIGO_SETTINGS_GROUP);
+        $this->description = __('WooCommerce Plenigo Description', self::PLENIGO_SETTINGS_GROUP);
+        $this->method_description = __('WooCommerce Plenigo Description', self::PLENIGO_SETTINGS_GROUP);
         $this->order_button_text = __('Pay with plenigo', self::PLENIGO_SETTINGS_GROUP);
 
         // Initialize administration
@@ -75,7 +77,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
 
     public function process_payment($order_id) {
         global $woocommerce;
-        $order = new WC_Order($order_id);
+        $order = new \WC_Order($order_id);
 
         // Mark as on-hold (we're awaiting the payment)
         $order->update_status('on-hold', __('Awaiting Plenigo payment', self::PLENIGO_SETTINGS_GROUP));
@@ -100,18 +102,22 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         global $woocommerce;
 
         $checkout_param = defined('PLENIGO_WOO_RECEIPT_ORDER') ? PLENIGO_WOO_RECEIPT_ORDER : FALSE;
+        $checkout_param = filter_input(INPUT_GET, 'order-received') ? filter_input(INPUT_GET, 'order-received') : $checkout_param;
+        plenigo_log_message("WOO: Processing checkout if order: " . var_export($checkout_param, true), E_USER_NOTICE);
+
         if (!is_null($checkout_param) && $checkout_param !== FALSE) {
-            $order = new WC_Order($checkout_param);
+            $order = new \WC_Order($checkout_param);
+            plenigo_log_message("WOO: Creating checkout snippet:", E_USER_NOTICE);
 
             //Let's create a unmanaged Plenigo Product for this order
-            $sdk = PlenigoSDKManager::get()->getPlenigoSDK();
+            $sdk = \plenigo_plugin\PlenigoSDKManager::get()->getPlenigoSDK();
             if (!is_null($sdk) && ($sdk instanceof \plenigo\PlenigoManager)) {
                 if (!isset($this->options['use_login']) || ($this->options['use_login'] == 0 )) {
                     $useOauthLogin = false;
                 } else {
                     $useOauthLogin = true;
                 }
-                $csrfToken = PlenigoSDKManager::get()->get_csrf_token();
+                $csrfToken = \plenigo_plugin\PlenigoSDKManager::get()->get_csrf_token();
                 $product = $this->get_product_checkout($order);
                 // creating the checkout snippet for this product
                 $checkoutBuilder = new \plenigo\builders\CheckoutSnippetBuilder($product);
@@ -131,7 +137,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                     error_log($exc->getMessage() . ': ' . $exc->getTraceAsString());
                     wc_add_notice($exc->getMessage(), 'error');
                 }
-
+                plenigo_log_message("WOO: Checkout snippet:" . var_export($checkoutSnippet, true), E_USER_NOTICE);
                 echo '<script>' . $checkoutSnippet . '</script>';
             }
         }
@@ -145,10 +151,12 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
      */
     public function receipt_page($order_id) {
         define('PLENIGO_WOO_RECEIPT_ORDER', $order_id);
-        $order = new WC_Order($order_id);
+        plenigo_log_message("WOO: Showing receipt", E_USER_NOTICE);
+        $order = new \WC_Order($order_id);
         // Mark as processing (checkout process)
         $order->update_status('processing', __('Plenigo checkout stating', self::PLENIGO_SETTINGS_GROUP));
         if (filter_input(INPUT_GET, 'paymentState') !== FALSE) {
+            plenigo_log_message("WOO: Payment DONE! Order #" . var_export($order, true), E_USER_NOTICE);
             $this->plenigo_buy_confirm($order_id);
         }
     }
@@ -199,9 +207,11 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         $user_ID = get_current_user_id();
         $count = wc_get_customer_order_count($user_ID);
         if ($user_ID > 0 && $count > 0) {
-            $order = new WC_Order($order_id);
+            plenigo_log_message("WOO: The customer has an order!", E_USER_NOTICE);
+            $order = new \WC_Order($order_id);
             $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order_id);
             if ($user_bought === true) {
+                plenigo_log_message("WOO: Uer bouight it with Plenigo!", E_USER_NOTICE);
                 $order->add_order_note(__('Plenigo payment complete. Thank you!', self::PLENIGO_SETTINGS_GROUP));
                 // Set Order as complete
                 $order->payment_complete();
@@ -218,7 +228,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
     private function get_product_checkout($order = null) {
         $res = null;
 
-        if (!is_null($order) && ($order instanceof \WooCommerce\Classes\WC_Order)) {
+        if (!is_null($order) && ($order instanceof \WC_Order)) {
             $prodID = $order->id;
             $title = $this->get_order_title($order);
             $total = $order->get_total();
@@ -276,7 +286,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         $res = '';
         $items = $order->get_items();
         foreach ($items as $curr_item) {
-            $curr_prod = $order->get_product_from_item($items);
+            $curr_prod = $order->get_product_from_item($curr_item);
             if (!is_null($curr_prod)) {
                 if ($res != '') {
                     $res.=',';
