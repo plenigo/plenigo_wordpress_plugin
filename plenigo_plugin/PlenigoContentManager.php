@@ -155,7 +155,7 @@ class PlenigoContentManager {
         /*
           echo '<script type="application/javascript">'
           . 'var plenigo = plenigo || {};'
-          . 'plenigo.baseURI = "' . PLENIGO_SVC_URL . '";';
+          . 'plenigo.baseURI = "' . PLENIGO_SVC_URL . '";'
           . 'plenigo.baseStaticURI = "' . PLENIGO_SVC_URL . '";</script>'; */
 
         if ($isPaywalled == true && !isset($this->reqCache["listProdId"]) && !isset($this->reqCache["lastCatId"])) {
