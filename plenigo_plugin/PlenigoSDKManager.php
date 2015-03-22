@@ -72,9 +72,10 @@ class PlenigoSDKManager {
             if (!isset($this->options['test_mode']) || ($this->options['test_mode'] == 1 )) {
                 $testValue = true;
             }
+            plenigo_log_message('Configuring SDK for company id: ' . $this->options["company_id"], E_USER_NOTICE);
             $this->plenigoSDK = \plenigo\PlenigoManager::configure(
-                    $this->options["company_secret"], $this->options["company_id"], $testValue
-                    , PLENIGO_SVC_URL
+                            $this->options["company_secret"], $this->options["company_id"], $testValue
+                            , PLENIGO_SVC_URL
             );
         }
         $this->plenigoSDK->setDebug((PLENIGO_DEBUG === true));
