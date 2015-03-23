@@ -21,68 +21,71 @@
 namespace plenigo_plugin\settings;
 
 /**
- * Setting class for curtain_title
+ * Setting class for woo_product_type
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class SettingCurtainTitle extends PlenigoWPSetting
-{
+class SettingWooProductType extends PlenigoWPSetting {
 
     //These should be overriden
-    const SECTION_ID = 'plenigo_curtain_section';
-    const SETTING_ID = 'curtain_title';
+    const SECTION_ID = 'plenigo_woo_section';
+    const SETTING_ID = 'woo_product_type';
+
+    // Available Product Types
+    private $prodTypeList = array('EBOOK', 'DIGITALNEWSPAPER', 'DOWNLOAD', 'VIDEO', 'MUSIC');
 
     /**
      * @see PlenigoWPSetting::getSanitizedValue()
      */
-    protected function getSanitizedValue($value = null)
-    {
-        $tempValue = trim($value);
-        if (is_null($value) && !empty($tempValue)) {
+    protected function getSanitizedValue($value = null) {
+        $tempValue = trim(strtoupper($value));
+        if (is_null($value) || empty($tempValue)) {
             return $this->getDefaultValue();
         }
-        return trim(wp_kses_post($value));
+        return trim(strtoupper($value));
     }
 
     /**
      * @see PlenigoWPSetting::getDefaultValue()
      */
-    public function getDefaultValue($current = null)
-    {
+    public function getDefaultValue($current = null) {
         if (!is_null($current)) {
             return $current;
         }
-        return __('Do you want to continue reading?', parent::PLENIGO_SETTINGS_GROUP);
+        return '';
     }
 
     /**
      * @see PlenigoWPSetting::getTitle()
      */
-    public function getTitle()
-    {
-        return __('Curtain Title', parent::PLENIGO_SETTINGS_GROUP);
+    public function getTitle() {
+        return __('Product Type', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
      * @see PlenigoWPSetting::renderCallback()
      */
-    public function renderCallback()
-    {
+    public function renderCallback() {
         $currValue = $this->getDefaultValue($this->getStoredValue());
-        printf('<input type="text" id="' . static::SETTING_ID . '" name="' . self::PLENIGO_SETTINGS_NAME
-            . '[' . static::SETTING_ID . ']" value="%s"  size="65" />', esc_attr($currValue));
+        printf('<select name="%s" id="%s" required size="1">'
+                , self::PLENIGO_SETTINGS_NAME . '[' . static::SETTING_ID . ']'
+                , static::SETTING_ID);
+        foreach ($this->prodTypeList as $prodType) {
+            $selValue = ($currValue == $prodType) ? ' selected' : '';
+            printf('<option value="%s" %s>%s</option>', $prodType, $selValue, ucfirst($prodType));
+        }
+        echo '</select>';
     }
 
     /**
      * @see PlenigoWPSetting::getValidationForValue()
      */
-    public function getValidationForValue($value = null)
-    {
-        if (!is_null($value) && strlen(trim($value)) > 5) {
-            return true;
+    public function getValidationForValue($value = null) {
+        if (!is_null($value) && strlen(trim($value)) > 2) {
+            return in_array(trim(strtoupper($value)), $this->prodTypeList);
         }
         return false;
     }

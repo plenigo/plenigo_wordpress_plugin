@@ -49,6 +49,7 @@ require_once __DIR__ . '/settings/SettingCurtainButtonCustom.php';
 require_once __DIR__ . '/settings/SettingCurtainButtonCustomURL.php';
 require_once __DIR__ . '/settings/SettingUseWoo.php';
 require_once __DIR__ . '/settings/SettingWooOrderTitle.php';
+require_once __DIR__ . '/settings/SettingWooProductType.php';
 
 /**
  * PlenigoSettingsPage
@@ -114,6 +115,7 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCustomURL());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseWoo());
         array_push($this->settings, new \plenigo_plugin\settings\SettingWooOrderTitle());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingWooProductType());
     }
 
     /**
