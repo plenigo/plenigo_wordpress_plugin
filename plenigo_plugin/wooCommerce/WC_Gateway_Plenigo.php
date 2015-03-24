@@ -143,7 +143,8 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                     $coSettings = array('csrfToken' => $csrfToken);
                     if ($useOauthLogin) {
                         // this url must be registered in plenigo
-                        $coSettings['oauth2RedirectUrl'] = $this->options['redirect_url'];
+                        $current_url = \plenigo_plugin\PlenigoURLManager::get()->getSanitizedURL();
+                        $coSettings['oauth2RedirectUrl'] = $current_url;
                     }
 
                     // checkout snippet
