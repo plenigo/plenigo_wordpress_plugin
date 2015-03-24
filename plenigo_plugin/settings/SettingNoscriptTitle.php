@@ -50,7 +50,7 @@ class SettingNoscriptTitle extends SettingCurtainButtonBuy {
      * @see PlenigoWPSetting::getTitle()
      */
     public function getTitle() {
-        return __('no-Javacript overlay Title', parent::PLENIGO_SETTINGS_GROUP);
+        return __('no-Javascript overlay Title', parent::PLENIGO_SETTINGS_GROUP);
     }
 
 }
