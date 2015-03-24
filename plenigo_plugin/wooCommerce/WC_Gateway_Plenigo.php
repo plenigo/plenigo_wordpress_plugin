@@ -120,7 +120,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
             plenigo_log_message("WOO: Processing checkout order: " . var_export($checkout_param, true), E_USER_NOTICE);
             $order = new \WC_Order($checkout_param);
 
-            $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order->order_key);
+            $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order->id);
 
             if (!$user_bought) {
                 // Mark as processing (checkout process)
@@ -225,7 +225,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         if ($user_ID > 0 && $count > 0) {
             plenigo_log_message("WOO: The customer has an order!", E_USER_NOTICE);
             $order = new \WC_Order($order_id);
-            $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order->order_key);
+            $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order->id);
             if ($user_bought === true) {
                 plenigo_log_message("WOO: Uer bouight it with Plenigo!", E_USER_NOTICE);
                 $order->add_order_note(__('Plenigo payment complete. Thank you!', self::PLENIGO_SETTINGS_GROUP));
@@ -248,7 +248,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         $res = null;
 
         if (!is_null($order) && ($order instanceof \WC_Order)) {
-            $prodID = $order->order_key;
+            $prodID = $order->id;
             $title = $this->get_order_title($order);
             $total = $order->get_total();
             $typeSetting = isset($this->options['woo_product_type']) ? $this->options['woo_product_type'] : null;
