@@ -62,7 +62,7 @@ class SettingWooOrderTitle extends SettingCurtainTitle {
             . '<b>%%SITE_TITLE%%</b> - The Site&quot;s title.<br>'
             . '<b>%%ORDER_ID%%</b> - This is the order ID.<br>'
             . '<b>%%ORDER_NO%%</b> - This is the order number (maybe same as ID, depending on other plugins).<br>'
-            . '<b>%%ORDER_KEY%%</b> - This is the order identifier key (usuario <i>wc_order_XXXXXXXXXX</i>).<br>'
+            . '<b>%%ORDER_KEY%%</b> - This is the order identifier key (usually <i>wc_order_XXXXXXXXXX</i>).<br>'
             . '<b>%%PROD_NAMES%%</b> - A comma separated list of order&quot;s product names. <b>*</b><br>'
             . '<b>%%PROD_IDS%%</b> - A comma separated list of order&quot;s product IDs. <b>*</b><br>'
             . '<b>%%PROD_SKUS%%</b> - A comma separated list of order&quot;s product SKUs. <b>*</b><br>'
