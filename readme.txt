@@ -130,7 +130,7 @@ Coming soon
 
 == Changelog ==
 = 1.1.32 - WooCommerce Payment Gateway =
-- Feature: Now you can use Plenigo as a WooCommerce Payment Gateway! No further setup required! Altough you can customize the order title to be shown in the curtomers bills. Start selling your products right away!
+- Feature: Now you can use plenigo as a WooCommerce Payment Gateway! No further setup required! Altough you can customize the order title to be shown in the customers bills. Start selling your products right away!
 
 = 1.1.31 - Fixed deployment script =
 - Fixed: Problems with deployment script
@@ -186,7 +186,7 @@ Coming soon
 = 1.1.16 - New curtain =
 - Feature: New, responsive curtain design
 - Feature: New button for Subscription Renew
-- Feature: New option to allow Plenigo to Override profile data with Plenigo data, or to allow Wordpress users to change it
+- Feature: New option to allow plenigo to Override profile data with plenigo data, or to allow Wordpress users to change it
 - Fixed a problem with paragraphs inside the curtain text
 
 = 1.1.15 - Disable Metered =

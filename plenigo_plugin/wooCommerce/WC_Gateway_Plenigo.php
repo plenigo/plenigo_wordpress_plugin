@@ -1,4 +1,5 @@
 <?php
+
 /*
   Copyright (C) 2014 Plenigo
 
@@ -63,8 +64,8 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         $this->enabled = true;
         $this->title = __('Plenigo Payment', self::PLENIGO_SETTINGS_GROUP);
         $this->method_title = __('Plenigo Payment', self::PLENIGO_SETTINGS_GROUP);
-        $this->description = __('WooCommerce Plenigo Description', self::PLENIGO_SETTINGS_GROUP);
-        $this->method_description = __('WooCommerce Plenigo Description', self::PLENIGO_SETTINGS_GROUP);
+        $this->description = __('WooCommerce plenigo Description', self::PLENIGO_SETTINGS_GROUP);
+        $this->method_description = __('WooCommerce plenigo Description', self::PLENIGO_SETTINGS_GROUP);
         $this->order_button_text = __('Pay with plenigo', self::PLENIGO_SETTINGS_GROUP);
 
         // Initialize administration
@@ -106,7 +107,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         $order = new \WC_Order($order_id);
 
         // Mark as on-hold (we're awaiting the payment)
-        $order->update_status('on-hold', __('Awaiting Plenigo payment', self::PLENIGO_SETTINGS_GROUP));
+        $order->update_status('on-hold', __('Awaiting plenigo checkout process', self::PLENIGO_SETTINGS_GROUP));
 
         /* // Reduce stock levels
           // $order->reduce_order_stock();
@@ -183,7 +184,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                     plenigo_log_message("WOO: Checkout snippet:" . var_export($checkoutSnippet, true), E_USER_NOTICE);
                     echo '<div style="width:100%;text-align:right;">'
                     . '<button class="checkout-button button alt wc-forward" onclick="' . $checkoutSnippet . '">'
-                    . __('Continue to Plenigo checkout', self::PLENIGO_SETTINGS_GROUP)
+                    . __('Continue to plenigo checkout', self::PLENIGO_SETTINGS_GROUP)
                     . '</button></div>';
                 } else {
                     $errorMessge = __('Plenigo not configured, contact the administrators', self::PLENIGO_SETTINGS_GROUP);
@@ -214,9 +215,10 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         if ($this->is_valid_for_use()) {
             parent::admin_options();
         } else {
-            ?>
-            <div class="inline error"><p><strong><?php _e('Gateway Disabled', self::PLENIGO_SETTINGS_GROUP); ?></strong>: <?php _e('Please complete the configuration in the Plenigo settings.', self::PLENIGO_SETTINGS_GROUP); ?></p></div>
-            <?php
+            echo '<div class="inline error"><p><strong>';
+            echo __('Gateway Disabled', self::PLENIGO_SETTINGS_GROUP) . '</strong>: ';
+            echo __('Please complete the configuration in the plenigo settings.', self::PLENIGO_SETTINGS_GROUP);
+            echo '</p></div>';
         }
     }
 
@@ -235,8 +237,8 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
     }
 
     /**
-     * Detectes if the icheckout process finished and then marks the order as paid if necessary
-     * @param int $order_id The order ID to check for pleigo user bought
+     * Detectes if the checkout process finished and then marks the order as paid if necessary
+     * @param int $order_id The order ID to check for plenigo user bought
      */
     public function plenigo_buy_confirm($order_id) {
         global $woocommerce;
@@ -247,13 +249,13 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
             $order = new \WC_Order($order_id);
             $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order_id);
             if ($user_bought === true) {
-                plenigo_log_message("WOO: Uer bouight it with Plenigo!", E_USER_NOTICE);
+                plenigo_log_message("WOO: Uer bouight it with plenigo!", E_USER_NOTICE);
                 // Set Order as complete
                 $order->payment_complete();
                 $order->update_status('completed', __('Plenigo payment complete. Thank you!', self::PLENIGO_SETTINGS_GROUP));
             } else {
                 // Here could be maybe a payment timeout to set it as cancelled
-                plenigo_log_message("WOO: Uer DID NOT buy this with Plenigo...yet?!", E_USER_NOTICE);
+                plenigo_log_message("WOO: Uer DID NOT buy this with plenigo...yet?!", E_USER_NOTICE);
             }
         }
     }
@@ -262,7 +264,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
      * Creates a plenigo unmanaged product with the last Product ID as the order ID. 
      * 
      * @param \WooCommerce\Classes\WC_Order $order the order to create the Product from
-     * @return \plenigo\models\ProductBase The Plenigo Product Object
+     * @return \plenigo\models\ProductBase The plenigo Product Object
      */
     private function get_product_checkout($order = null) {
         $res = null;

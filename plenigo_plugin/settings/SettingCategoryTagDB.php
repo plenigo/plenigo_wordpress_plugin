@@ -36,7 +36,7 @@ class SettingCategoryTagDB extends PlenigoWPSetting
     const SETTING_ID = 'plenigo_cat_tag_db';
 
     /**
-     * Holds values for tstoring values, so they are generated just once per request
+     * Holds values for storing values, so they are generated just once per request
      */
     private $reqCache = array();
 
