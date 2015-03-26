@@ -107,6 +107,7 @@ class PlenigoSDKManager {
      */
     public function plenigo_bought($products = null) {
         if (is_null($products)) {
+            plenigo_log_message("Plenigo bought check: false => products null", E_USER_WARNING);
             return false;
         }
 
@@ -115,27 +116,32 @@ class PlenigoSDKManager {
         }
 
         if (!is_array($products) || count($products) < 1) {
+            plenigo_log_message("Plenigo bought check: false => products array is weird", E_USER_WARNING);
             return false;
         }
 
         if (!isset($this->reqCache['bought'])) {
+            plenigo_log_message("Bought check array initialized", E_USER_NOTICE);
             $this->reqCache['bought'] = array();
         }
 
         $result = false;
         $sdk = $this->getPlenigoSDK();
         if (is_null($sdk) || !($sdk instanceof \plenigo\PlenigoManager)) {
+            plenigo_log_message("Plenigo bought check: false => SDK failed to start", E_USER_WARNING);
             return false;
         }
         foreach ($products as $currProdID) {
             // cached
             if (isset($this->reqCache['bought'][$currProdID]) && $this->reqCache['bought'][$currProdID] === true) {
+                plenigo_log_message("Plenigo bought cached result true for " . $currProdID, E_USER_NOTICE);
                 $result = true;
             }
             try {
                 $res = \plenigo\services\UserService::hasUserBought($currProdID);
                 //caching
                 $this->reqCache['bought'][$currProdID] = $res;
+                plenigo_log_message("Plenigo bought result true for " . $currProdID . ' - ' . var_export($res, true), E_USER_NOTICE);
 
                 $result = ($res === true) ? true : $result;
             } catch (\Exception $exc) {
@@ -146,6 +152,7 @@ class PlenigoSDKManager {
             }
         }
 
+        plenigo_log_message("Plenigo bought result " . var_export($result, true), E_USER_NOTICE);
         return $result;
     }
 

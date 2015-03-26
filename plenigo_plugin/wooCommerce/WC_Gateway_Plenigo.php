@@ -73,8 +73,32 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         // Saving options
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
 
+        add_action('woocommerce_before_template_part', array($this, 'plenigo_finish'), 20);
+
         // Processing the redirection
         add_action('woocommerce_thankyou_' . $this->id, array($this, 'plenigo_checkout_process'), 20);
+    }
+
+    /**
+     * Checks the conditions and triggers the process finalization, checking if the product is bought.
+     */
+    public function plenigo_finish() {
+        $varCheckout = is_checkout();
+        $checkout_param = filter_input(INPUT_GET, 'order-received');
+        $payment_param = filter_input(INPUT_GET, 'paymentState');
+
+        if (is_null($payment_param)) {
+            $payment_param = FALSE;
+        }
+        if (is_null($checkout_param)) {
+            $checkout_param = FALSE;
+        }
+
+        //Payment finished
+        if ($payment_param !== FALSE && $checkout_param !== FALSE && $varCheckout === TRUE) {
+            plenigo_log_message("WOO: Finishing checkout order: " . var_export($checkout_param, true), E_USER_NOTICE);
+            $this->plenigo_buy_confirm($checkout_param);
+        }
     }
 
     public function process_payment($order_id) {
@@ -124,7 +148,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
 
             if (!$user_bought) {
                 // Mark as processing (checkout process)
-                $order->update_status('processing', __('Plenigo checkout stating', self::PLENIGO_SETTINGS_GROUP));
+                $order->update_status('pending', __('Plenigo checkout stating', self::PLENIGO_SETTINGS_GROUP));
                 plenigo_log_message("WOO: Creating checkout snippet:", E_USER_NOTICE);
 
                 //Let's create a unmanaged Plenigo Product for this order
@@ -169,11 +193,6 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
             } else {
                 $order->add_order_note(__('You already purchased this order! Thank You!', self::PLENIGO_SETTINGS_GROUP));
             }
-        }
-        //Payment finished
-        if ($payment_param !== FALSE && $checkout_param !== FALSE) {
-            plenigo_log_message("WOO: Finishing checkout order: " . var_export($checkout_param, true), E_USER_NOTICE);
-            $this->plenigo_buy_confirm($checkout_param);
         }
     }
 
@@ -226,12 +245,12 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         if ($user_ID > 0 && $count > 0) {
             plenigo_log_message("WOO: The customer has an order!", E_USER_NOTICE);
             $order = new \WC_Order($order_id);
-            $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order->id);
+            $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order_id);
             if ($user_bought === true) {
                 plenigo_log_message("WOO: Uer bouight it with Plenigo!", E_USER_NOTICE);
-                $order->add_order_note(__('Plenigo payment complete. Thank you!', self::PLENIGO_SETTINGS_GROUP));
                 // Set Order as complete
                 $order->payment_complete();
+                $order->update_status('completed', __('Plenigo payment complete. Thank you!', self::PLENIGO_SETTINGS_GROUP));
             } else {
                 // Here could be maybe a payment timeout to set it as cancelled
                 plenigo_log_message("WOO: Uer DID NOT buy this with Plenigo...yet?!", E_USER_NOTICE);
