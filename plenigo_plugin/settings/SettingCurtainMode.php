@@ -94,7 +94,7 @@ class SettingCurtainMode extends PlenigoWPSetting
     }
 
     /**
-     * Returns the stylied buttons to be used as examples on the mode selection
+     * Returns the stylized buttons to be used as examples on the mode selection
      * 
      * @param bool $buy true if you want to render the Buy button
      * @param bool $custom true if you want to render the Custom button

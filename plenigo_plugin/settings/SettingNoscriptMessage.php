@@ -52,7 +52,7 @@ class SettingNoscriptMessage extends SettingCurtainButtonBuy {
      * @see PlenigoWPSetting::getTitle()
      */
     public function getTitle() {
-        return __('no-Javacript overlay Message', parent::PLENIGO_SETTINGS_GROUP);
+        return __('no-Javascript overlay Message', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**

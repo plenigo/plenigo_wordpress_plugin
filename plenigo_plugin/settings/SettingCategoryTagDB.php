@@ -21,7 +21,7 @@
 namespace plenigo_plugin\settings;
 
 /**
- * Setting class for company_secret
+ * Setting class for plenigo_cat_tag_db
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
@@ -36,7 +36,7 @@ class SettingCategoryTagDB extends PlenigoWPSetting
     const SETTING_ID = 'plenigo_cat_tag_db';
 
     /**
-     * Holds values for the SQL requests, so they are mdae just once per request
+     * Holds values for storing values, so they are generated just once per request
      */
     private $reqCache = array();
 
@@ -146,6 +146,12 @@ class SettingCategoryTagDB extends PlenigoWPSetting
         }
     }
 
+    /**
+     * This method allows the autocomplete field to populate with all the current tag values
+     * 
+     * @global type $wpdb The WordPress database object
+     * @return string A comma separated list of all existing tags
+     */
     private function get_term_data()
     {
         if (isset($this->reqCache['term-query'])) {

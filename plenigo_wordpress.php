@@ -4,7 +4,7 @@
   Plugin Name: Plenigo
   Plugin URI: http://wordpress.org/plugins/plenigo/
   Description: So far, the technical implementation of paid content has been time-consuming and costly for publishing houses and media companies. plenigo puts an end to this.
-  Version: 1.1.31
+  Version: 1.1.32
   Author: Plenigo
   Author URI: https://www.plenigo.com
   Text Domain: plenigo
@@ -38,7 +38,7 @@ if (PLENIGO_DEBUG === true) {
 }
 
 // Plenigo JavaScript SDK / Services
-define('PLENIGO_SVC_URL', "https://www.plenigo.com");
+define('PLENIGO_SVC_URL', "https://api.plenigo.com");
 define('PLENIGO_JSSDK_URL', "https://static.plenigo.com");
 
 // Plenigo PHP SDK
@@ -46,8 +46,7 @@ require_once dirname(__FILE__) . '/plenigo_sdk/plenigo/Plenigo.php';
 require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoSDKManager.php';
 
 // Internationalization and upgrade
-add_action('plugins_loaded',
-    function() {
+add_action('plugins_loaded', function() {
     load_plugin_textdomain('plenigo', FALSE, basename(dirname(__FILE__)) . '/plenigo_i18n/');
     $upgraded = plenigo_plugin_upgrade();
     if ($upgraded) {
@@ -88,13 +87,17 @@ if (isset($plenigoOptions['use_login']) && ($plenigoOptions['use_login'] == 1 ))
     $loginManager = new \plenigo_plugin\PlenigoLoginManager();
 }
 
+/**
+ * Check if WooCommerce is active
+ * */
+if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
 //WooCommerce
-/*if (isset($plenigoOptions['use_woo']) && ($plenigoOptions['use_woo'] == 1 )) {
-    require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoWooCManager.php';
+    if (isset($plenigoOptions['use_woo']) && ($plenigoOptions['use_woo'] == 1 )) {
+        require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoWooCManager.php';
 
-    $wooCommerceManager = new \plenigo_plugin\PlenigoWooCManager();
+        $wooCommerceManager = new \plenigo_plugin\PlenigoWooCManager();
+    }
 }
- */
 
 /**
  * Upgrades settings from older versions to current
