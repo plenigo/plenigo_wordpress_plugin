@@ -107,7 +107,7 @@ class PlenigoSDKManager {
      */
     public function plenigo_bought($products = null) {
         if (is_null($products)) {
-            plenigo_log_message("Plenigo bought check: false => products null", E_USER_WARNING);
+            plenigo_log_message("Plenigo bought check: false => products null", E_USER_NOTICE);
             return false;
         }
 
@@ -116,7 +116,7 @@ class PlenigoSDKManager {
         }
 
         if (!is_array($products) || count($products) < 1) {
-            plenigo_log_message("Plenigo bought check: false => products array is weird", E_USER_WARNING);
+            plenigo_log_message("Plenigo bought check: false => products array is weird", E_USER_NOTICE);
             return false;
         }
 
