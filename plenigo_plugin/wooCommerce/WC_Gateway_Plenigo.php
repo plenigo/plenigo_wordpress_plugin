@@ -249,13 +249,13 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
             $order = new \WC_Order($order_id);
             $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order_id);
             if ($user_bought === true) {
-                plenigo_log_message("WOO: Uer bouight it with plenigo!", E_USER_NOTICE);
+                plenigo_log_message("WOO: User bouight it with plenigo!", E_USER_NOTICE);
                 // Set Order as complete
                 $order->payment_complete();
                 $order->update_status('completed', __('Plenigo payment complete. Thank you!', self::PLENIGO_SETTINGS_GROUP));
             } else {
                 // Here could be maybe a payment timeout to set it as cancelled
-                plenigo_log_message("WOO: Uer DID NOT buy this with plenigo...yet?!", E_USER_NOTICE);
+                plenigo_log_message("WOO: User DID NOT buy this with plenigo...yet?!", E_USER_NOTICE);
             }
         }
     }
