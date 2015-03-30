@@ -42,7 +42,7 @@ class PlenigoSDKManager {
     private static $instance = null;
 
     /**
-     * Default constructor , called from the main php file
+     * Default constructor, called from the main php file
      */
     private function __construct() {
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME);

@@ -6,7 +6,7 @@ namespace plenigo_plugin;
  * PlenigoShortcodeManager
  * 
  * <b>
- * This class holds the functions needed to configure the Plenigo Shortcodes
+ * This class holds the functions needed to configure the plenigo shortcodes
  * </b>
  *
  * @category SDK
@@ -26,7 +26,7 @@ class PlenigoShortcodeManager {
     private $options = null;
 
     /**
-     * Default constructor , called from the main php file
+     * Default constructor, called from the main php file
      */
     public function __construct() {
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
@@ -48,14 +48,14 @@ class PlenigoShortcodeManager {
     }
 
     /**
-     * Adding the editor css style for the Plenigo custom tags
+     * Adding the editor css style for the plenigo custom tags
      */
     function plenigo_add_editor_styles() {
         add_editor_style(plugins_url('plenigo_css/pl_tinymce.css', dirname(__FILE__)));
     }
 
     /**
-     * Add Javascript/CSS imports
+     * Add CSS imports
      */
     public function add_scripts() {
         wp_register_style('plenigo-tinymce-css', plugins_url('plenigo_css/pl_tinymce.css', dirname(__FILE__)));
@@ -107,7 +107,7 @@ class PlenigoShortcodeManager {
         $prodId = $a['prod_id'];
         if ($tag !== 'pl_checkout_button' && $prodId !== "" && PlenigoSDKManager::get()->plenigo_bought($prodId)) { //Return the content untouched
             return do_shortcode($content);
-        } else { //Do the Plenigo Checkout button
+        } else { //Do the plenigo checkout button
             if (!isset($this->options['test_mode']) || ($this->options['test_mode'] == 1 )) {
                 $testMode = 'true';
             } else {
@@ -124,7 +124,7 @@ class PlenigoShortcodeManager {
                     $btnTitle = $this->getButtonTitle($prodId);
                 }
 
-                // creating a Plenigo-managed product
+                // creating a plenigo-managed product
                 $product = new \plenigo\models\ProductBase($prodId);
 
                 if ($tag === 'pl_renew') {
@@ -160,13 +160,13 @@ class PlenigoShortcodeManager {
     }
 
     /**
-     * Fancy method to get the Button Title from the Product with a backend call to obtain the managed product's information
+     * Fancy method to get the Button Title from the product with a backend call to obtain the managed product's information
      * 
      * @param string $prodId
      * @return string
      */
     private function getButtonTitle($prodId) {
-        $prodName = 'Unknown Product';
+        $prodName = 'Unknown product';
         $prodPrice = '??.??';
         // get product data
         try {
