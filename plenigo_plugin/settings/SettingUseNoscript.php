@@ -69,7 +69,7 @@ class SettingUseNoscript extends SettingUseLogin {
      * @return string
      */
     protected function getOnTitle() {
-        return __('Show the no-Javacript overlay', parent::PLENIGO_SETTINGS_GROUP);
+        return __('Show the no-Javascript overlay', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**

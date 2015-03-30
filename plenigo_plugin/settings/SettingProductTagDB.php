@@ -21,7 +21,7 @@
 namespace plenigo_plugin\settings;
 
 /**
- * Setting class for company_secret
+ * Setting class for plenigo_tag_db
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
@@ -36,7 +36,7 @@ class SettingProductTagDB extends PlenigoWPSetting
     const SETTING_ID = 'plenigo_tag_db';
 
     /**
-     * Holds values for the SQL requests, so they are mdae just once per request
+     * Holds values for the SQL requests, so they are made just once per request
      */
     private $reqCache = array();
     

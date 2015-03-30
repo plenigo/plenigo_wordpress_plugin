@@ -83,7 +83,7 @@ class SettingUseWPLogin extends PlenigoWPSetting
         }
 
         echo '<input type="radio" id="use_wp_login" name="' . self::PLENIGO_SETTINGS_NAME
-        . '[use_wp_login]" value="1" ' . $showWPLogin . '><label for="use_wp_login">' . __('Show the Worpress login form',
+        . '[use_wp_login]" value="1" ' . $showWPLogin . '><label for="use_wp_login">' . __('Show the Word   press login form',
             parent::PLENIGO_SETTINGS_GROUP) . '</label><br>'
         . '<input type = "radio" id = "not_wp_use_login" name = "' . self::PLENIGO_SETTINGS_NAME
         . '[use_wp_login]" value = "0" ' . $hideWPLogin . '><label for = "not_wp_use_login">' . __('Only show plenigo login Button',

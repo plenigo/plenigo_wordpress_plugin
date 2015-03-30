@@ -40,7 +40,7 @@ class PlenigoWooCManager {
     private $options = null;
 
     /**
-     * Holds values for the SDK requests, so they are mdae just once per request
+     * Holds values for the SDK requests, so they are made just once per request
      */
     private $reqCache = array();
 

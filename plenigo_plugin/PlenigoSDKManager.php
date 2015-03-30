@@ -6,7 +6,7 @@ namespace plenigo_plugin;
  * PlenigoSDKManager
  * 
  * <b>
- * 
+ * This class handles the initialization, main methods and request caches for the Wordpress plugin. Initialization is done by calling the getPlenigoSDK() method once it's configured properly.
  * </b>
  *
  * @category SDK
@@ -32,7 +32,7 @@ class PlenigoSDKManager {
     private $plenigoSDK = null;
 
     /**
-     * Holds values for the SDK requests, so they are mdae just once per request
+     * Holds values for the SDK requests, so they are made just once per request
      */
     private $reqCache = array();
 
@@ -62,7 +62,7 @@ class PlenigoSDKManager {
     }
 
     /**
-     * Creates or configures the Plenigo SDK to be used in the class for calling the Plenigo Services
+     * Creates or configures the plenigo SDK to be used in the class for calling the plenigo Services
      * 
      * @return \plenigo\PlenigoManager the new or reused instance of the PlenigoManager
      */
@@ -102,7 +102,7 @@ class PlenigoSDKManager {
     /**
      * Calls the PHP SDK and queries the server for products already bought. Sanitizes the response as a boolean
      *
-     * @param  string  $products the product Id string or an Array of Product Ids
+     * @param  string  $products the product Id string or an array of product ids
      * @return boolean true if the user has bought the product
      */
     public function plenigo_bought($products = null) {
@@ -187,9 +187,9 @@ class PlenigoSDKManager {
     }
 
     /**
-     * This method checks for the Paywall Enabled flag from the plenigo administration.
+     * This method checks for the paywall enabled flag from the plenigo administration.
      *
-     * @return boolean TRUE if the Paywall is enabled from the server side, false if not
+     * @return boolean TRUE if the paywall is enabled from the server side, false if not
      */
     public function isPayWallEnabled() {
         // cached
