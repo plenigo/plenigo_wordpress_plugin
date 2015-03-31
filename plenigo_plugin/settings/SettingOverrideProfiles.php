@@ -21,7 +21,7 @@
 namespace plenigo_plugin\settings;
 
 /**
- * Setting class for test_mode
+ * Setting class for override_profiles
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
@@ -63,7 +63,7 @@ class SettingOverrideProfiles extends SettingCheckMetered
     protected function getOptionLabel($option)
     {
         if ($option === 1) {
-            return __('Override Wordpress profile data with the Plenigo data', parent::PLENIGO_SETTINGS_GROUP);
+            return __('Override Wordpress profile data with the plenigo data', parent::PLENIGO_SETTINGS_GROUP);
         }
         if ($option === 0) {
             return __('Allow Wordpress users to modify their data', parent::PLENIGO_SETTINGS_GROUP);

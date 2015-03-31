@@ -21,7 +21,7 @@
 namespace plenigo_plugin\settings;
 
 /**
- * Setting class for ga_code
+ * Setting class for plenigo_prevent_tag
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
@@ -36,7 +36,7 @@ class SettingPreventTag extends PlenigoWPSetting
     const SETTING_ID = 'plenigo_prevent_tag';
 
     /**
-     * Holds values for the SQL requests, so they are mdae just once per request
+     * Holds values for the SQL requests, so they are made just once per request
      */
     private $reqCache = array();
 

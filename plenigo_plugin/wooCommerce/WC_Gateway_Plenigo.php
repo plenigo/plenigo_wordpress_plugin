@@ -34,14 +34,14 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
      * Holds the values to be used in the fields callbacks
      */
     private $options = null;
-    // Available Product Types
+    // Available product types
     private $prodTypeList = array('EBOOK', 'DIGITALNEWSPAPER', 'DOWNLOAD', 'VIDEO', 'MUSIC');
 
     //CONSTANTS
     //Plenigo settings group
     const PLENIGO_SETTINGS_GROUP = 'plenigo';
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
-    //Order Title Replacements
+    //Order title replacements
     const ORDER_SITE_TITLE = '%%SITE_TITLE%%';
     const ORDER_ORDER_ID = '%%ORDER_ID%%';
     const ORDER_ORDER_NO = '%%ORDER_NO%%';
@@ -123,7 +123,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
     }
 
     /**
-     * After the JavaScript SDk is loaded, if we have to process an order, let's enerate the checkout snippet and execute it...
+     * After the JavaScript SDk is loaded, if we have to process an order, let's generate the checkout snippet and execute it...
      */
     public function plenigo_checkout_process() {
         global $woocommerce;
@@ -152,7 +152,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                 $order->update_status('pending', __('Plenigo checkout stating', self::PLENIGO_SETTINGS_GROUP));
                 plenigo_log_message("WOO: Creating checkout snippet:", E_USER_NOTICE);
 
-                //Let's create a unmanaged Plenigo Product for this order
+                //Let's create a unmanaged Plenigo product for this order
                 $sdk = \plenigo_plugin\PlenigoSDKManager::get()->getPlenigoSDK();
                 if (!is_null($sdk) && ($sdk instanceof \plenigo\PlenigoManager)) {
                     if (!isset($this->options['use_login']) || ($this->options['use_login'] == 0 )) {
@@ -261,10 +261,10 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
     }
 
     /**
-     * Creates a plenigo unmanaged product with the last Product ID as the order ID. 
+     * Creates a plenigo unmanaged product with the last product ID as the order ID. 
      * 
-     * @param \WooCommerce\Classes\WC_Order $order the order to create the Product from
-     * @return \plenigo\models\ProductBase The plenigo Product Object
+     * @param \WooCommerce\Classes\WC_Order $order the order to create the product from
+     * @return \plenigo\models\ProductBase The plenigo product Object
      */
     private function get_product_checkout($order = null) {
         $res = null;
@@ -297,7 +297,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
     /**
      * 
      * @param \WooCommerce\Classes\WC_Order $order the order to create the title
-     * @return string the generated Title
+     * @return string the generated title
      */
     private function get_order_title($order) {
         $blog_title = get_bloginfo('name');
@@ -333,7 +333,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
      * 
      * @param int $field
      * @param \WooCommerce\Classes\WC_Order $order the order to create the title
-     * @return string the generated List
+     * @return string the generated list
      */
     public function get_product_list($field, $order) {
         $res = '';

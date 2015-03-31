@@ -6,7 +6,7 @@ namespace plenigo_plugin;
  * PlenigoURLManager
  * 
  * <b>
- * 
+ * This class handles everything aboiut URLs. Detecting th current one, sanitizing others, etc.
  * </b>
  *
  * @category SDK
@@ -25,7 +25,7 @@ class PlenigoURLManager {
     const FORBIDDEN_PARAMS = "plppsuccess,plppfailure,token,PayerID,plsofortsuccess,plsofortfailure,plpfsuccess,plpffailure";
 
     /**
-     * Holds the Plugin configuration options
+     * Holds the plugin configuration options
      */
     private $options = null;
 
@@ -35,7 +35,7 @@ class PlenigoURLManager {
     private static $instance = null;
 
     /**
-     * Default constructor , called from the main php file
+     * Default constructor, called from the main php file
      */
     private function __construct() {
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
@@ -54,10 +54,18 @@ class PlenigoURLManager {
         return self::$instance;
     }
 
+    /*     * *
+     * Obtains the current URL the user should be in. This won't include local anchors found in the page.
+     */
+
     public function getCurrentURL() {
         return $this->full_url($_SERVER, true);
     }
 
+    /**
+     * Obtains the current URL the user should be in and then sanitixes it. This won't include local anchors found in the page.
+     * @return string the current sanitized URL string
+     */
     public function getSanitizedURL() {
         $res = $this->getCurrentURL();
         return $this->sanitize_url($res);
@@ -116,8 +124,8 @@ class PlenigoURLManager {
     /**
      * Manual replacement of http_build_url() to avoid PECL library requirement
      * 
-     * @param type $parsed_url
-     * @return type
+     * @param string $parsed_url The url as it comes
+     * @return string a standardized URL with all its fields
      */
     private function unparse_url($parsed_url) {
         //unset blank values

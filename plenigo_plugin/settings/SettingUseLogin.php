@@ -105,7 +105,7 @@ class SettingUseLogin extends PlenigoWPSetting {
     }
 
     /**
-     * Returns the tiele of the OFF option
+     * Returns the title of the OFF option
      * 
      * @return string
      */

@@ -21,7 +21,7 @@
 namespace plenigo_plugin\settings;
 
 /**
- * Setting class for curtain_title_members
+ * Setting class for woo_order_title
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings

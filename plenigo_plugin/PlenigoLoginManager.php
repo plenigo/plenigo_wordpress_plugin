@@ -29,10 +29,9 @@ class PlenigoLoginManager {
      * Holds the values to be used in the fields callbacks
      */
     private $options = null;
-    private $plenigoSDK = null;
 
     /**
-     * Default constructor , called from the main php file
+     * Default constructor, called from the main php file
      */
     public function __construct() {
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
@@ -77,7 +76,7 @@ class PlenigoLoginManager {
 
     /**
      * This method checks if the page has to take care of the code received from the Oauth redirection. 
-     * If it does then it attempts to register the user, update the fields with Plenigo Data and the log the user in.
+     * If it does then it attempts to register the user, update the fields with plenigo data and the log the user in.
      * 
      * @return void only returns abruptly if no code is found on the request
      */
@@ -88,7 +87,6 @@ class PlenigoLoginManager {
         if ($code === null || $code === false) {
             return;
         }
-
 
         // getting the CSRF Token
         $csrfToken = PlenigoSDKManager::get()->get_csrf_token();
@@ -101,7 +99,7 @@ class PlenigoLoginManager {
         $tokenData = TokenService::getAccessToken($code, $redirectUrl, $csrfToken);
 
         /**
-         * The TokenData object contains the following fields:
+          The TokenData object contains the following fields:
           accessToken	This token has an expiration date and can be used to get user information
           expiresIn	The time in seconds where the access token will expire
           refreshToken	This token is used to get more access token
@@ -119,9 +117,9 @@ class PlenigoLoginManager {
     }
 
     /**
-     * This method looks for the user with the Plenigo details. It stores a 'meta' key  with the Plenigo UID so,
+     * This method looks for the user with the plenigo details. It stores a 'meta' key  with the plenigo UID so,
      * if found, the user is updated, if not found it will look by email address, if found the user is updated,
-     * if not found, it will register a new Wordpress user with the Plenigo details. The username will have 'PL_'
+     * if not found, it will register a new Wordpress user with the plenigo details. The username will have 'PL_'
      * prepended for visibility reasons.
      * 
      * @param plenigo\models\UserData $userData the user data returned by the API call
@@ -189,14 +187,14 @@ class PlenigoLoginManager {
     }
 
     /**
-     * Performs the actual login of a given Wordpress User ID. If defined it will redirecto to the needed URL, or else
-     * it will redirect to this blog's home page
+     * Performs the actual login of a given Wordpress User ID. If defined it will redirect to the needed URL, or else
+     * it will redirect to this blog's home page. This currently doesnt support Wordpress remember me functionality as 
+     * it is more complex than just providing a cookie.
      * 
      * @param int $currUserID the Wordpress User ID 
      */
     private function perform_login($currUserID) {
         //Log them in
-        //TODO remember me functionality
         $rememberme = true;
         wp_set_auth_cookie($currUserID, $rememberme);
         $homeURL = home_url('/');
@@ -234,7 +232,7 @@ class PlenigoLoginManager {
 
     /**
      * Generates a user name given the UserData object. This takes into account several cases:
-     * 1 - Username is set on Plenigo, then use that
+     * 1 - Username is set on plenigo, then use that
      * 2 - First and Last Name are set, then use "firstNameLastName" algorythm
      * 3 - Nothing is set so it takes the first part of the email address and use it as username
      * 
@@ -256,6 +254,7 @@ class PlenigoLoginManager {
             plenigo_log_message("FROM USERNAME [" . print_r($userName, true) . "]");
             $name = strtolower($userName);
         } else if (!is_null($lastName) && strlen($lastName) > 1) {
+            $firstName = !is_null($firstName) ? $firstName : __('Mr./Mis', self::PLENIGO_SETTINGS_GROUP);
             plenigo_log_message("FROM FIRST, LAST: [" . print_r($firstName, true) . ", " . print_r($lastName, true) . "]");
             $name = lcfirst(ucwords($firstName)) . ucwords($lastName);
         } else {
@@ -268,7 +267,7 @@ class PlenigoLoginManager {
         //WP sanitize
         $name = sanitize_user(trim($name), true);
 
-        //Add Plenigo Prefix
+        //Add plenigo prefix
         $name = "PL_" . $name;
 
         //Make sure the name is unique: if we've already got a user with this name, append a number to it.
@@ -319,7 +318,7 @@ class PlenigoLoginManager {
     }
 
     /**
-     * Updates and modifies the user profiles with the Plenigo data if needed and site is allowing it
+     * Updates and modifies the user profiles with the plenigo data if needed and site is allowing it
      * 
      * @param int $id the User ID to modify
      * @param plenigo\models\UserData $userData the data that comes from the API call

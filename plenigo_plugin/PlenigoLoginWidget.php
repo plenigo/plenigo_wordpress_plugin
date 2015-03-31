@@ -6,7 +6,7 @@ namespace plenigo_plugin;
  * PlenigoLoginWidget
  * 
  * <b>
- * This class describes the Widget that allows the Plenigo Login. It renders the actual widget plus the settings of the widget.
+ * This class describes the Widget that allows the plenigo login. It renders the actual widget plus the settings of the widget.
  * This class can change in the future to allow more customizations options of the widget.
  * </b>
  *
@@ -54,8 +54,8 @@ class PlenigoLoginWidget extends \WP_Widget
     {
         parent::__construct(
             'plenigo_login_widget', // Base ID
-            __('Plenigo Login', self::PLENIGO_SETTINGS_GROUP), // Name
-            array('description' => __('This is the Plegino Login widget. Here you will find the Plenigo login button '
+            __('Plenigo login', self::PLENIGO_SETTINGS_GROUP), // Name
+            array('description' => __('This is the Plegino Login widget. Here you will find the plenigo login button '
                 . 'or the user profile data related to the plenigo user.', self::PLENIGO_SETTINGS_GROUP),) // Args
         );
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
@@ -71,7 +71,6 @@ class PlenigoLoginWidget extends \WP_Widget
      */
     public function widget($args, $instance)
     {
-
         echo $args['before_widget'];
         if (!empty($instance['title'])) {
             echo $args['before_title'] . apply_filters('widget_title', $instance['title']) . $args['after_title'];
@@ -91,7 +90,7 @@ class PlenigoLoginWidget extends \WP_Widget
                 $strLoginCode = $this->replace_login_status($strLoginCode);
             }
         }
-        //Otherwise, show the login form (with Plenigo Connect button)
+        //Otherwise, show the login form (with plenigo connect button)
         else {
             $strLoginCode = file_get_contents($loginFormFile);
             if ($strLoginCode !== false) {
@@ -202,7 +201,7 @@ class PlenigoLoginWidget extends \WP_Widget
     /**
      * This method will create a login snippet and send it back for button on click
      * 
-     * @return string the Plenigo login snippet
+     * @return string the plenigo login snippet
      */
     private function get_plenigo_snippet()
     {
@@ -248,7 +247,7 @@ class PlenigoLoginWidget extends \WP_Widget
      */
     public function replace_login_status($html)
     {
-        plenigo_log_message("Current user forshowing status!", E_USER_NOTICE);
+        plenigo_log_message("Current user for showing status!", E_USER_NOTICE);
 
         $userdata = \get_userdata(\get_current_user_id());
         $loginFirstName = $userdata->user_firstname;
@@ -272,7 +271,7 @@ class PlenigoLoginWidget extends \WP_Widget
     }
 
     /**
-     * Replace tags for the login form (and Plenigo login button).
+     * Replace tags for the login form (and plenigo login button).
      * 
      * @param string $html the raw HTML from the template
      * @return string the HTML with actual information, ready to echo
