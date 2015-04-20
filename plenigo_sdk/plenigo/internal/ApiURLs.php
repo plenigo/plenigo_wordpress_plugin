@@ -18,12 +18,18 @@ namespace plenigo\internal;
  * @link     https://www.plenigo.com
  *
  */
+
 final class ApiURLs
 {
     /**
      * Default plenigo URL.
      */
     const DEFAULT_PLENIGO_URL = "https://api.plenigo.com";
+
+    /**
+     * OAuth2 plenigo URL.
+     */
+    const OAUTH_PLENIGO_URL = "https://www.plenigo.com";
 
     /**
      * This URL is used to check if an user has access to a product.
