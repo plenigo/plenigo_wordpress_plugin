@@ -166,7 +166,7 @@ class PlenigoContentManager {
 
         $disableText = '';
         if ($isPaywalled === FALSE || $userBought === TRUE || $hasFreeViews === FALSE || $rType !== self::RENDER_SINGLE) {
-            $disableText = ' data-disable-metered="TRUE" ';
+            $disableText = ' data-disable-metered="true" ';
         }
         $meteredURLText = '';
         if (isset($this->options['metered_url']) && filter_var($this->options['metered_url'], FILTER_VALIDATE_URL) !== FALSE) {
@@ -220,11 +220,11 @@ class PlenigoContentManager {
             $curtain_code = '';
             plenigo_log_message("ITS PAYWALLED");
             $canEdit = current_user_can('edit_post', $post->ID);
+            $hasBought = $this->user_bought_content($isFeed);            
             $this->addDebugLine("Post ID:" . $post->ID);
             $this->addDebugLine("Editor visit: " . var_export($canEdit, TRUE));
             if (!$hasBought && !$canEdit) {
                 $rType = $this->get_render_type($isFeed);
-                $hasBought = $this->user_bought_content($isFeed);
                 $html_curtain = null;
 
                 if (isset($this->templateMap[$rType][$hasBought])) {

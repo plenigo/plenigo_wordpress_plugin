@@ -46,6 +46,7 @@ class PlenigoSDKManager {
      */
     private function __construct() {
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
+        $this->start_session();
     }
 
     /**
@@ -74,8 +75,8 @@ class PlenigoSDKManager {
             }
             plenigo_log_message('Configuring SDK for company id: ' . $this->options["company_id"], E_USER_NOTICE);
             $this->plenigoSDK = \plenigo\PlenigoManager::configure(
-                            $this->options["company_secret"], $this->options["company_id"], $testValue
-                            , PLENIGO_SVC_URL
+                    $this->options["company_secret"], $this->options["company_id"], $testValue
+                    , PLENIGO_SVC_URL, PLENIGO_OAUTH_SVC_URL
             );
         }
         $this->plenigoSDK->setDebug((PLENIGO_DEBUG === true));
@@ -225,7 +226,7 @@ class PlenigoSDKManager {
                 $res = session_id() === '' ? FALSE : TRUE;
             }
         }
-        if ($res === FALSE && !headers_sent()) {
+        if (($res === FALSE && !headers_sent()) || (!isset($_SESSION))) {
             session_start();
         }
     }
