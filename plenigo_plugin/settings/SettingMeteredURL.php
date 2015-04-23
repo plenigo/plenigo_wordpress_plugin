@@ -33,7 +33,7 @@ require_once __DIR__ . '/SettingRedirectURL.php';
 class SettingMeteredURL extends SettingRedirectURL {
 
     //These should be overriden
-    const SECTION_ID = 'plenigo_general';
+    const SECTION_ID = 'plenigo_metered_section';
     const SETTING_ID = 'metered_url';
 
     /**

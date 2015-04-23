@@ -130,7 +130,9 @@ Coming soon
 
 == Changelog ==
 = 1.2.1 - A new hope =
+- Feature: Now you can set a post tag to be a "metered views prevention tag"
 - Improved: Updated PHP SDK
+- Improved: Moved metered settings to the new "metered views" section
 - Fixed: A problem with returning URLs after loging in from the curtain
 - Fixed: A problem where not being loggedout from plenigo when logging out from Wordpress via the login screen
 - Fixed: A problem with checking "bought" condition in some scenarios
