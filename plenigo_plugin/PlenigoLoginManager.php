@@ -359,14 +359,14 @@ class PlenigoLoginManager {
 
         $current_url = PlenigoURLManager::get()->getSanitizedURL();
         $arrTokens = explode(',', self::PLENIGO_URL_EXCEPTIONS);
-        $booUpdate = true;
+        $updNeeded = true;
         foreach ($arrTokens as $token) {
             if (stristr($current_url, $token)) {
-                $booUpdate = false;
+                $updNeeded = false;
                 break;
             }
         }
-        if ($booUpdate !== FALSE) {
+        if ($updNeeded !== FALSE) {
             $_SESSION['plenigo_throwback_url'] = $current_url;
         }
 

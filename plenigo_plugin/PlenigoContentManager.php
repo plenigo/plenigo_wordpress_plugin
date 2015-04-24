@@ -65,19 +65,19 @@ class PlenigoContentManager {
      * (for shortcode processing) but more than 1.
      */
     const PLENIGO_CONTENT_PRIO = 5;
-//Plenigo settings group
+    //Plenigo settings group
     const PLENIGO_SETTINGS_GROUP = 'plenigo';
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
     const MORE_SPLITTER = '<span id="more-';
     const PLENIGO_SEPARATOR = '<!-- {{PLENIGO_SEPARATOR}} -->';
-//Plenigo settings
+    //Plenigo settings
     const OPT_METERED_EXEMPT = 'plenigo_metered_exempt_tag';
-// Render types
+    // Render types
     const RENDER_FEED = 0;
     const RENDER_SINGLE = 1;
     const RENDER_SEARCH = 2;
     const RENDER_OTHER = 3;
-//Replacement tags
+    //Replacement tags
     const REPLACE_PLUGIN_DIR = "<!--[PLUGIN_DIR]-->";
     const REPLACE_PRODUCT_NAME = "<!--[PRODUCT_NAME]-->";
     const REPLACE_PRODUCT_PRICE = "<!--[PRODUCT_PRICE]-->";
@@ -93,13 +93,13 @@ class PlenigoContentManager {
     const REPLACE_CUSTOM_TITLE = "<!--[CUSTOM_TITLE]-->";
     const REPLACE_CUSTOM_CLICK = "<!--[CUSTOM_CLICK]-->";
     const REPLACE_CUSTOM_STYLE = "<!--[CUSTOM_STYLE]-->";
-//Google Analytics
+    //Google Analytics
     const REPLACE_GA_CODE = "<!--[PLENIGO_GA_CODE]-->";
     const REPLACE_GA_EVENTS = "<!--[PLENIGO_GA_EVENTS]-->";
-//NoScript
+    //NoScript
     const REPLACE_NS_TITLE = "<!--[NOSCRIPT_TITLE]-->";
     const REPLACE_NS_MESSAGE = "<!--[NOSCRIPT_MESSAGE]-->";
-// Teaser smart detection
+    // Teaser smart detection
     const TEASER_SHORTCODES_CONTAINER = "aesop_content,pl_checkout,pl_checkout_button,pl_renew";
     const TEASER_SHORTCODES_SINGLE = "aesop_quote";
     const TEASER_HTML_CONTAINER = "p,div,table";
@@ -170,14 +170,7 @@ class PlenigoContentManager {
         //Checking if the user has free views
         $hasFreeViews = (PlenigoSDKManager::get()->plenigo_has_free_views() === TRUE);
         //Checking if the metered view is exempt by tag
-        $tagExempt = FALSE;
-        $optExempt = isset($this->options[self::OPT_METERED_EXEMPT]) ? $this->options[self::OPT_METERED_EXEMPT] : NULL;
-        if (!is_null($optExempt) && $optExempt !== '') {
-            preg_match('/{(.*?)}/', $optExempt, $arrToken);
-            if (count($arrToken) == 2 && has_tag(trim($arrToken[1]))) {
-                $tagExempt = TRUE;
-            }
-        }
+        $tagExempt = $this->is_metered_exempt();
 
         $disableText = '';
         if ($tagExempt == TRUE || $isPaywalled === FALSE || $userBought === TRUE || $hasFreeViews === FALSE || $rType !== self::RENDER_SINGLE) {
@@ -196,7 +189,7 @@ class PlenigoContentManager {
 
         $this->printGoogleAnalytics();
 
-//Output the checklist
+    //Output the checklist
         $this->printDebugChecklist();
     }
 
@@ -249,8 +242,8 @@ class PlenigoContentManager {
 
                 $curtain_code = $content;
 
-//IF the blog is configured to show only excerpts in the RSS, then we let the content
-//go if paywalled and MORE tag not found, otherwise we don't show anything
+                //If the blog is configured to show only excerpts in the RSS, then we let the content
+                //go if paywalled and MORE tag not found, otherwise we don't show anything
                 $showByDefault = FALSE;
                 if (get_option('rss_use_excerpt ', 0) === 1) {
                     $showByDefault = TRUE;
@@ -310,38 +303,38 @@ class PlenigoContentManager {
         $plenigoTagDB = (isset($this->options['plenigo_tag_db']) ? $this->options['plenigo_tag_db'] : '');
         $plenigoCatTagDB = (isset($this->options['plenigo_cat_tag_db']) ? $this->options['plenigo_cat_tag_db'] : '');
 
-// Sanitize the product cache
+        // Sanitize the product cache
         if (!isset($this->reqCache["listProdId"])) {
             $this->reqCache["listProdId"] = array();
         }
-// Sanitize the category cache
+        // Sanitize the category cache
         if (!isset($this->reqCache["listCatId"])) {
             $this->reqCache["listCatId"] = array();
         }
 
-//Prevent tag takes precedense
+        //Prevent tag takes precedense
         $hasPreventTag = $this->hasPreventTag();
         if ($hasPreventTag) {
             $this->addGAEvent("curtain|curtain-prevented");
             return FALSE;
         }
 
-// Do not paywall if nothing is configured
+        // Do not paywall if nothing is configured
         if (trim($plenigoTagDB) === '' && trim($plenigoCatTagDB) === '') {
             plenigo_log_message("NO TAGS CONFIGURED");
             return FALSE;
         }
 
-// If Paywall is disabled, we dont check anything
+        // If Paywall is disabled, we dont check anything
         if (PlenigoSDKManager::get()->isPayWallEnabled()) {
 
-//Checking for category IDs
+            //Checking for category IDs
             $hasAnyCatTag = $this->hasAnyCategoryTag();
             if ($hasAnyCatTag) {
                 $this->addGAEvent("curtain|category-matched");
                 return TRUE;
             } else {
-//Checking for Product IDs
+                //Checking for Product IDs
                 $hasAnyProdTag = $this->hasAnyProductTag();
                 if ($hasAnyProdTag) {
                     $this->addGAEvent("curtain|product-matched");
@@ -368,7 +361,7 @@ class PlenigoContentManager {
         }
         $catTagList = (isset($this->options['plenigo_cat_tag_db']) ? $this->options['plenigo_cat_tag_db'] : '');
         $res = FALSE;
-//TAGS WITH CATEGORY IDS
+        //TAGS WITH CATEGORY IDS
         $rowSplit = explode("\n", $catTagList);
         if ($rowSplit === FALSE || count($rowSplit) == 0) {
             $rowSplit = array($catTagList);
@@ -376,13 +369,13 @@ class PlenigoContentManager {
         foreach ($rowSplit as $tagRow) {
             $strTag = explode("->", $tagRow);
             $arrToken = array();
-//Obtain the {slug}
+            //Obtain the {slug}
             preg_match('/{(.*?)}/', $strTag[0], $arrToken);
             if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && has_tag($arrToken[1])) {
                 plenigo_log_message("Category TAG! TAG=" . $strTag[0] . " CategoryID(s):" . $strTag[1]);
                 $this->addDebugLine("Category match: " . $strTag[0]);
                 $arrCats = array();
-//Support for multiple ids in one tag
+                //Support for multiple ids in one tag
                 if (stristr($strTag[1], ',')) {
                     $arrCats = explode(',', $strTag[1]);
                 } else {
@@ -444,7 +437,7 @@ class PlenigoContentManager {
         }
         $prodTagList = (isset($this->options['plenigo_tag_db']) ? $this->options['plenigo_tag_db'] : '');
         $res = FALSE;
-//TAGS WITH PRODUCT IDS
+        //TAGS WITH PRODUCT IDS
         $rowSplit = explode("\n", $prodTagList);
         if ($rowSplit == FALSE || count($rowSplit) == 0) {
             $rowSplit = array($prodTagList);
@@ -452,13 +445,13 @@ class PlenigoContentManager {
         foreach ($rowSplit as $tagRow) {
             $strTag = explode("->", $tagRow);
             $arrToken = array();
-//Obtain the {slug}
+            //Obtain the {slug}
             preg_match('/{(.*?)}/', $strTag[0], $arrToken);
             if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && has_tag($arrToken[1])) {
                 plenigo_log_message("Product TAG! TAG=" . $strTag[0] . " ProductID(s):" . $strTag[1]);
                 $this->addDebugLine("Product match: " . $strTag[0]);
                 $arrProds = array();
-//Support for multiple ids in one tag
+                //Support for multiple ids in one tag
                 if (stristr($strTag[1], ',')) {
                     $arrProds = explode(',', $strTag[1]);
                 } else {
@@ -536,14 +529,7 @@ class PlenigoContentManager {
         $this->addDebugLine("Plenigo backend check");
         $sdk = PlenigoSDKManager::get()->getPlenigoSDK();
         //Checking if the metered view is exempt by tag
-        $tagExempt = FALSE;
-        $optExempt = isset($this->options[self::OPT_METERED_EXEMPT]) ? $this->options[self::OPT_METERED_EXEMPT] : NULL;
-        if (!is_null($optExempt) && $optExempt !== '') {
-            preg_match('/{(.*?)}/', $optExempt, $arrToken);
-            if (count($arrToken) == 2 && has_tag(trim($arrToken[1]))) {
-                $tagExempt = TRUE;
-            }
-        }
+        $tagExempt = $this->is_metered_exempt();
         $res = FALSE;
         if (!is_null($sdk) && ($sdk instanceof \plenigo\PlenigoManager)) {
             plenigo_log_message("Checking if category is there");
@@ -560,7 +546,7 @@ class PlenigoContentManager {
                 if ($tagExempt === FALSE) {
                     plenigo_log_message("USER DIDNT BOUGHT THE PRODUCT, CHECKING FOR FREE VIEWS");
                     $res = PlenigoSDKManager::get()->plenigo_has_free_views();
-                }else{
+                } else {
                     plenigo_log_message("FREE VIEWS PREVENTED BY EXEMPT TAG");
                     $this->addGAEvent("product|freeview-exempt");
                 }
@@ -720,7 +706,7 @@ class PlenigoContentManager {
             $useOauthLogin = TRUE;
         }
 
-//If logged in with plenigo
+        //If logged in with plenigo
         $isLoggedIn = \plenigo\services\UserService::isLoggedIn();
         if ($isLoggedIn && isset($this->options['curtain_title_members']) && isset($this->options['curtain_text_members'])) {
             $courtTitle = $this->options['curtain_title_members'];
@@ -729,34 +715,34 @@ class PlenigoContentManager {
 
         $productData = null;
         if (!is_null($sdk) && ($sdk instanceof \plenigo\PlenigoManager)) {
-// creating a plenigo-managed product
+            // creating a plenigo-managed product
             $product = $this->get_product_checkout();
-// getting the CSRF Token
+            // getting the CSRF Token
             $csrfToken = PlenigoSDKManager::get()->get_csrf_token();
 
             try {
                 if (stristr($html, self::REPLACE_BUTTON_CLICK) !== FALSE) {
-// creating the checkout snippet for this product
+                    // creating the checkout snippet for this product
                     $checkoutBuilder = new \plenigo\builders\CheckoutSnippetBuilder($product);
 
                     $coSettings = array('csrfToken' => $csrfToken);
                     if ($useOauthLogin) {
-// this url must be registered in plenigo
+                        // this url must be registered in plenigo
                         $coSettings['oauth2RedirectUrl'] = $this->options['redirect_url'];
                         plenigo_log_message("url: " . $coSettings['oauth2RedirectUrl']);
                     }
 
-// checkout snippet
+                    // checkout snippet
                     $btnOnClick = $checkoutBuilder->build($coSettings);
                 }
                 if (stristr($html, self::REPLACE_PRODUCT_NAME) !== FALSE ||
-                    stristr($html, self::REPLACE_PRODUCT_PRICE) !== FALSE ||
-                    stristr($html, self::REPLACE_PRODUCT_DETAILS) !== FALSE) {
-// get product data
+                        stristr($html, self::REPLACE_PRODUCT_PRICE) !== FALSE ||
+                        stristr($html, self::REPLACE_PRODUCT_DETAILS) !== FALSE) {
+                    // get product data
                     $productData = \plenigo\services\ProductService::getProductData($product->getId());
                 }
                 if (stristr($html, self::REPLACE_LOGIN_CLICK) !== FALSE) {
-// login snippet depending on OAuth
+                    // login snippet depending on OAuth
                     if ($useOauthLogin) {
                         $loginOnClick = $this->get_oauth_login();
                     } else {
@@ -775,9 +761,9 @@ class PlenigoContentManager {
                 } else {
                     $prodPrice = $productData->getCurrency() . ' ' . sprintf("%06.2f", $productData->getPrice());
                 }
-//If we should show Product details
+                //If we should show Product details
                 $prodDetails = '<table class="plenigo-product"><tr><td><b>' . $prodName . '</b></td>'
-                    . '<td width="170" style="text-align: right;"><b>' . $prodPrice . '</b></td></tr></table>';
+                        . '<td width="170" style="text-align: right;"><b>' . $prodPrice . '</b></td></tr></table>';
             }
         }
 
@@ -785,9 +771,9 @@ class PlenigoContentManager {
         $strThird = "width:30%;";
         $strNone = "display:none;";
         $strEntire = "width:90%;";
-//Handling curtain modes
+        //Handling curtain modes
         if (!isset($this->options['curtain_mode']) || ($this->options['curtain_mode'] == 1 )) {
-//[BUY BUTTON] [LOGIN BUTTON]
+            //[BUY BUTTON] [LOGIN BUTTON]
             if ($isLoggedIn) {
                 $btnStyle = $strEntire;
                 $custStyle = $strNone;
@@ -800,7 +786,7 @@ class PlenigoContentManager {
         }
         if (isset($this->options['curtain_mode'])) {
             if ($this->options['curtain_mode'] == 2) {
-//[CUSTOM BUTTON] [LOGIN BUTTON]
+                //[CUSTOM BUTTON] [LOGIN BUTTON]
                 if ($isLoggedIn) {
                     $btnStyle = $strNone;
                     $custStyle = $strEntire;
@@ -812,7 +798,7 @@ class PlenigoContentManager {
                 }
             }
             if ($this->options['curtain_mode'] == 3) {
-//[BUY BUTTON] [CUSTOM BUTTON] [LOGIN BUTTON]
+                //[BUY BUTTON] [CUSTOM BUTTON] [LOGIN BUTTON]
                 if ($isLoggedIn) {
                     $btnStyle = $strHalf;
                     $custStyle = $strHalf;
@@ -824,7 +810,7 @@ class PlenigoContentManager {
                 }
             }
             if ($this->options['curtain_mode'] == 4) {
-//[CUSTOM BUTTON]
+                //[CUSTOM BUTTON]
                 $btnStyle = $strNone;
                 $custStyle = $strEntire;
                 $loginStyle = $strNone;
@@ -980,11 +966,10 @@ class PlenigoContentManager {
     public function replace_noscript_tags($htmlText) {
         $res = '';
         if (isset($this->options['noscript_enabled']) && $this->options['noscript_enabled'] === 1) {
-            $strTitle = (isset($this->options['noscript_title'])) ? $this->options['noscript_title'] : __("You need JavaScript",
-                    self::PLENIGO_SETTINGS_GROUP);
+            $strTitle = (isset($this->options['noscript_title'])) ? $this->options['noscript_title'] : __("You need JavaScript", self::PLENIGO_SETTINGS_GROUP);
             $strMessage = (isset($this->options['noscript_message'])) ? $this->options['noscript_message'] : __("In order to provide you with the best experience, "
-                    . "this site requires that you allow JavaScript to run. "
-                    . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
+                            . "this site requires that you allow JavaScript to run. "
+                            . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
             $res = str_ireplace(self::REPLACE_NS_TITLE, trim(wp_kses_post($strTitle)), $htmlText);
             $res = str_ireplace(self::REPLACE_NS_MESSAGE, trim(wp_kses_post(wpautop($strMessage))), $res);
         }
@@ -1025,11 +1010,11 @@ class PlenigoContentManager {
         if (!is_null($content) && is_string($content) && trim($content) !== '') {
             $trimmedContent = trim($content);
             $fstWord = strtok($trimmedContent, ' '); //get the very first work, it should be [aesop_ or any other tag
-//if its a shortcode, check for allowed shortcodes and capture the teaser
+            //if its a shortcode, check for allowed shortcodes and capture the teaser
             if (substr($fstWord, 0, 1) == '[') {
                 $this->addDebugLine("SHORTCODE");
                 $tag = strtolower(trim(substr($fstWord, 1)));
-//First lets catch container tags
+                //First lets catch container tags
                 if (in_array($tag, $this->resolveArray(self::TEASER_SHORTCODES_CONTAINER))) {
                     $needle = "[/" . $tag . "]";
                     $this->addDebugLine("TAG:" . $tag . " NEEDLE:" . $needle);
@@ -1041,11 +1026,11 @@ class PlenigoContentManager {
                     return $this->getTeaserText($trimmedContent, $needle);
                 }
             }
-//if its a html tag, check for allowed html tags and capture the teaser
+            //if its a html tag, check for allowed html tags and capture the teaser
             if (substr($fstWord, 0, 1) == '<') {
                 $this->addDebugLine("HTML");
                 $tag = strtolower(trim(substr($fstWord, 1)));
-//First lets catch container tags
+                //First lets catch container tags
                 if (in_array($tag, $this->resolveArray(self::TEASER_HTML_CONTAINER))) {
                     $needle = "/" . $tag . ">";
                     $this->addDebugLine("TAG:" . $tag . " NEEDLE:" . $needle);
@@ -1095,6 +1080,24 @@ class PlenigoContentManager {
             }
         }
         return $arr;
+    }
+
+    /**
+     * Checks if the metered view is exempt by tag
+     * 
+     * @return boolean TRUE if the post is exempt of metered views
+     */
+    public function is_metered_exempt() {
+        $res = FALSE;
+        $optExempt = isset($this->options[self::OPT_METERED_EXEMPT]) ? $this->options[self::OPT_METERED_EXEMPT] : NULL;
+        if (!is_null($optExempt) && $optExempt !== '') {
+            $arrToken = array();
+            preg_match('/{(.*?)}/', $optExempt, $arrToken);
+            if (count($arrToken) == 2 && has_tag(trim($arrToken[1]))) {
+                $res = TRUE;
+            }
+        }
+        return $res;
     }
 
 }
