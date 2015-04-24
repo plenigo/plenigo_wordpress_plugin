@@ -2,8 +2,8 @@
 Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 4.0.0
-Tested up to: 4.1.1
-Stable tag: 1.1.32
+Tested up to: 4.2.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -129,6 +129,15 @@ separator, native Wordpress tag.
 Coming soon
 
 == Changelog ==
+= 1.2.0 - A new hope =
+- Feature: Now you can set a post tag to be a "metered views prevention tag"
+- Feature: Now we are WordPress 4.2.0 compatible
+- Improved: Updated PHP SDK
+- Improved: Moved metered settings to the new "metered views" section
+- Fixed: A problem with returning URLs after loging in from the curtain
+- Fixed: A problem where not being loggedout from plenigo when loggedout from Wordpress via the login screen
+- Fixed: A problem with checking "bought" condition in some scenarios
+
 = 1.1.32 - WooCommerce Payment Gateway =
 - Feature: Now you can use plenigo as a WooCommerce Payment Gateway! No further setup required! Altough you can customize the order title to be shown in the customers bills. Start selling your products right away!
 

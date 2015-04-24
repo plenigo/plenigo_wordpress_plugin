@@ -32,7 +32,7 @@ class SettingCheckMetered extends PlenigoWPSetting
 {
 
     //These should be overriden
-    const SECTION_ID = 'plenigo_general';
+    const SECTION_ID = 'plenigo_metered_section';
     const SETTING_ID = 'check_metered';
 
     /**

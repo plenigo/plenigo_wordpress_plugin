@@ -26,6 +26,7 @@ require_once __DIR__ . '/settings/SettingCompanyId.php';
 require_once __DIR__ . '/settings/SettingCompanySecret.php';
 require_once __DIR__ . '/settings/SettingCheckMetered.php';
 require_once __DIR__ . '/settings/SettingMeteredURL.php';
+require_once __DIR__ . '/settings/SettingMeteredExemptionTag.php';
 require_once __DIR__ . '/settings/SettingUseNoscript.php';
 require_once __DIR__ . '/settings/SettingNoscriptTitle.php';
 require_once __DIR__ . '/settings/SettingNoscriptMessage.php';
@@ -92,6 +93,7 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingCompanySecret());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCheckMetered());
         array_push($this->settings, new \plenigo_plugin\settings\SettingMeteredURL());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingMeteredExemptionTag());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseNoscript());
         array_push($this->settings, new \plenigo_plugin\settings\SettingNoscriptTitle());
         array_push($this->settings, new \plenigo_plugin\settings\SettingNoscriptMessage());
@@ -204,6 +206,10 @@ class PlenigoSettingsPage {
         . 'aria-controls="plenigo_content_section" role="tab" data-toggle="tab">'
         . __('Premium Content', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
 
+        echo '<li role="presentation" class="active"><a href="#plenigo_metered_section" '
+        . 'aria-controls="plenigo_metered_section" role="tab" data-toggle="tab">'
+        . __('Metered Views', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
+
         echo '<li role="presentation" class="active"><a href="#plenigo_curtain_section" '
         . 'aria-controls="plenigo_curtain_section" role="tab" data-toggle="tab">'
         . __('Curtain Customization', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
@@ -256,6 +262,13 @@ class PlenigoSettingsPage {
                 'plenigo_content_section', // ID
                 "", // Title
                 array($this, 'print_section_content'), // Callback
+                self::PLENIGO_SETTINGS_PAGE // Page
+        );
+
+        add_settings_section(
+                'plenigo_metered_section', // ID
+                "", // Title
+                array($this, 'print_section_metered'), // Callback
                 self::PLENIGO_SETTINGS_PAGE // Page
         );
 
@@ -348,6 +361,17 @@ class PlenigoSettingsPage {
                 . 'Here you configure how plenigo detects the content that is behind a Paywall. '
                 . 'Here you can set a TAG to use as &quot;Payable&quot; marker, and also you can configure the '
                 . 'plenigo managed product(s) that represents the paywall for that particular tag.';
+    }
+
+    /**
+     * Print the Section text
+     */
+    public function print_section_metered() {
+        print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_metered_section">'
+            . '<h3>' . __('Metered Views settings', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
+            . 'Metered Views is a way to handle certain amount of free views. '
+            . 'Here you can set a TAG to use as Metered &quot;Exemption&quot; marker, and also you '
+            . 'completely disable metered views.';
     }
 
     /**

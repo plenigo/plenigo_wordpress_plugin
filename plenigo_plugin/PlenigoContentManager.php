@@ -70,6 +70,8 @@ class PlenigoContentManager {
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
     const MORE_SPLITTER = '<span id="more-';
     const PLENIGO_SEPARATOR = '<!-- {{PLENIGO_SEPARATOR}} -->';
+    //Plenigo settings
+    const OPT_METERED_EXEMPT = 'plenigo_metered_exempt_tag';
     // Render types
     const RENDER_FEED = 0;
     const RENDER_SINGLE = 1;
@@ -151,22 +153,22 @@ class PlenigoContentManager {
     public function plenigo_js_snippet() {
         PlenigoSDKManager::get()->getPlenigoSDK();
         $isPaywalled = $this->plenigo_paywalled_content();
-        /*
-          echo '<script type="application/javascript">'
-          . 'var plenigo = plenigo || {};'
-          . 'plenigo.baseURI = "' . PLENIGO_SVC_URL . '";'
-          . 'plenigo.baseStaticURI = "' . PLENIGO_SVC_URL . '";</script>'; */
 
         if ($isPaywalled == TRUE && !isset($this->reqCache["listProdId"]) && !isset($this->reqCache["lastCatId"])) {
             plenigo_log_message("PRODUCT OR CATEGORY NOT FOUND!!!", E_USER_WARNING);
         }
+        //Handling other pages than single post view
         $rType = $this->get_render_type(FALSE);
+        //Checking if product has been bought
         $userBought = (PlenigoSDKManager::get()->plenigo_bought($this->reqCache["listProdId"]) === TRUE);
+        //Checking if the user has free views
         $hasFreeViews = (PlenigoSDKManager::get()->plenigo_has_free_views() === TRUE);
+        //Checking if the metered view is exempt by tag
+        $tagExempt = $this->is_metered_exempt();
 
         $disableText = '';
-        if ($isPaywalled === FALSE || $userBought === TRUE || $hasFreeViews === FALSE || $rType !== self::RENDER_SINGLE) {
-            $disableText = ' data-disable-metered="TRUE" ';
+        if ($tagExempt == TRUE || $isPaywalled === FALSE || $userBought === TRUE || $hasFreeViews === FALSE || $rType !== self::RENDER_SINGLE) {
+            $disableText = ' data-disable-metered="true" ';
         }
         $meteredURLText = '';
         if (isset($this->options['metered_url']) && filter_var($this->options['metered_url'], FILTER_VALIDATE_URL) !== FALSE) {
@@ -181,7 +183,7 @@ class PlenigoContentManager {
 
         $this->printGoogleAnalytics();
 
-        //Output the checklist
+    //Output the checklist
         $this->printDebugChecklist();
     }
 
@@ -220,11 +222,11 @@ class PlenigoContentManager {
             $curtain_code = '';
             plenigo_log_message("ITS PAYWALLED");
             $canEdit = current_user_can('edit_post', $post->ID);
+            $hasBought = $this->user_bought_content($isFeed);
             $this->addDebugLine("Post ID:" . $post->ID);
             $this->addDebugLine("Editor visit: " . var_export($canEdit, TRUE));
             if (!$hasBought && !$canEdit) {
                 $rType = $this->get_render_type($isFeed);
-                $hasBought = $this->user_bought_content($isFeed);
                 $html_curtain = null;
 
                 if (isset($this->templateMap[$rType][$hasBought])) {
@@ -234,7 +236,7 @@ class PlenigoContentManager {
 
                 $curtain_code = $content;
 
-                //IF the blog is configured to show only excerpts in the RSS, then we let the content
+                //If the blog is configured to show only excerpts in the RSS, then we let the content
                 //go if paywalled and MORE tag not found, otherwise we don't show anything
                 $showByDefault = FALSE;
                 if (get_option('rss_use_excerpt ', 0) === 1) {
@@ -520,6 +522,8 @@ class PlenigoContentManager {
         plenigo_log_message("LOOKING FOR THE FULL PLENIGO SDK CHECK");
         $this->addDebugLine("Plenigo backend check");
         $sdk = PlenigoSDKManager::get()->getPlenigoSDK();
+        //Checking if the metered view is exempt by tag
+        $tagExempt = $this->is_metered_exempt();
         $res = FALSE;
         if (!is_null($sdk) && ($sdk instanceof \plenigo\PlenigoManager)) {
             plenigo_log_message("Checking if category is there");
@@ -533,8 +537,13 @@ class PlenigoContentManager {
 
             // If the user hasn't actually bought the product, check for free views
             if ($res === FALSE) {
-                plenigo_log_message("USER DIDNT BOUGHT THE PRODUCT, CHECKING FOR FREE VIEWS");
-                $res = PlenigoSDKManager::get()->plenigo_has_free_views();
+                if ($tagExempt === FALSE) {
+                    plenigo_log_message("USER DIDNT BOUGHT THE PRODUCT, CHECKING FOR FREE VIEWS");
+                    $res = PlenigoSDKManager::get()->plenigo_has_free_views();
+                } else {
+                    plenigo_log_message("FREE VIEWS PREVENTED BY EXEMPT TAG");
+                    $this->addGAEvent("product|freeview-exempt");
+                }
             } else {
                 $this->addGAEvent("product|bought-visit");
             }
@@ -1065,6 +1074,24 @@ class PlenigoContentManager {
             }
         }
         return $arr;
+    }
+
+    /**
+     * Checks if the metered view is exempt by tag
+     * 
+     * @return boolean TRUE if the post is exempt of metered views
+     */
+    public function is_metered_exempt() {
+        $res = FALSE;
+        $optExempt = isset($this->options[self::OPT_METERED_EXEMPT]) ? $this->options[self::OPT_METERED_EXEMPT] : NULL;
+        if (!is_null($optExempt) && $optExempt !== '') {
+            $arrToken = array();
+            preg_match('/{(.*?)}/', $optExempt, $arrToken);
+            if (count($arrToken) == 2 && has_tag(trim($arrToken[1]))) {
+                $res = TRUE;
+            }
+        }
+        return $res;
     }
 
 }

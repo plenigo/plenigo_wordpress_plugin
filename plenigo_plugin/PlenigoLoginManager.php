@@ -24,6 +24,7 @@ class PlenigoLoginManager {
     const PLENIGO_SETTINGS_GROUP = 'plenigo';
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
     const PLENIGO_META_NAME = 'plenigo_uid';
+    const PLENIGO_URL_EXCEPTIONS = 'wp-login,wp-admin';
 
     /**
      * Holds the values to be used in the fields callbacks
@@ -38,14 +39,13 @@ class PlenigoLoginManager {
         //If this pageload isn't supposed to be handing a login, just stop here.
         if (filter_input(INPUT_GET, 'code') !== null && filter_input(INPUT_GET, 'code') !== false) {
             add_action("init", array($this, 'plenigo_process_login'));
-            $this->options['afterLoginUrl'] = wp_login_url();
         } else {
             //Just saving return URL
             add_action('wp_footer', array($this, 'store_url'));
         }
 
         if (filter_input(INPUT_GET, 'error') !== null && filter_input(INPUT_GET, 'error') !== false &&
-                filter_input(INPUT_GET, 'error_description') !== null && filter_input(INPUT_GET, 'error_description') !== false) {
+            filter_input(INPUT_GET, 'error_description') !== null && filter_input(INPUT_GET, 'error_description') !== false) {
             add_filter('login_message', array($this, 'login_error'));
         }
 
@@ -54,6 +54,9 @@ class PlenigoLoginManager {
         $loggedIn = UserService::isLoggedIn();
         if ($loggedIn === false) {
             add_action('wp_footer', array($this, 'trigger_logout'));
+        }
+        if (filter_input(INPUT_GET, 'loggedout') !== null && filter_input(INPUT_GET, 'loggedout') !== false) {
+            add_action('login_footer', array($this, 'ensure_logout'));
         }
     }
 
@@ -75,6 +78,18 @@ class PlenigoLoginManager {
     }
 
     /**
+     * Ensures that plenigo cookie are is cleared after you triggered logout by other means (the WP Bar for example)
+     */
+    public function ensure_logout() {
+        echo'<script type="application/javascript" '
+        . 'src="' . PLENIGO_JSSDK_URL . '/static_resources/javascript/'
+        . $this->options["company_id"] . '/plenigo_sdk.min.js" data-disable-metered="true"></script>';
+        echo '<script type="application/javascript">';
+        echo 'plenigo.logout();';
+        echo '</script>';
+    }
+
+    /**
      * This method checks if the page has to take care of the code received from the Oauth redirection. 
      * If it does then it attempts to register the user, update the fields with plenigo data and the log the user in.
      * 
@@ -90,7 +105,6 @@ class PlenigoLoginManager {
 
         // getting the CSRF Token
         $csrfToken = PlenigoSDKManager::get()->get_csrf_token();
-
         // this url must be registered in plenigo
         $redirectUrl = $this->options['redirect_url'];
 
@@ -208,7 +222,7 @@ class PlenigoLoginManager {
                 $this->options['login_url'] = esc_url($sessionURL);
             }
         }
-
+        plenigo_log_message("Redirecting to:" . $this->options['login_url'] . "  <<<END>>>");
         header("Location: " . $this->options['login_url']);
         exit;
     }
@@ -340,8 +354,23 @@ class PlenigoLoginManager {
      * This method stores the last URL inside the site regardless the HTTP referrer
      */
     public function store_url() {
+        plenigo_log_message("PREVIOUS THROWBACK: " . var_export($_SESSION['plenigo_throwback_url'], true), E_USER_NOTICE);
+
+
         $current_url = PlenigoURLManager::get()->getSanitizedURL();
-        $_SESSION['plenigo_throwback_url'] = $current_url;
+        $arrTokens = explode(',', self::PLENIGO_URL_EXCEPTIONS);
+        $updNeeded = true;
+        foreach ($arrTokens as $token) {
+            if (stristr($current_url, $token)) {
+                $updNeeded = false;
+                break;
+            }
+        }
+        if ($updNeeded !== FALSE) {
+            $_SESSION['plenigo_throwback_url'] = $current_url;
+        }
+
+        plenigo_log_message("THROWBACK: " . var_export($_SESSION['plenigo_throwback_url'], true), E_USER_NOTICE);
     }
 
 }
