@@ -42,9 +42,6 @@ define('PLENIGO_SVC_URL', "https://api.plenigo.com");
 define('PLENIGO_OAUTH_SVC_URL', "https://www.plenigo.com");
 define('PLENIGO_JSSDK_URL', "https://static.plenigo.com");
 
-// Default URL for Javascript
-define('DEF_PLENIGO_SVC_URL', "https://api.plenigo.com");
-
 // Plenigo PHP SDK
 require_once dirname(__FILE__) . '/plenigo_sdk/plenigo/Plenigo.php';
 require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoSDKManager.php';

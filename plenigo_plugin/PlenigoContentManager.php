@@ -154,12 +154,6 @@ class PlenigoContentManager {
         PlenigoSDKManager::get()->getPlenigoSDK();
         $isPaywalled = $this->plenigo_paywalled_content();
 
-        if (DEF_PLENIGO_SVC_URL != PLENIGO_SVC_URL) {
-            echo '<script type="application/javascript">'
-            . 'var plenigo = plenigo || {};'
-            . 'plenigo.baseURI = "' . PLENIGO_SVC_URL . '";'
-            . 'plenigo.baseStaticURI = "' . PLENIGO_SVC_URL . '";</script>';
-        }
         if ($isPaywalled == TRUE && !isset($this->reqCache["listProdId"]) && !isset($this->reqCache["lastCatId"])) {
             plenigo_log_message("PRODUCT OR CATEGORY NOT FOUND!!!", E_USER_WARNING);
         }
