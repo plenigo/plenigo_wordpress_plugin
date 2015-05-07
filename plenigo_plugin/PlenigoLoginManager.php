@@ -237,7 +237,7 @@ class PlenigoLoginManager {
      * @return int Number of secconds to allow the cookie to stay
      */
     public function filter_cookie_expiration($length, $user_id, $remember) {
-        $length = YEAR_IN_SECONDS; //Standard Wordpress contant since Wordpress 3.5
+        $length = YEAR_IN_SECONDS; //Standard Wordpress constant since Wordpress 3.5
         return $length;
     }
 
