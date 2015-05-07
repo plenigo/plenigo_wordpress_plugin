@@ -39,6 +39,7 @@ class PlenigoLoginManager {
         //If this pageload isn't supposed to be handing a login, just stop here.
         if (filter_input(INPUT_GET, 'code') !== null && filter_input(INPUT_GET, 'code') !== false) {
             add_action("init", array($this, 'plenigo_process_login'));
+            add_filter('auth_cookie_expiration', array($this, 'filter_cookie_expiration'), 12, 3);
         } else {
             //Just saving return URL
             add_action('wp_footer', array($this, 'store_url'));
@@ -225,6 +226,19 @@ class PlenigoLoginManager {
         plenigo_log_message("Redirecting to:" . $this->options['login_url'] . "  <<<END>>>");
         header("Location: " . $this->options['login_url']);
         exit;
+    }
+
+    /**
+     * This filter the user being logged in and set it's cookie expiration date one year from now
+     * 
+     * @param int $length The current length of the cookie expiration (in seconds)
+     * @param int $user_id The current user ID being logged in
+     * @param bool $remember The remember me flag
+     * @return int Number of secconds to allow the cookie to stay
+     */
+    public function filter_cookie_expiration($length, $user_id, $remember) {
+        $length = YEAR_IN_SECONDS; //Standard Wordpress constant since Wordpress 3.5
+        return $length;
     }
 
     /**

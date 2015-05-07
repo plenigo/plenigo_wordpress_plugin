@@ -38,6 +38,7 @@ class TokenService extends Service {
 
     const ERR_MSG_TOKEN = "Error getting Acces Token";
     const ERR_MSG_TOKEN_DIF = "The request and response CSRF Token are different";
+    const ERR_MSG_TOKEN_CREATE = "Could not create CSRF token";
 
     /**
      * The CSRF Token used for the request.
@@ -65,7 +66,7 @@ class TokenService extends Service {
      * @param string $redirectUri The redirect URI used to get the Access Code.
      * @param string $csrfToken   An optional CSRF Token to pass to the request.
      *
-     * @return TokenService instance.
+     * @return TokenData object.
      *
      * @throws \Exception on request error.
      */
@@ -101,17 +102,22 @@ class TokenService extends Service {
      * @param string $redirectUri An optional redirect URI used to get the Access Code.
      * @param string $csrfToken   An optional CSRF Token to pass to the request.
      *
-     * @return TokenService instance.
+     * @return TokenData object.
      *
      * @throws \Exception on request error.
      */
     protected static function getToken($type, $code, $redirectUri = null, $csrfToken = null) {
         $map = array(
             'grant_type' => $type,
-            'code' => $code,
             'client_id' => PlenigoManager::get()->getCompanyId(),
             'client_secret' => PlenigoManager::get()->getSecret()
         );
+
+        if ($type == TokenGrantType::REFRESH_TOKEN) {
+            $map['refresh_token'] = $code;
+        } else {
+            $map['code'] = $code;
+        }
 
         if ($redirectUri !== null) {
             $map['redirect_uri'] = $redirectUri;
@@ -171,7 +177,7 @@ class TokenService extends Service {
      * Executes the prepared request and returns a
      * Token Data on success.
      *
-     * @return The Token Data {@link \plenigo\models\TokenData}.
+     * @return TokenData The Token Data {@link \plenigo\models\TokenData}.
      *
      * @throws \Exception on request error or CSRF Token state mismatch.
      */
