@@ -23,7 +23,7 @@ class PlenigoURLManager {
      * Holds the list of forbidden URL query parameters
      */
     private $forbiddenParams = array(
-        "plppsuccess", "plppfailure", "token", "PayerID", "plsofortsuccess", "plsofortfailure", "plpfsuccess", "plpffailureLANGUAGE", "OrderID",
+        "plppsuccess", "plppfailure", "token", "PayerID", "plsofortsuccess", "plsofortfailure", "plpfsuccess", "plpffailure", "LANGUAGE", "OrderID",
         "CN", "NCErrorCN", "CardNo", "Brand", "NCErrorCardNo", "CVC", "NCErrorCVC", "ED", "NCErrorED", "NCError", "Alias", "status", "SHASign",
         "ALIASPERSISTEDAFTERUSE");
 
