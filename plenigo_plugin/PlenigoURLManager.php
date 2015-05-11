@@ -22,7 +22,10 @@ class PlenigoURLManager {
     /**
      * Holds the list of forbidden URL query parameters
      */
-    const FORBIDDEN_PARAMS = "plppsuccess,plppfailure,token,PayerID,plsofortsuccess,plsofortfailure,plpfsuccess,plpffailure";
+    private $forbiddenParams = array(
+        "plppsuccess", "plppfailure", "token", "PayerID", "plsofortsuccess", "plsofortfailure", "plpfsuccess", "plpffailure", "LANGUAGE", "OrderID",
+        "CN", "NCErrorCN", "CardNo", "Brand", "NCErrorCardNo", "CVC", "NCErrorCVC", "ED", "NCErrorED", "NCError", "Alias", "status", "SHASign",
+        "ALIASPERSISTEDAFTERUSE");
 
     /**
      * Holds the plugin configuration options
@@ -111,7 +114,7 @@ class PlenigoURLManager {
         if ($arrParsedURL !== FALSE && !is_null($arrParsedURL)) {
             parse_str($arrParsedURL['query'], $arrParsedQuery);
             plenigo_log_message("QueryString:" . var_export($arrParsedQuery, true), E_USER_NOTICE);
-            $arrFilteredQuery = array_diff_key($arrParsedQuery, array_flip(explode(",", self::FORBIDDEN_PARAMS)));
+            $arrFilteredQuery = array_diff_key($arrParsedQuery, array_flip($this->forbiddenParams));
             plenigo_log_message("QueryString Filtered:" . var_export($arrFilteredQuery, true), E_USER_NOTICE);
             $arrParsedURL['query'] = http_build_query($arrFilteredQuery);
             plenigo_log_message("URL array Filtered:" . var_export($arrParsedURL, true), E_USER_NOTICE);
