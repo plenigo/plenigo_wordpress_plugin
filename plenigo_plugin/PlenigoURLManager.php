@@ -131,7 +131,7 @@ class PlenigoURLManager {
      * @return string a standardized URL with all its fields
      */
     private function unparse_url($parsed_url) {
-//unset blank values
+        //unset blank values
         foreach ($parsed_url as $key => $value) {
             if (isset($parsed_url[$key]) && trim($parsed_url[$key]) === '') {
                 unset($parsed_url[$key]);
