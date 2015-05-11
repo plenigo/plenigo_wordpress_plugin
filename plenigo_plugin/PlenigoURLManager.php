@@ -22,7 +22,7 @@ class PlenigoURLManager {
     /**
      * Holds the list of forbidden URL query parameters
      */
-    const FORBIDDEN_PARAMS = array(
+    private $forbiddenParams = array(
         "plppsuccess", "plppfailure", "token", "PayerID", "plsofortsuccess", "plsofortfailure", "plpfsuccess", "plpffailureLANGUAGE", "OrderID",
         "CN", "NCErrorCN", "CardNo", "Brand", "NCErrorCardNo", "CVC", "NCErrorCVC", "ED", "NCErrorED", "NCError", "Alias", "status", "SHASign",
         "ALIASPERSISTEDAFTERUSE");
@@ -114,7 +114,7 @@ class PlenigoURLManager {
         if ($arrParsedURL !== FALSE && !is_null($arrParsedURL)) {
             parse_str($arrParsedURL['query'], $arrParsedQuery);
             plenigo_log_message("QueryString:" . var_export($arrParsedQuery, true), E_USER_NOTICE);
-            $arrFilteredQuery = array_diff_key($arrParsedQuery, array_flip(self::FORBIDDEN_PARAMS));
+            $arrFilteredQuery = array_diff_key($arrParsedQuery, array_flip($this->forbiddenParams));
             plenigo_log_message("QueryString Filtered:" . var_export($arrFilteredQuery, true), E_USER_NOTICE);
             $arrParsedURL['query'] = http_build_query($arrFilteredQuery);
             plenigo_log_message("URL array Filtered:" . var_export($arrParsedURL, true), E_USER_NOTICE);
@@ -131,7 +131,7 @@ class PlenigoURLManager {
      * @return string a standardized URL with all its fields
      */
     private function unparse_url($parsed_url) {
-        //unset blank values
+//unset blank values
         foreach ($parsed_url as $key => $value) {
             if (isset($parsed_url[$key]) && trim($parsed_url[$key]) === '') {
                 unset($parsed_url[$key]);
