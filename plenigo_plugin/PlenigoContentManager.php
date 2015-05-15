@@ -151,6 +151,7 @@ class PlenigoContentManager {
      * baseURL of the JS and PHP SDKs at the same time
      */
     public function plenigo_js_snippet() {
+        global $post;
         PlenigoSDKManager::get()->getPlenigoSDK();
         $isPaywalled = $this->plenigo_paywalled_content();
 
@@ -165,9 +166,11 @@ class PlenigoContentManager {
         $hasFreeViews = (PlenigoSDKManager::get()->plenigo_has_free_views() === TRUE);
         //Checking if the metered view is exempt by tag
         $tagExempt = $this->is_metered_exempt();
+        // Check if the user can edit this post
+        $canEdit = current_user_can('edit_post', $post->ID);
 
         $disableText = '';
-        if ($tagExempt == TRUE || $isPaywalled === FALSE || $userBought === TRUE || $hasFreeViews === FALSE || $rType !== self::RENDER_SINGLE) {
+        if ($canEdit == TRUE || $tagExempt == TRUE || $isPaywalled === FALSE || $userBought === TRUE || $hasFreeViews === FALSE || $rType !== self::RENDER_SINGLE) {
             $disableText = ' data-disable-metered="true" ';
         }
         $meteredURLText = '';
@@ -183,7 +186,7 @@ class PlenigoContentManager {
 
         $this->printGoogleAnalytics();
 
-    //Output the checklist
+        //Output the checklist
         $this->printDebugChecklist();
     }
 
@@ -730,8 +733,8 @@ class PlenigoContentManager {
                     $btnOnClick = $checkoutBuilder->build($coSettings);
                 }
                 if (stristr($html, self::REPLACE_PRODUCT_NAME) !== FALSE ||
-                        stristr($html, self::REPLACE_PRODUCT_PRICE) !== FALSE ||
-                        stristr($html, self::REPLACE_PRODUCT_DETAILS) !== FALSE) {
+                    stristr($html, self::REPLACE_PRODUCT_PRICE) !== FALSE ||
+                    stristr($html, self::REPLACE_PRODUCT_DETAILS) !== FALSE) {
                     // get product data
                     $productData = \plenigo\services\ProductService::getProductData($product->getId());
                 }
@@ -757,7 +760,7 @@ class PlenigoContentManager {
                 }
                 //If we should show Product details
                 $prodDetails = '<table class="plenigo-product"><tr><td><b>' . $prodName . '</b></td>'
-                        . '<td width="170" style="text-align: right;"><b>' . $prodPrice . '</b></td></tr></table>';
+                    . '<td width="170" style="text-align: right;"><b>' . $prodPrice . '</b></td></tr></table>';
             }
         }
 
@@ -960,10 +963,11 @@ class PlenigoContentManager {
     public function replace_noscript_tags($htmlText) {
         $res = '';
         if (isset($this->options['noscript_enabled']) && $this->options['noscript_enabled'] === 1) {
-            $strTitle = (isset($this->options['noscript_title'])) ? $this->options['noscript_title'] : __("You need JavaScript", self::PLENIGO_SETTINGS_GROUP);
+            $strTitle = (isset($this->options['noscript_title'])) ? $this->options['noscript_title'] : __("You need JavaScript",
+                    self::PLENIGO_SETTINGS_GROUP);
             $strMessage = (isset($this->options['noscript_message'])) ? $this->options['noscript_message'] : __("In order to provide you with the best experience, "
-                            . "this site requires that you allow JavaScript to run. "
-                            . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
+                    . "this site requires that you allow JavaScript to run. "
+                    . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
             $res = str_ireplace(self::REPLACE_NS_TITLE, trim(wp_kses_post($strTitle)), $htmlText);
             $res = str_ireplace(self::REPLACE_NS_MESSAGE, trim(wp_kses_post(wpautop($strMessage))), $res);
         }
