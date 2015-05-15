@@ -129,6 +129,11 @@ separator, native Wordpress tag.
 Coming soon
 
 == Changelog ==
+= 1.2.1 - Lover for category of products =
+- Improved: Updated PHP SDK
+- Fixed: Editors were seeing the metered view ticker
+- Feature: Now new preferences for category-tagged products, subscription and Buy button (the latter with configurable text based on which category)
+
 = 1.2.1 - Don't want to forget =
 - Improved: Now if you login using plenigo, the WordPress Session will not expire
 - Improved: Updated PHP SDK
