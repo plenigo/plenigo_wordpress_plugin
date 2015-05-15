@@ -132,6 +132,7 @@ Coming soon
 = 1.2.1 - Lover for category of products =
 - Improved: Updated PHP SDK
 - Fixed: Editors were seeing the metered view ticker
+- Fixed: Now smoothly adding settings defaults for new settings, so our friends updating the plugin get some sort of values before actually goign into the setting screen and saving their own.
 - Feature: Now new preferences for category-tagged products, subscription and Buy button (the latter with configurable text based on which category)
 
 = 1.2.1 - Don't want to forget =

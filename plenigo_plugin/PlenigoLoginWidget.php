@@ -58,7 +58,7 @@ class PlenigoLoginWidget extends \WP_Widget
             array('description' => __('This is the Plegino Login widget. Here you will find the plenigo login button '
                 . 'or the user profile data related to the plenigo user.', self::PLENIGO_SETTINGS_GROUP),) // Args
         );
-        $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
+        $this->options = get_option(self::PLENIGO_SETTINGS_NAME, array());
     }
 
     /**

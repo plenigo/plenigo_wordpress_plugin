@@ -118,7 +118,7 @@ class PlenigoContentManager {
     public function __construct() {
         add_filter('the_content', array($this, 'plenigo_handle_main_content'), self::PLENIGO_CONTENT_PRIO);
         add_filter('the_content_feed ', array($this, 'plenigo_handle_feed_content'), self::PLENIGO_CONTENT_PRIO);
-        $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
+        $this->options = get_option(self::PLENIGO_SETTINGS_NAME, array());
 
         add_action('wp_footer', array($this, 'plenigo_js_snippet'));
         add_action('wp_enqueue_scripts', array($this, 'add_scripts'));
@@ -303,10 +303,12 @@ class PlenigoContentManager {
         // Sanitize the product cache
         if (!isset($this->reqCache["listProdId"])) {
             $this->reqCache["listProdId"] = array();
+            $this->reqCache["listProdTag"] = array();
         }
         // Sanitize the category cache
         if (!isset($this->reqCache["listCatId"])) {
             $this->reqCache["listCatId"] = array();
+            $this->reqCache["listCatTag"] = array();
         }
 
         //Prevent tag takes precedense
@@ -381,8 +383,10 @@ class PlenigoContentManager {
                 foreach ($arrCats as $cid) {
                     if (!isset($this->reqCache["lastCatId"])) {
                         $this->reqCache["lastCatId"] = trim($cid);
+                        $this->reqCache["lastCatTag"] = trim($arrToken[1]);
                     }
                     array_push($this->reqCache["listCatId"], trim($cid));
+                    array_push($this->reqCache["listCatTag"], trim($arrToken[1]));
                     $res = TRUE;
                 }
             }
@@ -457,8 +461,10 @@ class PlenigoContentManager {
                 foreach ($arrProds as $pid) {
                     if (!isset($this->reqCache["lastProdId"])) {
                         $this->reqCache["lastProdId"] = trim($pid);
+                        $this->reqCache["lastProdTag"] = trim($arrToken[1]);
                     }
                     array_push($this->reqCache["listProdId"], trim($pid));
+                    array_push($this->reqCache["listProdTag"], trim($arrToken[1]));
                     $res = TRUE;
                 }
             }
@@ -687,15 +693,23 @@ class PlenigoContentManager {
         $prodDetails = '*[ERROR check Product ID]';
         $courtTitle = $this->options['curtain_title'];
         $courtMsg = $this->options['curtain_text'];
-        $btnTitle = $this->options['curtain_buy'];
-        $btnOnClick = "javascript:alert('This product has not been configured correctly!');";
-        $btnStyle = "width:30%";
+        //Get buy text of the tag DB
+        $buyTitle = $this->get_buy_text(isset($this->options['curtain_buy']) ? $this->options['curtain_buy'] : '');
+        $buyOnClick = "javascript:alert('This product has not been configured correctly!');";
+        $loginStyle = "width:30%";
+        $custStyle = "width:30%";
+        $buyStyle = "width:30%";
         $loginTitle = $this->options['curtain_login'];
         $loginOnClick = "javascript:alert('The login API doesn't work!');";
-        $loginStyle = "width:30%";
-        $custTitle = $this->options['curtain_custom_title'];
-        $custOnClick = "javascript:window.location.href = '" . $this->options['curtain_custom_url'] . "';";
-        $custStyle = "width:30%";
+        if (!isset($this->reqCache["lastCatId"])) {
+            $curtainMode = (isset($this->options['curtain_mode'])) ? $this->options['curtain_mode'] : 1;
+            $custTitle = $this->options['curtain_custom_title'];
+            $custOnClick = "javascript:window.location.href = '" . $this->options['curtain_custom_url'] . "';";
+        } else {
+            $curtainMode = (isset($this->options['curtain_cat_mode'])) ? $this->options['curtain_cat_mode'] : 1;
+            $custTitle = $this->options['curtain_cat_custom_title'];
+            $custOnClick = "javascript:window.location.href = '" . $this->options['curtain_cat_custom_url'] . "';";
+        }
 
         if (!isset($this->options['use_login']) || ($this->options['use_login'] == 0 )) {
             $useOauthLogin = FALSE;
@@ -730,7 +744,7 @@ class PlenigoContentManager {
                     }
 
                     // checkout snippet
-                    $btnOnClick = $checkoutBuilder->build($coSettings);
+                    $buyOnClick = $checkoutBuilder->build($coSettings);
                 }
                 if (stristr($html, self::REPLACE_PRODUCT_NAME) !== FALSE ||
                     stristr($html, self::REPLACE_PRODUCT_PRICE) !== FALSE ||
@@ -769,49 +783,47 @@ class PlenigoContentManager {
         $strNone = "display:none;";
         $strEntire = "width:90%;";
         //Handling curtain modes
-        if (!isset($this->options['curtain_mode']) || ($this->options['curtain_mode'] == 1 )) {
+        if ($curtainMode == 1) {
             //[BUY BUTTON] [LOGIN BUTTON]
             if ($isLoggedIn) {
-                $btnStyle = $strEntire;
+                $buyStyle = $strEntire;
                 $custStyle = $strNone;
                 $loginStyle = $strNone;
             } else {
-                $btnStyle = $strHalf;
+                $buyStyle = $strHalf;
                 $custStyle = $strNone;
                 $loginStyle = $strHalf;
             }
         }
-        if (isset($this->options['curtain_mode'])) {
-            if ($this->options['curtain_mode'] == 2) {
-                //[CUSTOM BUTTON] [LOGIN BUTTON]
-                if ($isLoggedIn) {
-                    $btnStyle = $strNone;
-                    $custStyle = $strEntire;
-                    $loginStyle = $strNone;
-                } else {
-                    $btnStyle = $strNone;
-                    $custStyle = $strHalf;
-                    $loginStyle = $strHalf;
-                }
-            }
-            if ($this->options['curtain_mode'] == 3) {
-                //[BUY BUTTON] [CUSTOM BUTTON] [LOGIN BUTTON]
-                if ($isLoggedIn) {
-                    $btnStyle = $strHalf;
-                    $custStyle = $strHalf;
-                    $loginStyle = $strNone;
-                } else {
-                    $btnStyle = $strThird;
-                    $custStyle = $strThird;
-                    $loginStyle = $strThird;
-                }
-            }
-            if ($this->options['curtain_mode'] == 4) {
-                //[CUSTOM BUTTON]
-                $btnStyle = $strNone;
+        if ($curtainMode == 2) {
+            //[CUSTOM BUTTON] [LOGIN BUTTON]
+            if ($isLoggedIn) {
+                $buyStyle = $strNone;
                 $custStyle = $strEntire;
                 $loginStyle = $strNone;
+            } else {
+                $buyStyle = $strNone;
+                $custStyle = $strHalf;
+                $loginStyle = $strHalf;
             }
+        }
+        if ($curtainMode == 3) {
+            //[BUY BUTTON] [CUSTOM BUTTON] [LOGIN BUTTON]
+            if ($isLoggedIn) {
+                $buyStyle = $strHalf;
+                $custStyle = $strHalf;
+                $loginStyle = $strNone;
+            } else {
+                $buyStyle = $strThird;
+                $custStyle = $strThird;
+                $loginStyle = $strThird;
+            }
+        }
+        if ($curtainMode == 4) {
+            //[CUSTOM BUTTON]
+            $buyStyle = $strNone;
+            $custStyle = $strEntire;
+            $loginStyle = $strNone;
         }
         $html = str_ireplace(self::REPLACE_PLUGIN_DIR, plugins_url('', dirname(__FILE__)), $html);
         $html = str_ireplace(self::REPLACE_PRODUCT_NAME, $prodName, $html);
@@ -819,9 +831,9 @@ class PlenigoContentManager {
         $html = str_ireplace(self::REPLACE_PRODUCT_DETAILS, $prodDetails, $html);
         $html = str_ireplace(self::REPLACE_CURTAIN_TITLE, $courtTitle, $html);
         $html = str_ireplace(self::REPLACE_CURTAIN_MSG, $courtMsg, $html);
-        $html = str_ireplace(self::REPLACE_BUTTON_TITLE, $btnTitle, $html);
-        $html = str_ireplace(self::REPLACE_BUTTON_CLICK, $btnOnClick, $html);
-        $html = str_ireplace(self::REPLACE_BUTTON_STYLE, $btnStyle, $html);
+        $html = str_ireplace(self::REPLACE_BUTTON_TITLE, $buyTitle, $html);
+        $html = str_ireplace(self::REPLACE_BUTTON_CLICK, $buyOnClick, $html);
+        $html = str_ireplace(self::REPLACE_BUTTON_STYLE, $buyStyle, $html);
         $html = str_ireplace(self::REPLACE_LOGIN_TITLE, $loginTitle, $html);
         $html = str_ireplace(self::REPLACE_LOGIN_CLICK, $loginOnClick, $html);
         $html = str_ireplace(self::REPLACE_LOGIN_STYLE, $loginStyle, $html);
@@ -1093,6 +1105,47 @@ class PlenigoContentManager {
             preg_match('/{(.*?)}/', $optExempt, $arrToken);
             if (count($arrToken) == 2 && has_tag(trim($arrToken[1]))) {
                 $res = TRUE;
+            }
+        }
+        return $res;
+    }
+
+    /**
+     * Obtains the BUY button text in the case there is a product or a category tag 
+     * associated to a buy text, if nothing is found then it returns a given default value.
+     * 
+     * @param string $defaultValue the default value to return if no tag is found in the DB
+     * @return string The final Buy button text
+     */
+    private function get_buy_text($defaultValue = '') {
+        $res = $defaultValue;
+        $tag = '';
+        if (isset($this->reqCache["lastCatTag"])) {
+            $tag = $this->reqCache["lastCatTag"];
+            $this->addDebugLine("Tag from Category:" . $tag);
+        }
+        if (isset($this->reqCache["lastProdTag"])) {
+            $tag = $this->reqCache["lastProdTag"];
+            $this->addDebugLine("Tag from Product:" . $tag);
+        }
+        $buyTextTagList = (isset($this->options['curtain_buy_text_db']) ? $this->options['curtain_buy_text_db'] : '');
+        //TAGS WITH PRODUCT IDS
+        $rowSplit = explode("\n", $buyTextTagList);
+        if ($rowSplit == FALSE || count($rowSplit) == 0) {
+            $rowSplit = array($buyTextTagList);
+        }
+        foreach ($rowSplit as $tagRow) {
+            if (stripos($tagRow, "->") === FALSE) {
+                continue;
+            }
+            $strTag = explode("->", $tagRow);
+            $arrToken = array();
+            //Obtain the {slug}
+            preg_match('/{(.*?)}/', $strTag[0], $arrToken);
+            if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && $arrToken[1] == $tag) {
+                $res = $strTag[1];
+                $this->addDebugLine("Buyt Button Text from tag: " . $tag . ' ==> ' . $res);
+                break;
             }
         }
         return $res;

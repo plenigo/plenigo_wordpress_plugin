@@ -21,19 +21,19 @@
 namespace plenigo_plugin\settings;
 
 /**
- * Setting class for curtain_custom_url
+ * Setting class for curtain_cat_custom_title
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class SettingCurtainButtonCustomURL extends SettingRedirectURL
+class SettingCurtainButtonCatCustom extends SettingCurtainButtonBuy
 {
 
     //These should be overriden
     const SECTION_ID = 'plenigo_curtain_section';
-    const SETTING_ID = 'curtain_custom_url';
+    const SETTING_ID = 'curtain_cat_custom_title';
 
     /**
      * @see PlenigoWPSetting::getDefaultValue()
@@ -41,9 +41,9 @@ class SettingCurtainButtonCustomURL extends SettingRedirectURL
     public function getDefaultValue($current = null)
     {
         if (!is_null($current)) {
-            return esc_url($current);
+            return $current;
         }
-        return esc_url(home_url('/pricing'));
+        return __("Subscribe", parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
@@ -51,7 +51,7 @@ class SettingCurtainButtonCustomURL extends SettingRedirectURL
      */
     public function getTitle()
     {
-        return __('CUSTOM Button URL', parent::PLENIGO_SETTINGS_GROUP);
+        return __('CUSTOM Button Text (Category tag)', parent::PLENIGO_SETTINGS_GROUP);
     }
 
 }

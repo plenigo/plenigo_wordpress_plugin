@@ -52,7 +52,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
 
     public function __construct() {
         //Plenigo Options
-        $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
+        $this->options = get_option(self::PLENIGO_SETTINGS_NAME, array());
 
         // This plugin supports....
         $this->supports = array('products');

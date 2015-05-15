@@ -104,14 +104,14 @@ class SettingCurtainMode extends PlenigoWPSetting
     private function getButtons($buy = true, $custom = true, $login = true)
     {
         $res = '';
-        if ($buy) {
-            $res.= '<span class="button button-small">[BUY BUTTON]</span> ';
+        if ($login) {
+            $res.= ' <span class="button button-small">[LOGIN BUTTON]</span>';
         }
         if ($custom) {
             $res.= '<span class="button button-small">[CUSTOM BUTTON]</span>';
         }
-        if ($login) {
-            $res.= ' <span class="button button-small">[LOGIN BUTTON]</span>';
+        if ($buy) {
+            $res.= '<span class="button button-small">[BUY BUTTON]</span> ';
         }
 
         return $res;

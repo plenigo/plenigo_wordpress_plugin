@@ -35,7 +35,7 @@ class PlenigoLoginManager {
      * Default constructor, called from the main php file
      */
     public function __construct() {
-        $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
+        $this->options = get_option(self::PLENIGO_SETTINGS_NAME, array());
         //If this pageload isn't supposed to be handing a login, just stop here.
         if (filter_input(INPUT_GET, 'code') !== null && filter_input(INPUT_GET, 'code') !== false) {
             add_action("init", array($this, 'plenigo_process_login'));

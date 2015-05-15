@@ -28,8 +28,7 @@ namespace plenigo_plugin\settings;
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class SettingCurtainCategoryMode extends PlenigoWPSetting
-{
+class SettingCurtainCategoryMode extends PlenigoWPSetting {
 
     //These should be overriden
     const SECTION_ID = 'plenigo_curtain_section';
@@ -38,8 +37,7 @@ class SettingCurtainCategoryMode extends PlenigoWPSetting
     /**
      * @see PlenigoWPSetting::getSanitizedValue()
      */
-    protected function getSanitizedValue($value = null)
-    {
+    protected function getSanitizedValue($value = null) {
         if (is_null($value)) {
             return $this->getDefaultValue();
         }
@@ -49,8 +47,7 @@ class SettingCurtainCategoryMode extends PlenigoWPSetting
     /**
      * @see PlenigoWPSetting::getDefaultValue()
      */
-    public function getDefaultValue($current = null)
-    {
+    public function getDefaultValue($current = null) {
         if (!is_null($current)) {
             return $current;
         }
@@ -60,16 +57,14 @@ class SettingCurtainCategoryMode extends PlenigoWPSetting
     /**
      * @see PlenigoWPSetting::getTitle()
      */
-    public function getTitle()
-    {
+    public function getTitle() {
         return __('Curtain Button Scheme (Category tag)', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
      * @see PlenigoWPSetting::renderCallback()
      */
-    public function renderCallback()
-    {
+    public function renderCallback() {
         $currValue = $this->getDefaultValue($this->getStoredValue());
         $arrDefaults = array(
             1 => '',
@@ -80,16 +75,16 @@ class SettingCurtainCategoryMode extends PlenigoWPSetting
         $arrDefaults[$currValue] = ' checked';
 
         echo '<input type="radio" id="curtain_cat_mode_1" name="' . self::PLENIGO_SETTINGS_NAME
-        . '[curtain_mode]" value="1" ' . $arrDefaults[1] . '>'
+        . '[' . self::SETTING_ID . ']" value="1" ' . $arrDefaults[1] . '>'
         . '<label for="curtain_cat_mode_1">' . $this->getButtons(true, false, true) . '</label><br>';
         echo '<input type="radio" id="curtain_cat_mode_2" name="' . self::PLENIGO_SETTINGS_NAME
-        . '[curtain_mode]" value="2" ' . $arrDefaults[2] . '>'
+        . '[' . self::SETTING_ID . ']" value="2" ' . $arrDefaults[2] . '>'
         . '<label for="curtain_cat_mode_2">' . $this->getButtons(false, true, true) . '</label><br>';
         echo '<input type="radio" id="curtain_cat_mode_3" name="' . self::PLENIGO_SETTINGS_NAME
-        . '[curtain_mode]" value="3" ' . $arrDefaults[3] . '>'
+        . '[' . self::SETTING_ID . ']" value="3" ' . $arrDefaults[3] . '>'
         . '<label for="curtain_cat_mode_3">' . $this->getButtons(true, true, true) . '</label><br>';
         echo '<input type="radio" id="curtain_cat_mode_4" name="' . self::PLENIGO_SETTINGS_NAME
-        . '[curtain_mode]" value="4" ' . $arrDefaults[4] . '>'
+        . '[' . self::SETTING_ID . ']" value="4" ' . $arrDefaults[4] . '>'
         . '<label for="curtain_cat_mode_4">' . $this->getButtons(false, true, false) . '</label><br>';
     }
 
@@ -97,21 +92,20 @@ class SettingCurtainCategoryMode extends PlenigoWPSetting
      * Returns the stylized buttons to be used as examples on the mode selection
      * 
      * @param bool $buy true if you want to render the Buy button
-     * @param bool $subscription true if you want to render the Subsctiption button
+     * @param bool $custom true if you want to render the Custom button
      * @param bool $login true if you want to render the Login button
      * @return string that represents the 3 buttons to echo
      */
-    private function getButtons($buy = true, $subscription = true, $login = true)
-    {
+    private function getButtons($buy = true, $custom = true, $login = true) {
         $res = '';
         if ($login) {
             $res.= ' <span class="button button-small">[LOGIN BUTTON]</span>';
         }
-        if ($subscription) {
-            $res.= '<span class="button button-small">[SUBSCRIPTION BUTTON]</span>';
+        if ($custom) {
+            $res.= '<span class="button button-small">[CUSTOM BUTTON]</span>';
         }
         if ($buy) {
-            $res.= '<span class="button button-small">[BUY BUTTON]</span> ';
+            $res.= '<span class="button button-small">[BUY CATEGORY PRODUCT BUTTON]</span> ';
         }
 
         return $res;
@@ -120,8 +114,7 @@ class SettingCurtainCategoryMode extends PlenigoWPSetting
     /**
      * @see PlenigoWPSetting::getValidationForValue()
      */
-    public function getValidationForValue($value = null)
-    {
+    public function getValidationForValue($value = null) {
         if (!is_null($value) && (intval(trim($value)) >= 1 && intval(trim($value)) <= 4)) {
             return true;
         } else {
