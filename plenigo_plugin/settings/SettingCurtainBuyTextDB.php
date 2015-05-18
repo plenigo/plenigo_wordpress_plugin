@@ -80,7 +80,7 @@ class SettingCurtainBuyTextDB extends PlenigoWPSetting
             parent::PLENIGO_SETTINGS_GROUP) . '" /> -&gt; '
         . '<input type="text" id="buy_text_adder" name="ignore_buy_text_adder" size="35" placeholder="' . __('Buy button text...',
             parent::PLENIGO_SETTINGS_GROUP) . '" /> '
-        . '<input type="button" onclick="addValuesToCatArea();" value="' . __("Add values", self::PLENIGO_SETTINGS_GROUP) . '" /><br/><br/>';
+        . '<input type="button" onclick="addValuesToBuyTextArea();" value="' . __("Add values", self::PLENIGO_SETTINGS_GROUP) . '" /><br/><br/>';
 
         printf('<textarea cols="100" wrap="off" rows="10" id="' . static::SETTING_ID . '" name="' . self::PLENIGO_SETTINGS_NAME
             . '[' . static::SETTING_ID . ']">%s</textarea>', $currValue);
@@ -89,7 +89,7 @@ class SettingCurtainBuyTextDB extends PlenigoWPSetting
         . 'jQuery(document).ready(function(){'
         . 'var data = "' . $this->get_term_data() . '".split(",");'
         . 'jQuery("#tag_buy_text_adder").autocomplete({source:data,autoFocus:true});});'
-        . 'function addValuesToCatArea(){'
+        . 'function addValuesToBuyTextArea(){'
         . 'var strPrev=jQuery("#' . static::SETTING_ID . '").val();'
         . 'if(strPrev!==""){strPrev+="\n"}'
         . 'jQuery("#' . static::SETTING_ID . '").val('
