@@ -3,7 +3,7 @@ Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 4.0.0
 Tested up to: 4.2.2
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -129,6 +129,12 @@ separator, native Wordpress tag.
 Coming soon
 
 == Changelog ==
+= 1.2.2 - Lover for category of products =
+- Improved: Updated PHP SDK
+- Fixed: Editors were seeing the metered view ticker
+- Fixed: Now smoothly adding settings defaults for new settings, so our friends updating the plugin get some sort of values before actually going into the setting screen and saving their own.
+- Feature: Now new preferences for category-tagged products, subscription and Buy button (the latter with configurable text based on which category)
+
 = 1.2.1 - Don't want to forget =
 - Improved: Now if you login using plenigo, the WordPress Session will not expire
 - Improved: Updated PHP SDK

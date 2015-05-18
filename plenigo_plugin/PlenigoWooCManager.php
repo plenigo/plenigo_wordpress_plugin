@@ -59,7 +59,7 @@ class PlenigoWooCManager {
         add_filter('woocommerce_payment_gateways', array($this, 'add_gateway_class'));
 
         //Plenigo Options
-        $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
+        $this->options = get_option(self::PLENIGO_SETTINGS_NAME, array());
     }
 
     public function plenigo_gateway_class() {

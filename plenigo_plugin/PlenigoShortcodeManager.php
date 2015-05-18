@@ -29,7 +29,7 @@ class PlenigoShortcodeManager {
      * Default constructor, called from the main php file
      */
     public function __construct() {
-        $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
+        $this->options = get_option(self::PLENIGO_SETTINGS_NAME, array());
 
         //Adding the shortcodes
         add_shortcode('pl_checkout', array($this, 'plenigo_handle_shortcode'));

@@ -41,7 +41,7 @@ class PlenigoURLManager {
      * Default constructor, called from the main php file
      */
     private function __construct() {
-        $this->options = get_option(self::PLENIGO_SETTINGS_NAME);
+        $this->options = get_option(self::PLENIGO_SETTINGS_NAME, array());
     }
 
     /**
