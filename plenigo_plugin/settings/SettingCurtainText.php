@@ -55,7 +55,7 @@ class SettingCurtainText extends PlenigoWPSetting
         if (!is_null($current)) {
             return $current;
         }
-        return __('In order to continue delivering <b>valuable</b> content for our readers,'
+        return __('In order to continue delivering <b>valuable</b> content for our readers, '
             . 'we ask a single everlasting fee from you.<br>'
             . 'Please join us and receive our premium content for ever.', parent::PLENIGO_SETTINGS_GROUP);
     }

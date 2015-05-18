@@ -220,11 +220,11 @@ msgstr "Curtain Button Scheme"
 
 #: plenigo_plugin/settings/SettingCurtainText.php:58
 msgid ""
-"In order to continue delivering <b>valuable</b> content for our readers,we "
+"In order to continue delivering <b>valuable</b> content for our readers, we "
 "ask a single everlasting fee from you.<br>Please join us and receive our "
 "premium content for ever."
 msgstr ""
-"In order to continue delivering <b>valuable</b> content for our readers,we "
+"In order to continue delivering <b>valuable</b> content for our readers, we "
 "ask a single everlasting fee from you.<br>Please join us and receive our "
 "premium content for ever."
 
