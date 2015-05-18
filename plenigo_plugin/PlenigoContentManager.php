@@ -104,6 +104,10 @@ class PlenigoContentManager {
     const TEASER_SHORTCODES_SINGLE = "aesop_quote";
     const TEASER_HTML_CONTAINER = "p,div,table";
     const TEASER_HTML_SINGLE = "";
+    const CURTAIN_MODE_LB = 1;
+    const CURTAIN_MODE_LC = 2;
+    const CURTAIN_MODE_LCB = 3;
+    const CURTAIN_MODE_C = 4;
 
     private $templateMap = array(
         self::RENDER_FEED => array(TRUE => null, FALSE => 'plenigo-curtain-feed.html'),
@@ -702,11 +706,11 @@ class PlenigoContentManager {
         $loginTitle = $this->options['curtain_login'];
         $loginOnClick = "javascript:alert('The login API doesn't work!');";
         if (!isset($this->reqCache["lastCatId"])) {
-            $curtainMode = (isset($this->options['curtain_mode'])) ? $this->options['curtain_mode'] : 1;
+            $curtainMode = (isset($this->options['curtain_mode'])) ? $this->options['curtain_mode'] : self::CURTAIN_MODE_LB;
             $custTitle = $this->options['curtain_custom_title'];
             $custOnClick = "javascript:window.location.href = '" . $this->options['curtain_custom_url'] . "';";
         } else {
-            $curtainMode = (isset($this->options['curtain_cat_mode'])) ? $this->options['curtain_cat_mode'] : 1;
+            $curtainMode = (isset($this->options['curtain_cat_mode'])) ? $this->options['curtain_cat_mode'] : self::CURTAIN_MODE_LB;
             $custTitle = $this->options['curtain_cat_custom_title'];
             $custOnClick = "javascript:window.location.href = '" . $this->options['curtain_cat_custom_url'] . "';";
         }
@@ -783,8 +787,8 @@ class PlenigoContentManager {
         $strNone = "display:none;";
         $strEntire = "width:90%;";
         //Handling curtain modes
-        if ($curtainMode == 1) {
-            //[BUY BUTTON] [LOGIN BUTTON]
+        if ($curtainMode == self::CURTAIN_MODE_LB) {
+            //[LOGIN BUTTON] [BUY BUTTON]
             if ($isLoggedIn) {
                 $buyStyle = $strEntire;
                 $custStyle = $strNone;
@@ -795,8 +799,8 @@ class PlenigoContentManager {
                 $loginStyle = $strHalf;
             }
         }
-        if ($curtainMode == 2) {
-            //[CUSTOM BUTTON] [LOGIN BUTTON]
+        if ($curtainMode == self::CURTAIN_MODE_LC) {
+            //[LOGIN BUTTON] [CUSTOM BUTTON]
             if ($isLoggedIn) {
                 $buyStyle = $strNone;
                 $custStyle = $strEntire;
@@ -807,8 +811,8 @@ class PlenigoContentManager {
                 $loginStyle = $strHalf;
             }
         }
-        if ($curtainMode == 3) {
-            //[BUY BUTTON] [CUSTOM BUTTON] [LOGIN BUTTON]
+        if ($curtainMode == self::CURTAIN_MODE_LCB) {
+            //[LOGIN BUTTON] [CUSTOM BUTTON] [BUY BUTTON] 
             if ($isLoggedIn) {
                 $buyStyle = $strHalf;
                 $custStyle = $strHalf;
@@ -819,7 +823,7 @@ class PlenigoContentManager {
                 $loginStyle = $strThird;
             }
         }
-        if ($curtainMode == 4) {
+        if ($curtainMode == self::CURTAIN_MODE_C) {
             //[CUSTOM BUTTON]
             $buyStyle = $strNone;
             $custStyle = $strEntire;
