@@ -178,7 +178,7 @@ This curtain message is shown to users that are already logged in but don't have
 This button scheme is used within the curtain if a product tag is added to an article.
 
 **Curtain Button Scheme (Category tag)**
-This button scheme is used within the curtain if a category tag is added to an article. If a product an d a category tag is added to an article this scheme will be used.
+This button scheme is used within the curtain if a category tag is added to an article. If a product and a category tag is added to an article this scheme will be used.
 
 **BUY Button Text**
 Text that is shown on the buy button.
