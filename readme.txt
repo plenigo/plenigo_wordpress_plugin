@@ -80,7 +80,7 @@ Your customer is your customer. You have full access to all information we gathe
 
 == Installation ==
 
-To use the plenigo plugin you must [register a company account at plenigo](https://www.plenigo.com/company/register "plenigo company registration").
+To use the plenigo plugin you must [register a company account at plenigo](https://www.plenigo.com/company/registration "plenigo company registration").
 
 = Pre Requirements =
 
@@ -244,7 +244,10 @@ separator, native Wordpress tag.
 <!-- {{PLENIGO_SEPARATOR}} -->
 
 == Screenshots ==
-Coming soon
+1. Extensive configuration options
+/assets/screenshot-1.png
+2. Freely configurable curtain
+/assets/screenshot-2.png
 
 == Changelog ==
 = 1.2.2 - Lover for category of products =
