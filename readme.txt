@@ -132,6 +132,7 @@ If you want the user to get redirected to a special URL after login you can defi
 = Premium Content Section =
 
 The plenigo plugin controls which article is paid content by the use of WordPress tags. So before you add mappings in this section you have to
+
 1. Create WordPress tags that identify your payments.
 2. Create a product within the plenigo product section. (This step is optional if you only want to sell single articles.)
 
@@ -245,8 +246,11 @@ separator, native Wordpress tag.
 
 == Screenshots ==
 1. Extensive configuration options
+
 /assets/screenshot-1.png
+
 2. Freely configurable curtain
+
 /assets/screenshot-2.png
 
 == Changelog ==
