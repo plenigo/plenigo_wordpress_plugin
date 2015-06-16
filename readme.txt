@@ -254,6 +254,9 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
+= 1.2.3 - Peek A Boo, I see you . . . and you
+- Avoid sending the default PageView to Google Analytics to prevent duplicated measurements. Demographic stuff should be measured as well
+
 = 1.2.2 - Lover for category of products =
 - Improved: Updated PHP SDK
 - Fixed: Editors were seeing the metered view ticker
