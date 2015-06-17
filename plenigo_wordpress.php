@@ -27,7 +27,7 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-define('PLENIGO_VERSION', '1.2.2');
+define('PLENIGO_VERSION', '1.2.3');
 
 define('PLENIGO_DEBUG', false);
 if (PLENIGO_DEBUG === true) {
