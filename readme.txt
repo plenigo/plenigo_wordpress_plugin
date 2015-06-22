@@ -257,6 +257,7 @@ separator, native Wordpress tag.
 = 1.2.4 - Sorry Sir, your credit card was rejected....
 - Improved: Updated PHP SDK for supporting the failed payment flag
 - Feature: New button to provide the users with a way to check their failed payments, so they can take care of those problems easily from your site!
+- Improved: TinyMCE buttons now have tooltips, aren't the icons enough explanation? Aren't they?
 
 = 1.2.3 - Peek A Boo, I see you . . . and you
 - Avoid sending the default PageView to Google Analytics to prevent duplicated measurements. Demographic stuff should be measured as well

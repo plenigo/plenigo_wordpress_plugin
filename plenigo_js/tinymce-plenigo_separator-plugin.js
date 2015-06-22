@@ -7,6 +7,7 @@ tinymce.PluginManager.add('plenigo_separator', function (editor, url) {
 
     // Add a button that opens a setup window and configures the checkout button
     editor.addButton('plenigo_separator', {
+        tooltip: 'Plenigo Teaser Separator',
         text: '',
         icon: 'pl-splitter',
         onclick: function () {
