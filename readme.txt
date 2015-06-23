@@ -3,7 +3,7 @@ Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 4.0.0
 Tested up to: 4.2.2
-Stable tag: 1.2.3
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -231,6 +231,11 @@ product is bought.
 [pl_checkout_button prod_id="{{PRODUCT ID}}" title="{{BUTTON TITLE}}"
 class="{{CSS CLASS}}"][/pl_checkout_button]
 
+Same as pl_checkout_button but it will trigger the failed payments list
+instead of checking out a particular product.
+
+[pl_failed title="{{BUTTON TITLE}}" class="{{CSS CLASS}}"][/pl_failed]
+
 Same as pl_checkout but it will set the "Subcription Renew" flag for
 this purchase.
 
@@ -254,6 +259,11 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
+= 1.3.0 - Sorry Sir, your credit card was rejected....
+- Improved: Updated PHP SDK for supporting the failed payment flag
+- Feature: New button to provide the users with a way to check their failed payments, so they can take care of those problems easily from your site!
+- Improved: TinyMCE buttons now have tooltips, aren't the icons enough explanation? Aren't they?
+
 = 1.2.3 - Peek A Boo, I see you . . . and you
 - Avoid sending the default PageView to Google Analytics to prevent duplicated measurements. Demographic stuff should be measured as well
 

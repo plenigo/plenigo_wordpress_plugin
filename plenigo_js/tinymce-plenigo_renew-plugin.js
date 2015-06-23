@@ -2,6 +2,7 @@ tinymce.PluginManager.requireLangPack('plenigo', 'en_US,es_ES');
 tinymce.PluginManager.add('plenigo_renew', function (editor, url) {
     // Add a button that opens a setup window and configures the checkout button
     editor.addButton('plenigo_renew', {
+        tooltip: 'Subscription Renew Button',
         text: '',
         icon: 'pl-renew',
         onclick: function () {

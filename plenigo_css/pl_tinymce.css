@@ -16,6 +16,13 @@
     background-image: url('https://static.plenigo.com/static_resources/images/icon-recycle.png')  !important;
 }
 
+.mce-i-pl-failed {
+    background-image: url('https://static.plenigo.com/static_resources/images/icon-failed-transp.png')  !important;
+}
+.mce-i-pl-failed:hover {
+    background-image: url('https://static.plenigo.com/static_resources/images/icon-failed.png')  !important;
+}
+
 .mce-i-pl-splitter {
     background-image: url('https://static.plenigo.com/static_resources/images/icon-seperator-vertical-16x16.png')  !important;
 }

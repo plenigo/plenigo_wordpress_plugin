@@ -35,6 +35,7 @@ class PlenigoShortcodeManager {
         add_shortcode('pl_checkout', array($this, 'plenigo_handle_shortcode'));
         add_shortcode('pl_checkout_button', array($this, 'plenigo_handle_shortcode'));
         add_shortcode('pl_renew', array($this, 'plenigo_handle_shortcode'));
+        add_shortcode('pl_failed', array($this, 'plenigo_handle_shortcode'));
 
         //TinyMCE
         // add new buttons
@@ -72,7 +73,7 @@ class PlenigoShortcodeManager {
         // We are attempting to only allow the shortcode appearance to editors.
         if (\current_user_can('edit_posts') || \current_user_can('edit_pages')) {
             if (\get_user_option('rich_editing') == 'true') {
-                array_push($buttons, 'separator', 'plenigo', 'plenigo_renew', 'plenigo_separator');
+                array_push($buttons, 'separator', 'plenigo', 'plenigo_renew', 'plenigo_failed', 'plenigo_separator');
             }
         }
         return $buttons;
@@ -81,6 +82,7 @@ class PlenigoShortcodeManager {
     function plenigo_register_tinymce_js($plugin_array) {
         $plugin_array['plenigo'] = plugins_url('../plenigo_js/tinymce-plenigo-plugin.js', __file__);
         $plugin_array['plenigo_renew'] = plugins_url('../plenigo_js/tinymce-plenigo_renew-plugin.js', __file__);
+        $plugin_array['plenigo_failed'] = plugins_url('../plenigo_js/tinymce-plenigo_failed-plugin.js', __file__);
         $plugin_array['plenigo_separator'] = plugins_url('../plenigo_js/tinymce-plenigo_separator-plugin.js', __file__);
         return $plugin_array;
     }
@@ -119,13 +121,25 @@ class PlenigoShortcodeManager {
                 $useOauthLogin = true;
             }
             $btnOnClick = "alert('The button was not configured correctly')";
+
+            // If failed payment tag, the product ID doesnt make sense 
+            // and we should not make a search for the title based in this fake ID
+            if ($tag === 'pl_failed') {
+                $btnTitle = ($btnTitle === "") ? __('Failed Payments', self::PLENIGO_SETTINGS_GROUP) : $btnTitle;
+                $prodId = "FAKE_PROD_ID";
+            }
+
             if ($prodId !== "") {
                 if ($btnTitle === "") {
                     $btnTitle = $this->getButtonTitle($prodId);
                 }
 
                 // creating a plenigo-managed product
-                $product = new \plenigo\models\ProductBase($prodId);
+                if ($tag === 'pl_failed') {
+                    $product = \plenigo\models\ProductBase::buildFailedPaymentProduct();
+                } else {
+                    $product = new \plenigo\models\ProductBase($prodId);
+                }
 
                 if ($tag === 'pl_renew') {
                     $product->setSubscriptionRenewal(true);

@@ -2,6 +2,7 @@ tinymce.PluginManager.requireLangPack('plenigo', 'en_US,es_ES');
 tinymce.PluginManager.add('plenigo', function (editor, url) {
     // Add a button that opens a setup window and configures the checkout button
     editor.addButton('plenigo', {
+        tooltip: 'Product Checkout Button',
         text: '',
         icon: 'pl-checkout',
         onclick: function () {
