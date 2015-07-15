@@ -35,7 +35,7 @@ class SettingWooProductType extends PlenigoWPSetting {
     const SETTING_ID = 'woo_product_type';
 
     // Available Product Types
-    private $prodTypeList = array('EBOOK', 'DIGITALNEWSPAPER', 'DOWNLOAD', 'VIDEO', 'MUSIC');
+    private $prodTypeList = array('EBOOK', 'DIGITALNEWSPAPER', 'DOWNLOAD', 'VIDEO', 'MUSIC', 'BOOK', 'NEWSPAPER');
 
     /**
      * @see PlenigoWPSetting::getSanitizedValue()

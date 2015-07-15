@@ -58,7 +58,7 @@ final class Checkout extends ServerInterface {
     protected $failedPayment;
     protected $shippingCost;
     protected $testMode;
-    private $allowedShippingTypes = [ProductBase::TYPE_BOOK, ProductBase::TYPE_NEWSPAPER];
+    private $allowedShippingTypes = array(ProductBase::TYPE_BOOK, ProductBase::TYPE_NEWSPAPER);
 
     /**
      * <p>
