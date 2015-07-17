@@ -3,7 +3,7 @@ Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 4.0.0
 Tested up to: 4.2.2
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -259,7 +259,7 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
-= 1.3.1 - New Product types!
+= 1.4.0 - New Product types!
 - Updated SDK
 - WooCommerce now have new product types
 
