@@ -55,6 +55,7 @@ require_once __DIR__ . '/settings/SettingCurtainBuyTextDB.php';
 require_once __DIR__ . '/settings/SettingUseWoo.php';
 require_once __DIR__ . '/settings/SettingWooOrderTitle.php';
 require_once __DIR__ . '/settings/SettingWooProductType.php';
+require_once __DIR__ . '/settings/SettingUseQuietReport.php';
 
 /**
  * PlenigoSettingsPage
@@ -129,6 +130,7 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseWoo());
         array_push($this->settings, new \plenigo_plugin\settings\SettingWooOrderTitle());
         array_push($this->settings, new \plenigo_plugin\settings\SettingWooProductType());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingUseQuietReport());
 
         // Check the initialization of settings uppon upgrade
         if (!isset($this->options[self::PLENIGO_VERSION_OPT]) || $this->options[self::PLENIGO_VERSION_OPT] !== PLENIGO_VERSION) {
@@ -238,6 +240,10 @@ class PlenigoSettingsPage {
         . 'aria-controls="plenigo_woo_section" role="tab" data-toggle="tab">'
         . __('WooCommerce', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
 
+        echo '<li role="presentation" class="active"><a href="#plenigo_advanced_section" '
+        . 'aria-controls="plenigo_advanced_section" role="tab" data-toggle="tab">'
+        . __('Advanced', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
+
         echo '</ul>';
 
         echo '<form method="post" action="options.php">';
@@ -303,6 +309,13 @@ class PlenigoSettingsPage {
             'plenigo_woo_section', // ID
             "", // Title
             array($this, 'print_section_woo'), // Callback
+            self::PLENIGO_SETTINGS_PAGE // Page
+        );
+
+        add_settings_section(
+            'plenigo_advanced_section', // ID
+            "", // Title
+            array($this, 'print_section_advanced'), // Callback
             self::PLENIGO_SETTINGS_PAGE // Page
         );
 
@@ -414,6 +427,17 @@ class PlenigoSettingsPage {
             . '<a href="http://www.woothemes.com/woocommerce/" target="_blank">WooCommerce</a>. '
             . 'It allows you to use the powerful features in <a href="http://www.woothemes.com/woocommerce/" target="_blank">'
             . 'WooCommerce</a> and use plenigo as payment method.';
+    }
+
+    /**
+     * Print the Section text
+     */
+    public function print_section_advanced() {
+        print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_advanced_section">'
+            . '<h3>' . __('Advanced settings', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
+            . '<h2 style="color:red;">HANDS OFF!!</h2>'
+            . 'Please make sure you understand what it means to enable these settings because it can be dangerous to expose '
+                . 'this information to the user, or the plugin could compromise the site\'s look & feel.';
     }
 
     /**

@@ -50,6 +50,13 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
     const ORDER_PROD_IDS = '%%PROD_IDS%%';
     const ORDER_PROD_SKUS = '%%PROD_SKUS%%';
 
+    /**
+     * Holds the String[] to be rendered for debug checklist.
+     *
+     * @var array
+     */
+    private $debugChecklist = array();
+
     public function __construct() {
         //Plenigo Options
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME, array());
@@ -98,22 +105,26 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         //Payment finished
         if ($payment_param !== FALSE && $checkout_param !== FALSE && $varCheckout === TRUE) {
             plenigo_log_message("WOO: Finishing checkout order: " . var_export($checkout_param, true), E_USER_NOTICE);
+            $this->addDebugLine("Finishing checkout order");
             $this->plenigo_buy_confirm($checkout_param);
+            $this->printDebugChecklist();
         }
     }
 
+    /**
+     * Placeholder function for the settings panel inside the WooCommerce settings
+     */
+    public function process_admin_options() {
+        $this->addDebugLine("Enteres options");
+        $this->printDebugChecklist();
+    }
+    
     public function process_payment($order_id) {
         global $woocommerce;
         $order = new \WC_Order($order_id);
 
         // Mark as on-hold (we're awaiting the payment)
         $order->update_status('on-hold', __('Awaiting plenigo checkout process', self::PLENIGO_SETTINGS_GROUP));
-
-        /* // Reduce stock levels
-          // $order->reduce_order_stock();
-          // Remove cart
-          // $woocommerce->cart->empty_cart();
-         */
 
         // Return thank you (receipt) page redirect
         return array(
@@ -147,7 +158,9 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
 
             $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order->id);
 
+            $this->addDebugLine("Processing checkout order");
             if (!$user_bought) {
+                $this->addDebugLine("Order wasn't payed!");
                 // Mark as processing (checkout process)
                 $order->update_status('pending', __('Plenigo checkout stating', self::PLENIGO_SETTINGS_GROUP));
                 plenigo_log_message("WOO: Creating checkout snippet:", E_USER_NOTICE);
@@ -156,12 +169,19 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                 $sdk = \plenigo_plugin\PlenigoSDKManager::get()->getPlenigoSDK();
                 if (!is_null($sdk) && ($sdk instanceof \plenigo\PlenigoManager)) {
                     if (!isset($this->options['use_login']) || ($this->options['use_login'] == 0 )) {
+                        $this->addDebugLine("Using OAuth login");
                         $useOauthLogin = false;
                     } else {
                         $useOauthLogin = true;
                     }
                     $csrfToken = \plenigo_plugin\PlenigoSDKManager::get()->get_csrf_token();
                     $product = $this->get_product_checkout($order);
+                    if (!is_null($product)) {
+                        $this->addDebugLine("Product is valid");
+                    } else {
+                        $this->addDebugLine("Product is NOT valid");
+                    }
+
                     // creating the checkout snippet for this product
                     $checkoutBuilder = new \plenigo\builders\CheckoutSnippetBuilder($product);
 
@@ -179,6 +199,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                     } catch (Exception $exc) {
                         plenigo_log_message($exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING);
                         error_log($exc->getMessage() . ': ' . $exc->getTraceAsString());
+                        $this->addDebugLine("Error creating the cehckout snnippet: " . $exc->getMessage());
                         wc_add_notice($exc->getMessage(), 'error');
                     }
                     plenigo_log_message("WOO: Checkout snippet:" . var_export($checkoutSnippet, true), E_USER_NOTICE);
@@ -188,12 +209,15 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                     . '</button></div>';
                 } else {
                     $errorMessge = __('Plenigo not configured, contact the administrators', self::PLENIGO_SETTINGS_GROUP);
+                    $this->addDebugLine("Failed: " . $errorMessge);
                     $order->update_status('failed', $errorMessge);
                     wc_add_notice($errorMessge, 'error');
                 }
             } else {
                 $order->add_order_note(__('You already purchased this order! Thank You!', self::PLENIGO_SETTINGS_GROUP));
+                $this->addDebugLine("Already payed!");
             }
+            $this->printDebugChecklist();
         }
     }
 
@@ -246,16 +270,19 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         $count = wc_get_customer_order_count($user_ID);
         if ($user_ID > 0 && $count > 0) {
             plenigo_log_message("WOO: The customer has an order!", E_USER_NOTICE);
+            $this->addDebugLine("The customer has an order");
             $order = new \WC_Order($order_id);
             $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order_id);
             if ($user_bought === true) {
                 plenigo_log_message("WOO: User bouight it with plenigo!", E_USER_NOTICE);
+                $this->addDebugLine("The order was purchased with plenigo");
                 // Set Order as complete
                 $order->payment_complete();
                 $order->update_status('completed', __('Plenigo payment complete. Thank you!', self::PLENIGO_SETTINGS_GROUP));
             } else {
                 // Here could be maybe a payment timeout to set it as cancelled
                 plenigo_log_message("WOO: User DID NOT buy this with plenigo...yet?!", E_USER_NOTICE);
+                $this->addDebugLine("User DID NOT buy this with plenigo...yet?!");
             }
         }
     }
@@ -270,17 +297,22 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         $res = null;
 
         if (!is_null($order) && ($order instanceof \WC_Order)) {
+            $this->addDebugLine("There is a valid order!");
             $prodID = $order->id;
+            $this->addDebugLine("Order ID:" . $prodID);
             $title = $this->get_order_title($order);
+            $this->addDebugLine("Order Title:" . $title);
             $total = $order->get_total();
             $typeSetting = isset($this->options['woo_product_type']) ? $this->options['woo_product_type'] : null;
             $prodType = ($order->has_downloadable_item() === true) ? \plenigo\models\ProductBase::TYPE_DOWNLOAD : null;
             if (is_null($prodType) && !is_null($typeSetting) && in_array($typeSetting, $this->prodTypeList)) {
                 $prodType = $typeSetting;
+                $this->addDebugLine("Product Type:" . $prodType);
             } else {
                 $prodType = null;
                 $errorMessge = __('Product type is not configured, contact the administrators', self::PLENIGO_SETTINGS_GROUP);
                 $order->update_status('failed', $errorMessge);
+                $this->addDebugLine("Product NOT configured! Failing order!");
                 wc_add_notice($errorMessge, 'error');
             }
             $currency = $order->get_order_currency();
@@ -331,7 +363,9 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
 
     /**
      * 
-     * @param int $field
+     * Creates a list for the current order products using the titles (0) the SKU (1) or otherwise the ID 
+     * 
+     * @param int $field the field to use 0 is the title, 1 is the SKU, otherwise is the ID
      * @param \WooCommerce\Classes\WC_Order $order the order to create the title
      * @return string the generated list
      */
@@ -358,6 +392,39 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
             }
         }
         return $res;
+    }
+
+    /**
+     * Adds a line at the end of the debug checklist
+     * 
+     * @param string $row
+     */
+    private function addDebugLine($row = null) {
+        $res = '';
+        if (!is_null($row)) {
+            if (!is_string($row) && !is_numeric($row)) {
+                $res.=print_r($row, TRUE);
+            } else {
+                $res.=$row;
+            }
+        }
+        array_push($this->debugChecklist, $res);
+    }
+
+    /**
+     * Outputs the debug checklist as a HTML comment for debugging purposes, then it clears the array
+     */
+    private function printDebugChecklist() {
+        if (isset($this->options['quiet_report_enabled'])) {
+            if (is_array($this->debugChecklist) && count($this->debugChecklist) > 0) {
+                echo "<!-- *** Plenigo debug checklist ***\n";
+                foreach ($this->debugChecklist as $debugRow) {
+                    echo "## - " . $debugRow . " \n";
+                }
+                echo "// *** Plenigo debug checklist *** -->";
+            }
+        }
+        $this->debugChecklist = array();
     }
 
 }

@@ -918,12 +918,14 @@ class PlenigoContentManager {
      * Outputs the debug checklist as a HTML comment for debugging purposes, then it clears the array
      */
     private function printDebugChecklist() {
-        if (is_array($this->debugChecklist) && count($this->debugChecklist) > 0) {
-            echo "<!-- *** Plenigo debug checklist ***\n";
-            foreach ($this->debugChecklist as $debugRow) {
-                echo "## - " . $debugRow . " \n";
+        if(isset($this->options['quiet_report_enabled'])){
+            if (is_array($this->debugChecklist) && count($this->debugChecklist) > 0) {
+                echo "<!-- *** Plenigo debug checklist ***\n";
+                foreach ($this->debugChecklist as $debugRow) {
+                    echo "## - " . $debugRow . " \n";
+                }
+                echo "// *** Plenigo debug checklist *** -->";
             }
-            echo "// *** Plenigo debug checklist *** -->";
         }
         $this->debugChecklist = array();
     }
