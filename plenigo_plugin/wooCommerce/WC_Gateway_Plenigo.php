@@ -92,7 +92,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
      */
     public function plenigo_finish() {
         $varCheckout = is_checkout();
-        $checkout_param = filter_input(INPUT_GET, 'order-received');
+        $checkout_param = is_wc_endpoint_url('order-received');
         $payment_param = filter_input(INPUT_GET, 'paymentState');
 
         if (is_null($payment_param)) {
@@ -118,7 +118,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         $this->addDebugLine("Enteres options");
         $this->printDebugChecklist();
     }
-    
+
     public function process_payment($order_id) {
         global $woocommerce;
         $order = new \WC_Order($order_id);
@@ -139,7 +139,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
     public function plenigo_checkout_process() {
         global $woocommerce;
 
-        $checkout_param = filter_input(INPUT_GET, 'order-received');
+        $checkout_param = is_wc_endpoint_url('order-received');
         $payment_param = filter_input(INPUT_GET, 'paymentState');
 
         if (is_null($payment_param)) {
@@ -149,13 +149,17 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
             $checkout_param = FALSE;
         }
 
+        $order_id = $this->get_current_order_id();
+
         plenigo_log_message('WOO: Checkout=' . var_export($checkout_param, true));
         plenigo_log_message('WOO: Payment=' . var_export($payment_param, true));
-        //Checkout start
-        if ($checkout_param !== FALSE && $payment_param === FALSE) {
-            plenigo_log_message("WOO: Processing checkout order: " . var_export($checkout_param, true), E_USER_NOTICE);
-            $order = new \WC_Order($checkout_param);
 
+        //Checkout start
+        if ($checkout_param !== FALSE && $payment_param === FALSE && $order_id !== FALSE) {
+            plenigo_log_message("WOO: Processing checkout order: " . var_export($checkout_param, true), E_USER_NOTICE);
+            $order = new \WC_Order($order_id);
+            $this->addDebugLine("Order Received URL:" . var_export($order->get_checkout_order_received_url(), true));
+        
             $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order->id);
 
             $this->addDebugLine("Processing checkout order");
@@ -217,8 +221,8 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                 $order->add_order_note(__('You already purchased this order! Thank You!', self::PLENIGO_SETTINGS_GROUP));
                 $this->addDebugLine("Already payed!");
             }
-            $this->printDebugChecklist();
         }
+        $this->printDebugChecklist();
     }
 
     /**
@@ -299,17 +303,15 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         if (!is_null($order) && ($order instanceof \WC_Order)) {
             $this->addDebugLine("There is a valid order!");
             $prodID = $order->id;
-            $this->addDebugLine("Order ID:" . $prodID);
+            $this->addDebugLine("Order:" . var_export($order, true));
             $title = $this->get_order_title($order);
             $this->addDebugLine("Order Title:" . $title);
             $total = $order->get_total();
             $typeSetting = isset($this->options['woo_product_type']) ? $this->options['woo_product_type'] : null;
-            $prodType = ($order->has_downloadable_item() === true) ? \plenigo\models\ProductBase::TYPE_DOWNLOAD : null;
-            if (is_null($prodType) && !is_null($typeSetting) && in_array($typeSetting, $this->prodTypeList)) {
-                $prodType = $typeSetting;
+            $prodType = ($order->has_downloadable_item() === true) ? \plenigo\models\ProductBase::TYPE_DOWNLOAD : $typeSetting;
+            if (!is_null($prodType) && in_array($typeSetting, $this->prodTypeList)) {
                 $this->addDebugLine("Product Type:" . $prodType);
             } else {
-                $prodType = null;
                 $errorMessge = __('Product type is not configured, contact the administrators', self::PLENIGO_SETTINGS_GROUP);
                 $order->update_status('failed', $errorMessge);
                 $this->addDebugLine("Product NOT configured! Failing order!");
@@ -417,14 +419,64 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
     private function printDebugChecklist() {
         if (isset($this->options['quiet_report_enabled'])) {
             if (is_array($this->debugChecklist) && count($this->debugChecklist) > 0) {
-                echo "<!-- *** Plenigo debug checklist ***\n";
+                echo "<!-- *** Plenigo WooCommerce debug checklist ***\n";
                 foreach ($this->debugChecklist as $debugRow) {
                     echo "## - " . $debugRow . " \n";
                 }
-                echo "// *** Plenigo debug checklist *** -->";
+                echo "// *** Plenigo WooCommerce debug checklist *** -->";
             }
         }
         $this->debugChecklist = array();
+    }
+
+    /**
+     * Uses several method to assess the current order ID  for this payment page. 
+     * This is no simple task since the user may be looking at the order list. 
+     * Also there are multiple ways to detect the URL format to parse.
+     * 
+     * @return int the order id or FALSE if not found
+     */
+    public function get_current_order_id() {
+        // Lets try the order pay method first
+        $order_id = absint(get_query_var('order-pay'));
+
+        if ($order_id <= 0) {
+            // The try the order key method
+            $oKey = filter_input(INPUT_GET, 'key');
+            $order_id = absint(wc_get_order_id_by_order_key($oKey));
+            if ($order_id <= 0) {
+                // Try from the order received query parameter
+                $order_id = bsint(filter_input(INPUT_GET, 'order-received'));
+                 if ($order_id <= 0) {
+                        //Try from the order-received path variable
+                        $urlArray = parse_url(\plenigo_plugin\PlenigoURLManager::get()->getSanitizedURL());
+                        $useNext = false;
+                        foreach (split('/', $urlArray['path']) as $value) {
+                            if($useNext){
+                                $order_id=absint($value);
+                                break;
+                            }
+                            if($value=='order-received'){
+                                $useNext=true;
+                            }
+                        }
+                        if ($order_id <= 0) {
+                            $this->addDebugLine("Order ID not found");
+                            return FALSE;
+                        }else{
+                            $this->addDebugLine("Order ID from 'order-received' path variable");
+                        }
+                 }else{
+                     $this->addDebugLine("Order ID from 'order-received' query param");
+                 }
+            } else {
+                $this->addDebugLine("Order ID from 'key' query param");
+            }
+        } else {
+            $this->addDebugLine("Order ID from 'order-pay'");
+        }
+        $this->addDebugLine("Order ID :" . var_export($order_id, true));
+        return $order_id;
     }
 
 }

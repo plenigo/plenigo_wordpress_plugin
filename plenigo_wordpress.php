@@ -9,6 +9,8 @@
   Author URI: https://www.plenigo.com
   Text Domain: plenigo
   License: GPLv2
+  WC requires at least: 2.2
+  WC tested up to: 2.4.5
  */
 /*
   Copyright (C) 2014 plenigo
