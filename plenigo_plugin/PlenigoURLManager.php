@@ -20,10 +20,17 @@ class PlenigoURLManager {
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
 
     /**
+     * Additional parameters to take out from the URL, this one time;
+     * 
+     * @var array
+     */
+    private $forbiddenAdditional = array();
+
+    /**
      * Holds the list of forbidden URL query parameters
      */
     private $forbiddenParams = array(
-        "plppsuccess", "plppfailure", "token", "PayerID", "plsofortsuccess", "plsofortfailure", "plpfsuccess", "plpffailure", "LANGUAGE", "OrderID",
+        "state", "code", "plppsuccess", "plppfailure", "token", "PayerID", "plsofortsuccess", "plsofortfailure", "plpfsuccess", "plpffailure", "LANGUAGE", "OrderID",
         "CN", "NCErrorCN", "CardNo", "Brand", "NCErrorCardNo", "CVC", "NCErrorCVC", "ED", "NCErrorED", "NCError", "Alias", "status", "SHASign",
         "ALIASPERSISTEDAFTERUSE");
 
@@ -49,10 +56,11 @@ class PlenigoURLManager {
      * 
      * @return PlenigoURLManager The URL Manager
      */
-    public static function get() {
+    public static function get($forbidenParams = array()) {
         if (self::$instance === null) {
             self::$instance = new PlenigoURLManager();
         }
+        self::$instance->forbiddenAdditional = $forbidenParams;
 
         return self::$instance;
     }
@@ -111,10 +119,16 @@ class PlenigoURLManager {
         $res = $current_url; // a safe default
         $arrParsedURL = parse_url($current_url);
         $arrParsedQuery = array();
+        if (is_null($this->forbiddenAdditional)) {
+            $this->forbiddenAdditional = array();
+        }
+        plenigo_log_message("Filtering additional:" . var_export($this->forbiddenAdditional, true), E_USER_NOTICE);
+        $finalForbiddenParams = array_merge($this->forbiddenParams, $this->forbiddenAdditional);
+        plenigo_log_message("Filtering these parameters:" . var_export($finalForbiddenParams, true), E_USER_NOTICE);
         if ($arrParsedURL !== FALSE && !is_null($arrParsedURL)) {
             parse_str($arrParsedURL['query'], $arrParsedQuery);
             plenigo_log_message("QueryString:" . var_export($arrParsedQuery, true), E_USER_NOTICE);
-            $arrFilteredQuery = array_diff_key($arrParsedQuery, array_flip($this->forbiddenParams));
+            $arrFilteredQuery = array_diff_key($arrParsedQuery, array_flip($finalForbiddenParams));
             plenigo_log_message("QueryString Filtered:" . var_export($arrFilteredQuery, true), E_USER_NOTICE);
             $arrParsedURL['query'] = http_build_query($arrFilteredQuery);
             plenigo_log_message("URL array Filtered:" . var_export($arrParsedURL, true), E_USER_NOTICE);

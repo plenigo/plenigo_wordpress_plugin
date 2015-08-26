@@ -107,11 +107,11 @@ class PlenigoLoginManager {
         // getting the CSRF Token
         $csrfToken = PlenigoSDKManager::get()->get_csrf_token();
         // this url must be registered in plenigo
-        $redirectUrl = $this->options['redirect_url'];
+        $currentUrl = PlenigoURLManager::get(array("paymentState"))->getSanitizedURL();
 
-        plenigo_log_message("ATEMPTING LOGIN - REDIRECT TO:" . $redirectUrl);
+        plenigo_log_message("ATEMPTING LOGIN - REDIRECT TO:" . $currentUrl);
         // Now we pass the generated CSRF Token as third parameter
-        $tokenData = TokenService::getAccessToken($code, $redirectUrl, $csrfToken);
+        $tokenData = TokenService::getAccessToken($code, $currentUrl, $csrfToken);
 
         /**
           The TokenData object contains the following fields:
