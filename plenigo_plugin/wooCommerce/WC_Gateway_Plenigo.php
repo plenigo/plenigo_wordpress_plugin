@@ -159,8 +159,8 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
             plenigo_log_message("WOO: Processing checkout order: " . var_export($checkout_param, true), E_USER_NOTICE);
             $order = new \WC_Order($order_id);
             $this->addDebugLine("Order Received URL:" . var_export($order->get_checkout_order_received_url(), true));
-        
-            $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order->id);
+
+            $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order->id . "");
 
             $this->addDebugLine("Processing checkout order");
             if (!$user_bought) {
@@ -192,7 +192,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                     $coSettings = array('csrfToken' => $csrfToken);
                     if ($useOauthLogin) {
                         // this url must be registered in plenigo
-                        $current_url = \plenigo_plugin\PlenigoURLManager::get()->getSanitizedURL();
+                        $current_url = \plenigo_plugin\PlenigoURLManager::get(array("paymentState"))->getSanitizedURL();
                         $coSettings['oauth2RedirectUrl'] = $current_url;
                     }
 
@@ -219,7 +219,14 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                 }
             } else {
                 $order->add_order_note(__('You already purchased this order! Thank You!', self::PLENIGO_SETTINGS_GROUP));
+                $order->payment_complete();
+                $order->update_status('completed', __('Plenigo payment complete. Thank you!', self::PLENIGO_SETTINGS_GROUP));
                 $this->addDebugLine("Already payed!");
+                echo '<div style="width:100%;text-align:right;">'
+                . '<button class="checkout-button button alt wc-forward" onclick="javacript:location.href=\'' 
+                . $order->get_view_order_url() . '\';">'
+                . __('View your purchase', self::PLENIGO_SETTINGS_GROUP)
+                . '</button></div>';
             }
         }
         $this->printDebugChecklist();
@@ -447,28 +454,28 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
             if ($order_id <= 0) {
                 // Try from the order received query parameter
                 $order_id = bsint(filter_input(INPUT_GET, 'order-received'));
-                 if ($order_id <= 0) {
-                        //Try from the order-received path variable
-                        $urlArray = parse_url(\plenigo_plugin\PlenigoURLManager::get()->getSanitizedURL());
-                        $useNext = false;
-                        foreach (split('/', $urlArray['path']) as $value) {
-                            if($useNext){
-                                $order_id=absint($value);
-                                break;
-                            }
-                            if($value=='order-received'){
-                                $useNext=true;
-                            }
+                if ($order_id <= 0) {
+                    //Try from the order-received path variable
+                    $urlArray = parse_url(\plenigo_plugin\PlenigoURLManager::get()->getSanitizedURL());
+                    $useNext = false;
+                    foreach (split('/', $urlArray['path']) as $value) {
+                        if ($useNext) {
+                            $order_id = absint($value);
+                            break;
                         }
-                        if ($order_id <= 0) {
-                            $this->addDebugLine("Order ID not found");
-                            return FALSE;
-                        }else{
-                            $this->addDebugLine("Order ID from 'order-received' path variable");
+                        if ($value == 'order-received') {
+                            $useNext = true;
                         }
-                 }else{
-                     $this->addDebugLine("Order ID from 'order-received' query param");
-                 }
+                    }
+                    if ($order_id <= 0) {
+                        $this->addDebugLine("Order ID not found");
+                        return FALSE;
+                    } else {
+                        $this->addDebugLine("Order ID from 'order-received' path variable");
+                    }
+                } else {
+                    $this->addDebugLine("Order ID from 'order-received' query param");
+                }
             } else {
                 $this->addDebugLine("Order ID from 'key' query param");
             }

@@ -261,6 +261,10 @@ separator, native Wordpress tag.
 == Changelog ==
 = 1.4.1 - Beware of advanced features!
 - Some customers wanted more information on the operation of the plugin without breaking the look & feel of their site. You got it, be warned!
+- Plenty of improvements
+- OAuth working with the WooCommerce stuff
+- Now you can redeem past orders! if you purchased them of course, just go to your customer profile
+- Many bug fixes client and server side
 
 = 1.4.0 - New Product types!
 - Updated SDK
