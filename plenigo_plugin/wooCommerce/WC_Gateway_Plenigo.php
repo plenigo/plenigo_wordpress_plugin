@@ -222,8 +222,15 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                 $order->payment_complete();
                 $order->update_status('completed', __('Plenigo payment complete. Thank you!', self::PLENIGO_SETTINGS_GROUP));
                 $this->addDebugLine("Already payed!");
+                // If its an anonymous user
+                if ($order->customer_user == 0) {
+                    $updArray = array();
+                    $updArray['order_id'] = $order->id;
+                    $updArray['customer_id'] = get_current_user_id();
+                    wc_update_order($updArray);
+                }
                 echo '<div style="width:100%;text-align:right;">'
-                . '<button class="checkout-button button alt wc-forward" onclick="javacript:location.href=\'' 
+                . '<button class="checkout-button button alt wc-forward" onclick="javacript:location.href=\''
                 . $order->get_view_order_url() . '\';">'
                 . __('View your purchase', self::PLENIGO_SETTINGS_GROUP)
                 . '</button></div>';

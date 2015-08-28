@@ -3,7 +3,7 @@ Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 4.0.0
 Tested up to: 4.3
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -259,6 +259,9 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
+= 1.4.2 - It's MY order you got there!
+- If customers started an order (cart) without logging in, the order wasnt associated to the customer and then lost as annonymous, not anymore.
+
 = 1.4.1 - Beware of advanced features!
 - Some customers wanted more information on the operation of the plugin without breaking the look & feel of their site. You got it, be warned!
 - Plenty of improvements
