@@ -280,7 +280,7 @@ separator, native Wordpress tag.
 - Updated SDK
 - WooCommerce now have new product types
 
-= 1.3.0 - Sorry Sir, your credit card was rejected....
+= 1.3.0 - Sorry Sir, your credit card was rejected.... =
 - Improved: Updated PHP SDK for supporting the failed payment flag
 - Feature: New button to provide the users with a way to check their failed payments, so they can take care of those problems easily from your site!
 - Improved: TinyMCE buttons now have tooltips, aren't the icons enough explanation? Aren't they?
