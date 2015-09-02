@@ -80,7 +80,7 @@ Your customer is your customer. You have full access to all information we gathe
 
 == Installation ==
 
-To use the plenigo plugin you must [register a company account at plenigo](https://www.plenigo.com/company/registration "plenigo company registration").
+For installation instructions visit [help pages](https://developer.plenigo.com/plugins/wordpress/ "Wordpress plugin").
 
 = Pre Requirements =
 
@@ -215,6 +215,10 @@ Type of the product going to be sold. This is importent for the tax rate that wi
 
 == Frequently Asked Questions ==
 
+= Help =
+
+To get help visit [help pages](https://developer.plenigo.com/plugins/wordpress/ "Wordpress plugin").
+
 = Available Shortcodes =
 
 Creates a checkout button with optional title and optional css class.
@@ -259,7 +263,7 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
-= 1.4.2 - It's MY order you got there!
+= 1.4.2 - It's MY order you got there! =
 - If customers started an order (cart) without logging in, the order wasnt associated to the customer and then lost as annonymous, not anymore.
 
 = 1.4.1 - Beware of advanced features!
