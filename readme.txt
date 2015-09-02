@@ -3,7 +3,7 @@ Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 4.0.0
 Tested up to: 4.3
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -263,17 +263,20 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
+= 1.4.3 - Get help! =
+- Added help pages.
+
 = 1.4.2 - It's MY order you got there! =
 - If customers started an order (cart) without logging in, the order wasnt associated to the customer and then lost as annonymous, not anymore.
 
-= 1.4.1 - Beware of advanced features!
+= 1.4.1 - Beware of advanced features! =
 - Some customers wanted more information on the operation of the plugin without breaking the look & feel of their site. You got it, be warned!
 - Plenty of improvements
 - OAuth working with the WooCommerce stuff
 - Now you can redeem past orders! if you purchased them of course, just go to your customer profile
 - Many bug fixes client and server side
 
-= 1.4.0 - New Product types!
+= 1.4.0 - New Product types! =
 - Updated SDK
 - WooCommerce now have new product types
 
@@ -282,7 +285,7 @@ separator, native Wordpress tag.
 - Feature: New button to provide the users with a way to check their failed payments, so they can take care of those problems easily from your site!
 - Improved: TinyMCE buttons now have tooltips, aren't the icons enough explanation? Aren't they?
 
-= 1.2.3 - Peek A Boo, I see you . . . and you
+= 1.2.3 - Peek A Boo, I see you . . . and you =
 - Avoid sending the default PageView to Google Analytics to prevent duplicated measurements. Demographic stuff should be measured as well
 
 = 1.2.2 - Lover for category of products =
