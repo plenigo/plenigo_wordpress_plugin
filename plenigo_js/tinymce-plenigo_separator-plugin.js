@@ -23,7 +23,7 @@ tinymce.PluginManager.add('plenigo_separator', function (editor, url) {
 
     editor.on('PostProcess', function (event) {
         if (event.get) {
-            var regExp = /<img class="pl-separator.+".+\/>/ig;
+            var regExp = /<img class="pl-separator.+?".+?\/>/ig;
             event.content = event.content.replace(regExp, separatorTag);
         }
     });
