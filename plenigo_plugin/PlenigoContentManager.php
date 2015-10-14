@@ -298,7 +298,7 @@ class PlenigoContentManager {
     /**
      * This method checks if the content is due to be paywalled by plenigo
      *
-     * @return boolean TRUE if the content needs to be paywalled, FALSE otherwise
+     * @return bool TRUE if the content needs to be paywalled, FALSE otherwise
      */
     private function plenigo_paywalled_content() {
         $plenigoTagDB = (isset($this->options['plenigo_tag_db']) ? $this->options['plenigo_tag_db'] : '');
@@ -356,7 +356,7 @@ class PlenigoContentManager {
      * so it can be checked for bought products. Returns FALSE if there is no tag 
      * found on the article that reflects a tag in the plenigo settings
      * 
-     * @return boolean Returns TRUE if a tag has been found and the category list is in the cache
+     * @return bool Returns TRUE if a tag has been found and the category list is in the cache
      */
     public function hasAnyCategoryTag() {
         if (isset($this->reqCache["hasAnyCategoryTag"])) {
@@ -405,7 +405,7 @@ class PlenigoContentManager {
     /**
      * Check if the prevent tags is present, and returns the flag indicating it
      * 
-     * @return boolean TRUE if the prevent tag is present and thus the curtain shouldn't
+     * @return bool TRUE if the prevent tag is present and thus the curtain shouldn't
      */
     public function hasPreventTag() {
         if (isset($this->reqCache["hasPreventTag"])) {
@@ -434,7 +434,7 @@ class PlenigoContentManager {
      * so it can be checked for bought products. Returns FALSE if there is no tag 
      * found on the article that reflects a tag in the plenigo settings
      * 
-     * @return boolean Returns TRUE if a tag has been found and the product list is in the cache
+     * @return bool Returns TRUE if a tag has been found and the product list is in the cache
      */
     private function hasAnyProductTag() {
         if (isset($this->reqCache["hasAnyProductTag"])) {
@@ -487,7 +487,7 @@ class PlenigoContentManager {
      *
      * @param  boolean $isFeed TRUE if this method is being called from a feed filter
      *                         (the_content_feed, the_excerpt_feed, etc.)
-     * @return boolean TRUE if the user has bought or if its due to be paywalled
+     * @return bool TRUE if the user has bought or if its due to be paywalled
      */
     private function user_bought_content($isFeed = FALSE) {
         $rType = $this->get_render_type($isFeed);
@@ -508,7 +508,7 @@ class PlenigoContentManager {
     /**
      * Comodity method to call the paywalled check and trace some message
      *
-     * @return boolean TRUE if the content needs to be paywalled, FALSE otherwise
+     * @return bool TRUE if the content needs to be paywalled, FALSE otherwise
      */
     private function paywalled_check() {
         if (isset($this->reqCache["paywalledCheck"])) {
@@ -525,7 +525,7 @@ class PlenigoContentManager {
      * This methods calls the SDK and ask for the managed product ID to check if the current logged in user
      * has bought the product. This assumes a previous login
      *
-     * @return boolean TRUE if the SDK succeded to call the service and if the user has bought the product
+     * @return bool TRUE if the SDK succeded to call the service and if the user has bought the product
      */
     private function plenigo_check() {
         global $post;
@@ -1101,7 +1101,7 @@ class PlenigoContentManager {
     /**
      * Checks if the metered view is exempt by tag
      * 
-     * @return boolean TRUE if the post is exempt of metered views
+     * @return bool TRUE if the post is exempt of metered views
      */
     public function is_metered_exempt() {
         $res = FALSE;
