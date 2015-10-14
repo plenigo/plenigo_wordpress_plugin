@@ -104,7 +104,7 @@ class PlenigoSDKManager {
      * Calls the PHP SDK and queries the server for products already bought. Sanitizes the response as a boolean
      *
      * @param  string  $products the product Id string or an array of product ids
-     * @return boolean true if the user has bought the product
+     * @return bool true if the user has bought the product
      */
     public function plenigo_bought($products = null) {
         if (is_null($products)) {
@@ -160,7 +160,7 @@ class PlenigoSDKManager {
     /**
      * Checks if the user has free views in a metered environment
      *
-     * @return boolean true if the user has metered views left
+     * @return bool true if the user has metered views left
      */
     public function plenigo_has_free_views() {
         // cached
@@ -190,7 +190,7 @@ class PlenigoSDKManager {
     /**
      * This method checks for the paywall enabled flag from the plenigo administration.
      *
-     * @return boolean TRUE if the paywall is enabled from the server side, false if not
+     * @return bool TRUE if the paywall is enabled from the server side, false if not
      */
     public function isPayWallEnabled() {
         // cached
