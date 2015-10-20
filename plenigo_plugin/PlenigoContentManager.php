@@ -132,6 +132,7 @@ class PlenigoContentManager {
     /**
      * Check if the curtain has to be rendered and injects a meta tag for search engine robots
      * 
+     * @global WP_Post $post The Wordpress post object
      */
     public function add_metatags() {
         global $post;
@@ -153,6 +154,8 @@ class PlenigoContentManager {
     /**
      * This is only for testing purposes, the snipet here allows to change the
      * baseURL of the JS and PHP SDKs at the same time
+     * 
+     * @global WP_Post $post The Wordpress post object
      */
     public function plenigo_js_snippet() {
         global $post;
@@ -164,8 +167,13 @@ class PlenigoContentManager {
         }
         //Handling other pages than single post view
         $rType = $this->get_render_type(FALSE);
-        //Checking if product has been bought
-        $userBought = (PlenigoSDKManager::get()->plenigo_bought($this->reqCache["listProdId"]) === TRUE);
+        //Checking if product has been bought (Products)
+        $userBoughtProd = (PlenigoSDKManager::get()->plenigo_bought($this->reqCache["listProdId"]) === TRUE);
+        //Checking if product has been bought (Categories)
+        $userBoughtCat = (PlenigoSDKManager::get()->plenigo_bought($this->reqCache["lastCatId"]) === TRUE);
+        //Either way the user bought it
+        $userBought = ($userBoughtProd === TRUE || $userBoughtCat === TRUE) ? TRUE : FALSE;
+
         //Checking if the user has free views
         $hasFreeViews = (PlenigoSDKManager::get()->plenigo_has_free_views() === TRUE);
         //Checking if the metered view is exempt by tag
@@ -221,6 +229,7 @@ class PlenigoContentManager {
      *
      * @param  string  $content the contents as it will be shown
      * @param  boolean $isFeed  TRUE if the method is being called from a FEED filter or not
+     * @global WP_Post $post The Wordpress post object
      * @return string  the content filtered if needed by the plenigo paywall
      */
     private function plenigo_filter_content($content, $isFeed = FALSE) {
@@ -318,6 +327,7 @@ class PlenigoContentManager {
         //Prevent tag takes precedense
         $hasPreventTag = $this->hasPreventTag();
         if ($hasPreventTag) {
+            plenigo_log_message("PREVENT TAG FOUND");
             $this->addGAEvent("curtain|curtain-prevented");
             return FALSE;
         }
@@ -330,19 +340,21 @@ class PlenigoContentManager {
 
         // If Paywall is disabled, we dont check anything
         if (PlenigoSDKManager::get()->isPayWallEnabled()) {
-
             //Checking for category IDs
             $hasAnyCatTag = $this->hasAnyCategoryTag();
+            //Checking for Product IDs
+            $hasAnyProdTag = $this->hasAnyProductTag();
             if ($hasAnyCatTag) {
+                plenigo_log_message("A Category tag was found matching");
                 $this->addGAEvent("curtain|category-matched");
                 return TRUE;
+            } else if ($hasAnyProdTag) {
+                plenigo_log_message("A Product tag was found matching");
+                $this->addGAEvent("curtain|product-matched");
+                return TRUE;
             } else {
-                //Checking for Product IDs
-                $hasAnyProdTag = $this->hasAnyProductTag();
-                if ($hasAnyProdTag) {
-                    $this->addGAEvent("curtain|product-matched");
-                }
-                return $hasAnyProdTag;
+                plenigo_log_message("No product/Category was found matching");
+                return FALSE;
             }
         }
 
@@ -360,6 +372,7 @@ class PlenigoContentManager {
      */
     public function hasAnyCategoryTag() {
         if (isset($this->reqCache["hasAnyCategoryTag"])) {
+            $this->addDebugLine("[Cached] has Category Tag: " . $this->reqCache["hasAnyCategoryTag"]);
             return $this->reqCache["hasAnyCategoryTag"];
         }
         $catTagList = (isset($this->options['plenigo_cat_tag_db']) ? $this->options['plenigo_cat_tag_db'] : '');
@@ -409,6 +422,7 @@ class PlenigoContentManager {
      */
     public function hasPreventTag() {
         if (isset($this->reqCache["hasPreventTag"])) {
+            $this->addDebugLine("[Cached] has Prevented Tag: " . $this->reqCache["hasPreventTag"]);
             return $this->reqCache["hasPreventTag"];
         }
         $prevTag = (isset($this->options['plenigo_prevent_tag']) ? $this->options['plenigo_prevent_tag'] : '');
@@ -438,6 +452,7 @@ class PlenigoContentManager {
      */
     private function hasAnyProductTag() {
         if (isset($this->reqCache["hasAnyProductTag"])) {
+            $this->addDebugLine("[Cached] has Product Tag: " . $this->reqCache["hasAnyProductTag"]);
             return $this->reqCache["hasAnyProductTag"];
         }
         $prodTagList = (isset($this->options['plenigo_tag_db']) ? $this->options['plenigo_tag_db'] : '');
@@ -476,6 +491,9 @@ class PlenigoContentManager {
         if ($res === TRUE) {
             $this->addDebugLine("Products: " . var_export($this->reqCache["listProdId"], TRUE));
         }
+        //Output some data conditions
+        $this->showDebugConditions();
+
         $this->reqCache["hasAnyProductTag"] = $res;
         return $res;
     }
@@ -525,6 +543,7 @@ class PlenigoContentManager {
      * This methods calls the SDK and ask for the managed product ID to check if the current logged in user
      * has bought the product. This assumes a previous login
      *
+     * @global WP_Post $post The Wordpress post object
      * @return bool TRUE if the SDK succeded to call the service and if the user has bought the product
      */
     private function plenigo_check() {
@@ -558,10 +577,12 @@ class PlenigoContentManager {
                     $this->addGAEvent("product|freeview-exempt");
                 }
             } else {
+                $this->addDebugLine("User is visiting it's bought product");
                 $this->addGAEvent("product|bought-visit");
             }
         }
         if ($res === TRUE) {
+            $this->addDebugLine("User is visiting a free view product");
             $this->addGAEvent("product|freeview-visit");
         }
         $this->reqCache["plenigoCheck"] = $res;
@@ -751,8 +772,8 @@ class PlenigoContentManager {
                     $buyOnClick = $checkoutBuilder->build($coSettings);
                 }
                 if (stristr($html, self::REPLACE_PRODUCT_NAME) !== FALSE ||
-                    stristr($html, self::REPLACE_PRODUCT_PRICE) !== FALSE ||
-                    stristr($html, self::REPLACE_PRODUCT_DETAILS) !== FALSE) {
+                        stristr($html, self::REPLACE_PRODUCT_PRICE) !== FALSE ||
+                        stristr($html, self::REPLACE_PRODUCT_DETAILS) !== FALSE) {
                     // get product data
                     $productData = \plenigo\services\ProductService::getProductData($product->getId());
                 }
@@ -778,7 +799,7 @@ class PlenigoContentManager {
                 }
                 //If we should show Product details
                 $prodDetails = '<table class="plenigo-product"><tr><td><b>' . $prodName . '</b></td>'
-                    . '<td width="170" style="text-align: right;"><b>' . $prodPrice . '</b></td></tr></table>';
+                        . '<td width="170" style="text-align: right;"><b>' . $prodPrice . '</b></td></tr></table>';
             }
         }
 
@@ -918,7 +939,7 @@ class PlenigoContentManager {
      * Outputs the debug checklist as a HTML comment for debugging purposes, then it clears the array
      */
     private function printDebugChecklist() {
-        if(isset($this->options['quiet_report_enabled'])){
+        if (isset($this->options['quiet_report_enabled'])) {
             if (is_array($this->debugChecklist) && count($this->debugChecklist) > 0) {
                 echo "<!-- *** Plenigo debug checklist ***\n";
                 foreach ($this->debugChecklist as $debugRow) {
@@ -981,11 +1002,10 @@ class PlenigoContentManager {
     public function replace_noscript_tags($htmlText) {
         $res = '';
         if (isset($this->options['noscript_enabled']) && $this->options['noscript_enabled'] === 1) {
-            $strTitle = (isset($this->options['noscript_title'])) ? $this->options['noscript_title'] : __("You need JavaScript",
-                    self::PLENIGO_SETTINGS_GROUP);
+            $strTitle = (isset($this->options['noscript_title'])) ? $this->options['noscript_title'] : __("You need JavaScript", self::PLENIGO_SETTINGS_GROUP);
             $strMessage = (isset($this->options['noscript_message'])) ? $this->options['noscript_message'] : __("In order to provide you with the best experience, "
-                    . "this site requires that you allow JavaScript to run. "
-                    . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
+                            . "this site requires that you allow JavaScript to run. "
+                            . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
             $res = str_ireplace(self::REPLACE_NS_TITLE, trim(wp_kses_post($strTitle)), $htmlText);
             $res = str_ireplace(self::REPLACE_NS_MESSAGE, trim(wp_kses_post(wpautop($strMessage))), $res);
         }
@@ -1150,11 +1170,28 @@ class PlenigoContentManager {
             preg_match('/{(.*?)}/', $strTag[0], $arrToken);
             if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && $arrToken[1] == $tag) {
                 $res = $strTag[1];
-                $this->addDebugLine("Buyt Button Text from tag: " . $tag . ' ==> ' . $res);
+                $this->addDebugLine("Buy Button Text from tag: " . $tag . ' ==> ' . $res);
                 break;
             }
         }
         return $res;
+    }
+
+    /**
+     * Output debugging information about the condition of the post before analyzing if it has been bought or not.
+     * 
+     * @global WP_Post $post The Wordpress post object
+     */
+    private function showDebugConditions() {
+        global $post;
+        $t = wp_get_post_tags($post->ID);
+        $tagList = array();
+        if (!is_null($t) && is_array($t)) {
+            foreach ($t as $currTag) {
+                array_push($tagList, "(" . $currTag->term_id . ") " . $currTag->name . " | " . $currTag->slug);
+            }
+        }
+        $this->addDebugLine("WP Tag List: [" . implode("], [", $tagList) . "]");
     }
 
 }
