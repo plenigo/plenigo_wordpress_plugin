@@ -168,9 +168,9 @@ class PlenigoContentManager {
         //Handling other pages than single post view
         $rType = $this->get_render_type(FALSE);
         //Checking if product has been bought (Products)
-        $userBoughtProd = (PlenigoSDKManager::get()->plenigo_bought($this->reqCache["listProdId"]) === TRUE);
+        $userBoughtProd = (isset($this->reqCache["listProdId"])) ? (PlenigoSDKManager::get()->plenigo_bought($this->reqCache["listProdId"]) === TRUE) : FALSE;
         //Checking if product has been bought (Categories)
-        $userBoughtCat = (PlenigoSDKManager::get()->plenigo_bought($this->reqCache["lastCatId"]) === TRUE);
+        $userBoughtCat = (isset($this->reqCache["lastCatId"])) ? (PlenigoSDKManager::get()->plenigo_bought($this->reqCache["lastCatId"]) === TRUE) : FALSE;
         //Either way the user bought it
         $userBought = ($userBoughtProd === TRUE || $userBoughtCat === TRUE) ? TRUE : FALSE;
 

@@ -31,15 +31,6 @@
  */
 define('PLENIGO_VERSION', '1.4.6');
 
-define('PLENIGO_DEBUG', false);
-if (PLENIGO_DEBUG === true) {
-    define('WP_DEBUG', true);
-    define('WP_DEBUG_LOG', true);
-    define('WP_DEBUG_DISPLAY', true);
-    @ini_set('display_errors', 1);
-    error_reporting(E_ALL | E_STRICT);
-}
-
 // Plenigo JavaScript SDK / Services
 define('PLENIGO_SVC_URL', "https://api.plenigo.com");
 define('PLENIGO_OAUTH_SVC_URL', "https://www.plenigo.com");
@@ -78,6 +69,32 @@ $shortcodeManager = new \plenigo_plugin\PlenigoShortcodeManager();
 
 //Plenigo Login
 $plenigoOptions = get_option('plenigo_settings');
+//Debug mode
+$rightNow = time();
+//Sanitize debug value
+if ($plenigoOptions['debug_mode'] > 1 && $plenigoOptions['debug_mode'] < $rightNow) {
+    $plenigoOptions['debug_mode'] = 0;
+    update_option('plenigo_settings', $plenigoOptions);
+}
+
+//activating debug mode
+if ($plenigoOptions['debug_mode'] > 0) {
+    define('PLENIGO_DEBUG', true);
+    define('WP_DEBUG', true);
+    if ($plenigoOptions['debug_mode'] == 1) {
+        define('WP_DEBUG_LOG', false);
+        define('WP_DEBUG_DISPLAY', true);
+        @ini_set('display_errors', 1);
+    } else {
+        define('WP_DEBUG_LOG', true);
+        define('WP_DEBUG_DISPLAY', false);
+        @ini_set('display_errors', 0);
+    }
+    error_reporting(E_ALL | E_STRICT);
+}else{
+    define('PLENIGO_DEBUG', false);
+}
+
 //LoginWidget
 if (isset($plenigoOptions['use_login']) && ($plenigoOptions['use_login'] == 1 )) {
     require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoLoginWidget.php';
