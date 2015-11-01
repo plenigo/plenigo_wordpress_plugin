@@ -344,7 +344,11 @@ class PlenigoContentManager {
             $hasAnyCatTag = $this->hasAnyCategoryTag();
             //Checking for Product IDs
             $hasAnyProdTag = $this->hasAnyProductTag();
-            if ($hasAnyCatTag) {
+            if($hasAnyCatTag && $hasAnyProdTag) {
+                plenigo_log_message("A Category and a Product tag was found matching");
+                $this->addGAEvent("curtain|category-product-matched");
+                return TRUE;
+            } else if ($hasAnyCatTag) {
                 plenigo_log_message("A Category tag was found matching");
                 $this->addGAEvent("curtain|category-matched");
                 return TRUE;
@@ -561,6 +565,7 @@ class PlenigoContentManager {
             plenigo_log_message("Checking if category is there");
             if (isset($this->reqCache["lastCatId"])) {
                 $products = array($post->ID);
+                $products = array_merge($products, $this->reqCache["listProdId"]);
             } else {
                 $products = $this->reqCache["listProdId"];
             }
