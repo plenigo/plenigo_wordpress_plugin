@@ -107,7 +107,9 @@ class PlenigoShortcodeManager {
         $btnTitle = $a['title'];
         $cssClass = $a['class'];
         $prodId = $a['prod_id'];
-        if ($tag !== 'pl_checkout_button' && $prodId !== "" && PlenigoSDKManager::get()->plenigo_bought($prodId)) { //Return the content untouched
+        $isIgnoringTag = ($tag !== 'pl_checkout_button' && $tag !== 'pl_renew');
+        $isBought = ($prodId !== "" && PlenigoSDKManager::get()->plenigo_bought($prodId));
+        if ($isIgnoringTag && $isBought) { //Return the content untouched
             return do_shortcode($content);
         } else { //Do the plenigo checkout button
             if (!isset($this->options['test_mode']) || ($this->options['test_mode'] == 1 )) {
