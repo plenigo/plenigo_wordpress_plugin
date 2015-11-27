@@ -112,10 +112,10 @@ class PlenigoShortcodeManager {
         //evaluate the condition
         $renderButton = true;
         if ($isIgnoringTag) {
-            plenigo_log_message("Got ignoring chosrtcode, rendering button", E_USER_NOTICE);
+            plenigo_log_message("Got ignoring shortcode, rendering button", E_USER_NOTICE);
             $renderButton = true;
         } else {
-            plenigo_log_message("Shosrtcode not ignoring, checking if bought", E_USER_NOTICE);
+            plenigo_log_message("Shortcode not ignoring, checking if bought", E_USER_NOTICE);
             $isBought = ($prodId !== "" && PlenigoSDKManager::get()->plenigo_bought($prodId));
             if ($isBought) {
                 plenigo_log_message("Product bought: " . $prodId, E_USER_NOTICE);
