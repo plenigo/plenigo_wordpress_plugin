@@ -102,16 +102,31 @@ class PlenigoShortcodeManager {
             'title' => "",
             'prod_id' => "",
             'class' => "",
-            ), $atts);
+                ), $atts);
 
         $btnTitle = $a['title'];
         $cssClass = $a['class'];
         $prodId = $a['prod_id'];
-        $isIgnoringTag = ($tag !== 'pl_checkout_button' && $tag !== 'pl_renew');
-        $isBought = ($prodId !== "" && PlenigoSDKManager::get()->plenigo_bought($prodId));
-        if ($isIgnoringTag && $isBought) { //Return the content untouched
-            return do_shortcode($content);
-        } else { //Do the plenigo checkout button
+        $isIgnoringTag = ($tag == 'pl_checkout_button' || $tag == 'pl_renew');
+
+        //evaluate the condition
+        $renderButton = true;
+        if ($isIgnoringTag) {
+            plenigo_log_message("Got ignoring chosrtcode, rendering button", E_USER_NOTICE);
+            $renderButton = true;
+        } else {
+            plenigo_log_message("Shosrtcode not ignoring, checking if bought", E_USER_NOTICE);
+            $isBought = ($prodId !== "" && PlenigoSDKManager::get()->plenigo_bought($prodId));
+            if ($isBought) {
+                plenigo_log_message("Product bought: " . $prodId, E_USER_NOTICE);
+                $renderButton = false;
+            } else {
+                plenigo_log_message("Product NOT bought: " . $prodId, E_USER_NOTICE);
+                $renderButton = true;
+            }
+        }
+
+        if ($renderButton) { //Do the plenigo checkout button
             if (!isset($this->options['test_mode']) || ($this->options['test_mode'] == 1 )) {
                 $testMode = 'true';
             } else {
@@ -169,9 +184,11 @@ class PlenigoShortcodeManager {
                 }
             }
             return '<input type="button" id="submit" '
-                . ' class="button button-primary ' . $cssClass . '" '
-                . ' value="' . $btnTitle . '" '
-                . ' onclick="' . $btnOnClick . '" />';
+                    . ' class="button button-primary ' . $cssClass . '" '
+                    . ' value="' . $btnTitle . '" '
+                    . ' onclick="' . $btnOnClick . '" />';
+        } else { //Return the content untouched
+            return do_shortcode($content);
         }
     }
 
