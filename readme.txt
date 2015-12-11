@@ -264,7 +264,7 @@ separator, native Wordpress tag.
 
 == Changelog ==
 = 1.4.9 - Awesome Greetings for your awesome new users! = 
-- Added a Redirect URL for new users (registering using plenigo or already registered with plenigo.
+- Added a Redirect URL for new users (registering using plenigo or already registered with plenigo).
 
 = 1.4.8 - Paving the road of the future and covering some road bumps too! = 
 - Update SDK with support for new functionality
