@@ -28,8 +28,7 @@ namespace plenigo_plugin\settings;
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class SettingRedirectURL extends PlenigoWPSetting
-{
+class SettingRedirectURL extends PlenigoWPSetting {
 
     //These should be overriden
     const SECTION_ID = 'plenigo_login_section';
@@ -38,8 +37,7 @@ class SettingRedirectURL extends PlenigoWPSetting
     /**
      * @see PlenigoWPSetting::getSanitizedValue()
      */
-    protected function getSanitizedValue($value = null)
-    {
+    protected function getSanitizedValue($value = null) {
         $tempValue = trim($value);
         if (is_null($value) && !empty($tempValue)) {
             return $this->getDefaultValue();
@@ -50,8 +48,7 @@ class SettingRedirectURL extends PlenigoWPSetting
     /**
      * @see PlenigoWPSetting::getDefaultValue()
      */
-    public function getDefaultValue($current = null)
-    {
+    public function getDefaultValue($current = null) {
         if (!is_null($current)) {
             return esc_url($current);
         }
@@ -61,40 +58,39 @@ class SettingRedirectURL extends PlenigoWPSetting
     /**
      * @see PlenigoWPSetting::getTitle()
      */
-    public function getTitle()
-    {
+    public function getTitle() {
         return __('OAuth redirect URL', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
      * @see PlenigoWPSetting::renderCallback()
      */
-    public function renderCallback()
-    {
+    public function renderCallback() {
         $currValue = $this->getDefaultValue($this->getStoredValue());
         $currHint = $this->getHint();
 
         printf('<input type="text" id="' . static::SETTING_ID . '" name="' . self::PLENIGO_SETTINGS_NAME
-            . '[' . static::SETTING_ID . ']" value="%s" placeholder="%s" size="90" />', $currValue, $currHint);
+                . '[' . static::SETTING_ID . ']" value="%s" placeholder="%s" size="90" />', $currValue, $currHint);
     }
 
     /**
      * Returns the text to be used as a hint for the text box
      */
-    protected function getHint()
-    {
+    protected function getHint() {
         return __('http://', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
      * @see PlenigoWPSetting::getValidationForValue()
      */
-    public function getValidationForValue($value = null)
-    {
-        if (!is_null($value) && strlen(trim($value)) > 9) {
-            return true;
+    public function getValidationForValue($value = null) {
+        if ((!is_null($value) && strlen(trim($value)) > 9) || $value === '') {
+            if ($value !== '' && filter_var(trim($value), FILTER_VALIDATE_URL) === false) {
+                return false;
+            } else {
+                return true;
+            }
         }
         return false;
     }
-
 }

@@ -20,26 +20,26 @@
 
 namespace plenigo_plugin\settings;
 
-require_once __DIR__ . '/SettingRedirectURL.php';
-
 /**
- * Setting class for metered_url
+ * Setting class for welcome_url
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class SettingMeteredURL extends SettingRedirectURL {
+class SettingWelcomeURL extends SettingRedirectURL
+{
 
     //These should be overriden
-    const SECTION_ID = 'plenigo_metered_section';
-    const SETTING_ID = 'metered_url';
+    const SECTION_ID = 'plenigo_login_section';
+    const SETTING_ID = 'welcome_url';
 
     /**
      * @see PlenigoWPSetting::getDefaultValue()
      */
-    public function getDefaultValue($current = null) {
+    public function getDefaultValue($current = null)
+    {
         if (!is_null($current)) {
             return esc_url($current);
         }
@@ -49,14 +49,16 @@ class SettingMeteredURL extends SettingRedirectURL {
     /**
      * @see PlenigoWPSetting::getTitle()
      */
-    public function getTitle() {
-        return __('Metered explanation URL', parent::PLENIGO_SETTINGS_GROUP);
+    public function getTitle()
+    {
+        return __('URL After NEW USER', parent::PLENIGO_SETTINGS_GROUP);
     }
-
+    
     /**
      * @see SettingRedirectURL::getHint()
      */
-    protected function getHint() {
-        return __('https://', parent::PLENIGO_SETTINGS_GROUP);
+    protected function getHint()
+    {
+        return __('Leave empty for no redirection...', parent::PLENIGO_SETTINGS_GROUP);
     }
 }

@@ -61,16 +61,4 @@ class SettingLoginURL extends SettingRedirectURL
     {
         return __('Leave empty for no redirection...', parent::PLENIGO_SETTINGS_GROUP);
     }
-
-    /**
-     * @see PlenigoWPSetting::getValidationForValue()
-     */
-    public function getValidationForValue($value = null)
-    {
-        if ((!is_null($value) && strlen(trim($value)) > 9) || $value === '') {
-            return true;
-        }
-        return false;
-    }
-
 }
