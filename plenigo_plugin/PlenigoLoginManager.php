@@ -198,6 +198,11 @@ class PlenigoLoginManager {
         //Tag the user with our meta so we can recognize them next time, without resorting to email hashes
         update_user_meta($user_login_id, self::PLENIGO_META_NAME, $userData->getId());
 
+        // Set the login URL to the welcome URL (just in memory)
+        if(isset($this->options['welcome_url']) && !empty($this->options['welcome_url']) & !is_null($this->options['welcome_url'])){
+            $this->options['login_url'] = esc_url($this->options['welcome_url']);
+        }     
+        
         return $user_login_id;
     }
 
