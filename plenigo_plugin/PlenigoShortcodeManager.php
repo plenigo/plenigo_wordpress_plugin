@@ -36,6 +36,8 @@ class PlenigoShortcodeManager {
         add_shortcode('pl_checkout_button', array($this, 'plenigo_handle_shortcode'));
         add_shortcode('pl_renew', array($this, 'plenigo_handle_shortcode'));
         add_shortcode('pl_failed', array($this, 'plenigo_handle_shortcode'));
+        add_shortcode('pl_content_show', array($this, 'plenigo_handle_content_shortcode'));
+        add_shortcode('pl_content_hide', array($this, 'plenigo_handle_content_shortcode'));
 
         //TinyMCE
         // add new buttons
@@ -73,7 +75,7 @@ class PlenigoShortcodeManager {
         // We are attempting to only allow the shortcode appearance to editors.
         if (\current_user_can('edit_posts') || \current_user_can('edit_pages')) {
             if (\get_user_option('rich_editing') == 'true') {
-                array_push($buttons, 'separator', 'plenigo', 'plenigo_renew', 'plenigo_failed', 'plenigo_separator');
+                array_push($buttons, 'separator', 'plenigo', 'plenigo_renew', 'plenigo_failed', 'plenigo_separator', 'plenigo_show', 'plenigo_hide');
             }
         }
         return $buttons;
@@ -84,6 +86,8 @@ class PlenigoShortcodeManager {
         $plugin_array['plenigo_renew'] = plugins_url('../plenigo_js/tinymce-plenigo_renew-plugin.js', __file__);
         $plugin_array['plenigo_failed'] = plugins_url('../plenigo_js/tinymce-plenigo_failed-plugin.js', __file__);
         $plugin_array['plenigo_separator'] = plugins_url('../plenigo_js/tinymce-plenigo_separator-plugin.js', __file__);
+        $plugin_array['plenigo_show'] = plugins_url('../plenigo_js/tinymce-plenigo_show-plugin.js', __file__);
+        $plugin_array['plenigo_hide'] = plugins_url('../plenigo_js/tinymce-plenigo_hide-plugin.js', __file__);
         return $plugin_array;
     }
 
@@ -190,6 +194,47 @@ class PlenigoShortcodeManager {
         } else { //Return the content untouched
             return do_shortcode($content);
         }
+    }
+
+    public function plenigo_handle_content_shortcode($atts, $content = null, $tag = null) {
+        $a = shortcode_atts(array(
+            'prod_id' => "",
+            'class' => "",
+                ), $atts);
+
+        $cssClass = $a['class'];
+        $prodId = $a['prod_id'];
+        $showContent = false;
+        $returnString = "";
+        $isBought = ($prodId !== "" && PlenigoSDKManager::get()->plenigo_bought($prodId));
+
+        if ($tag == 'pl_content_show') {
+            if ($isBought) {
+                $showContent = true;
+            } else {
+                $showContent = false;
+            }
+        }
+        if ($tag == 'pl_content_hide') {
+            if ($isBought) {
+                $showContent = false;
+            } else {
+                $showContent = true;
+            }
+        }
+        if ($showContent) {
+            if ($cssClass != "") {
+                $returnString+='<div class="' . $cssClass . '">';
+            }
+
+            $returnString+=do_shortcode($content);
+
+            if ($cssClass != "") {
+                $returnString+='</div>';
+            }
+        }
+
+        return $returnString;
     }
 
     /**

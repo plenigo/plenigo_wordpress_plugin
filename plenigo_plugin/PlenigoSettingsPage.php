@@ -156,8 +156,12 @@ class PlenigoSettingsPage {
      * Add Javascript imports
      */
     public function add_scripts() {
+        // Javascript
         wp_enqueue_script('jquery-ui-autocomplete');
         wp_enqueue_script('jquery-ui-tabs');
+        wp_register_script('plenigo-settings-js', plugins_url('plenigo_js/pl_settings.js', dirname(__FILE__)));
+        wp_enqueue_script('plenigo-settings-js');
+        // CSS
         wp_enqueue_style("jquery-ui");
         wp_enqueue_style("jquery-ui-core");
         wp_enqueue_style("jquery-ui-tabs");
@@ -254,7 +258,7 @@ class PlenigoSettingsPage {
         settings_fields(self::PLENIGO_SETTINGS_GROUP);
         echo '<div class="tab-content">';
         do_settings_sections(self::PLENIGO_SETTINGS_PAGE);
-        echo '</div>';
+        echo '</div>&nbsp;';
         submit_button();
         echo '</form>';
         echo "</div></div>\n";
@@ -479,6 +483,8 @@ class PlenigoSettingsPage {
         foreach ($this->settings as $setInstance) {
             if (!isset($this->options[$setInstance::SETTING_ID])) {
                 $this->options[$setInstance::SETTING_ID] = $setInstance->getDefaultValue();
+                add_settings_error(self::PLENIGO_SETTINGS_PAGE, "plenigo",
+                        sprintf(__('Setting has been set to default value: %s', $setInstance::SETTING_ID), $setInstance->getTitle()), 'updated');
             }
         }
         update_option(self::PLENIGO_SETTINGS_NAME, $this->options);

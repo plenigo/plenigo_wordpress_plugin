@@ -72,7 +72,7 @@ class PlenigoLoginManager {
             if (is_null($returnURL)) {
                 $returnURL = \home_url('/');
             }
-            echo '<script type="application/javascript">';
+            echo '<script type="text/javascript">';
             echo "plenigo.logout();location.href='" . $returnURL . "';";
             echo '</script>';
         }
@@ -82,10 +82,10 @@ class PlenigoLoginManager {
      * Ensures that plenigo cookie are is cleared after you triggered logout by other means (the WP Bar for example)
      */
     public function ensure_logout() {
-        echo'<script type="application/javascript" '
+        echo'<script type="text/javascript" '
         . 'src="' . PLENIGO_JSSDK_URL . '/static_resources/javascript/'
         . $this->options["company_id"] . '/plenigo_sdk.min.js" data-disable-metered="true"></script>';
-        echo '<script type="application/javascript">';
+        echo '<script type="text/javascript">';
         echo 'plenigo.logout();';
         echo '</script>';
     }
