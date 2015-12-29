@@ -221,6 +221,7 @@ To get help visit [help pages](https://developer.plenigo.com/plugins/wordpress/ 
 
 = Available Shortcodes =
 
+**Checkout Button**
 Creates a checkout button with optional title and optional css class.
 If the product is bought, the button won't e shown and the contents
 will be shown instead.
@@ -229,22 +230,35 @@ Note: You can use shotcodes and all formating inside the button shortcode
 [pl_checkout prod_id="{{PRODUCT ID}}" title="{{BUTTON TITLE}}"
 class="{{CSS CLASS}}"]{{DISPLAY TEXT AFTER PURCHASE}}[/pl_checkout]
 
+**Checkout Button (persistent)**
 Same as pl_checkout but it will show the checkout button even if the
 product is bought.
 
 [pl_checkout_button prod_id="{{PRODUCT ID}}" title="{{BUTTON TITLE}}"
 class="{{CSS CLASS}}"][/pl_checkout_button]
 
+**Failed Payments button**
 Same as pl_checkout_button but it will trigger the failed payments list
 instead of checking out a particular product.
 
 [pl_failed title="{{BUTTON TITLE}}" class="{{CSS CLASS}}"][/pl_failed]
 
+**Subscription renewal button**
 Same as pl_checkout but it will set the "Subcription Renew" flag for
 this purchase.
 
 [pl_renew prod_id="{{PRODUCT ID}}" title="{{BUTTON TITLE}}"
 class="{{CSS CLASS}}"]{{DISPLAY TEXT AFTER PURCHASE}}[/pl_renew]
+
+**Plenigo User Profile replacement**
+To render a complete user profile with the current data from plenigo, just
+create a nuew Page (i.e.: /PlenigoProfile ) and put the Shortcode below to 
+render a nice (and customizable) user profile.
+
+[pl_user_profile]Sorry the user is not logged in to plenigo[/pl_user_profile]
+
+After that copy the URL of the newly cerated page and paste it in the Profile URL
+setting at the Plenigo Login section.
 
 This hidden HTML tag will let plenigo know where the plugin should trim
 the contents of the post and show the payment curtain. This allows to

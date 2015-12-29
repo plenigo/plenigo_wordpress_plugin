@@ -1,0 +1,36 @@
+<script type="text/javascript">
+    var linkElement = document.createElement("link");
+    linkElement.rel = "stylesheet";
+    linkElement.href = "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/1.0.0/css/flag-icon.min.css";
+    document.head.appendChild(linkElement);
+</script>
+<style type="text/css">
+    .cust-pl-btn{
+        background-color: rgba(6, 162, 184, 0.7); 
+        color: #ffffff; 
+        margin: 0 auto;
+    }
+</style>
+<div id="PlenigoLogin">
+    <div class="PlenigoStage">
+        <h2><!--[PROFILE_TITLE]--></h2>
+        <div class="PlenigoParagraph">
+            <dl class="pl-dl-horizontal">
+                <dt><!--[TITLE_CUSTNO]--></dt><dd><!--[VALUE_CUSTNO]--></dd>
+                <dt><!--[TITLE_EMAIL]--></dt><dd><!--[VALUE_EMAIL]--></dd>
+                <dt><!--[TITLE_USERNAME]--></dt><dd><!--[VALUE_USERNAME]--></dd>
+                <dt><!--[TITLE_FIRST]--></dt><dd><!--[VALUE_FIRST]--></dd>
+                <dt><!--[TITLE_LAST]--></dt><dd><!--[VALUE_LAST]--></dd>
+                <dt><!--[TITLE_GENDER]--></dt><dd><!--[VALUE_GENDER]--></dd>
+                <dt><!--[TITLE_STREET]--></dt><dd><!--[VALUE_STREET]--></dd>
+                <dt><!--[TITLE_ADDINFO]--></dt><dd><!--[VALUE_ADDINFO]--></dd>
+                <dt><!--[TITLE_ZIP]--></dt><dd><!--[VALUE_ZIP]--></dd>
+                <dt><!--[TITLE_CITY]--></dt><dd><!--[VALUE_CITY]--></dd>
+                <dt><!--[TITLE_COUNTRY]--></dt><dd><!--[VALUE_COUNTRY]--> <span class="flag-icon flag-icon-<!--[VALUE_COUNTRY_LCASE]-->"></span></dd>
+            </dl>
+        </div>
+        <div class="PlenigoFooter">
+            <button class="btn btn-default enp-button cust-pl-btn" onclick="<!--[CLICK_PLENIGO_PROFILE]-->"><!--[TITLE_PLENIGO_PROFILE]--></button>
+        </div>
+    </div>
+</div>

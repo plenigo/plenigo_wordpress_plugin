@@ -2,6 +2,10 @@
 
 namespace plenigo_plugin;
 
+use \plenigo\services\UserService;
+use \plenigo\models\UserData;
+use \plenigo\internal\models\Address;
+
 /**
  * PlenigoShortcodeManager
  * 
@@ -20,6 +24,36 @@ class PlenigoShortcodeManager {
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
     const PLENIGO_META_NAME = 'plenigo_uid';
 
+        //Replacement tags
+    const REPLACE_PLUGIN_DIR = "<!--[PLUGIN_DIR]-->";
+    const REPLACE_PROFILE_TITLE = "<!--[PROFILE_TITLE]-->";
+    const REPLACE_TITLE_CUSTNO = "<!--[TITLE_CUSTNO]-->";
+    const REPLACE_TITLE_EMAIL = "<!--[TITLE_EMAIL]-->";
+    const REPLACE_TITLE_USERNAME = "<!--[TITLE_USERNAME]-->";
+    const REPLACE_TITLE_GENDER = "<!--[TITLE_GENDER]-->";
+    const REPLACE_TITLE_NAME = "<!--[TITLE_NAME]-->";
+    const REPLACE_TITLE_FIRST = "<!--[TITLE_FIRST]-->";
+    const REPLACE_TITLE_LAST = "<!--[TITLE_LAST]-->";
+    const REPLACE_TITLE_STREET = "<!--[TITLE_STREET]-->";
+    const REPLACE_TITLE_ADDINFO = "<!--[TITLE_ADDINFO]-->";
+    const REPLACE_TITLE_ZIP = "<!--[TITLE_ZIP]-->";
+    const REPLACE_TITLE_CITY = "<!--[TITLE_CITY]-->";
+    const REPLACE_TITLE_COUNTRY = "<!--[TITLE_COUNTRY]-->";
+    const REPLACE_TITLE_PLENIGO_PROFILE = "<!--[TITLE_PLENIGO_PROFILE]-->";
+    const REPLACE_CLICK_PLENIGO_PROFILE = "<!--[CLICK_PLENIGO_PROFILE]-->";
+    const REPLACE_VALUE_CUSTNO = "<!--[VALUE_CUSTNO]-->";
+    const REPLACE_VALUE_EMAIL = "<!--[VALUE_EMAIL]-->";
+    const REPLACE_VALUE_USERNAME = "<!--[VALUE_USERNAME]-->";
+    const REPLACE_VALUE_GENDER = "<!--[VALUE_GENDER]-->";
+    const REPLACE_VALUE_FIRST = "<!--[VALUE_FIRST]-->";
+    const REPLACE_VALUE_LAST = "<!--[VALUE_LAST]-->";
+    const REPLACE_VALUE_STREET = "<!--[VALUE_STREET]-->";
+    const REPLACE_VALUE_ADDINFO = "<!--[VALUE_ADDINFO]-->";
+    const REPLACE_VALUE_ZIP = "<!--[VALUE_ZIP]-->";
+    const REPLACE_VALUE_CITY = "<!--[VALUE_CITY]-->";
+    const REPLACE_VALUE_COUNTRY = "<!--[VALUE_COUNTRY]-->";
+    const REPLACE_VALUE_COUNTRY_LCASE = "<!--[VALUE_COUNTRY_LCASE]-->";
+    
     /**
      * Holds the values to be used in the fields callbacks
      */
@@ -38,6 +72,7 @@ class PlenigoShortcodeManager {
         add_shortcode('pl_failed', array($this, 'plenigo_handle_shortcode'));
         add_shortcode('pl_content_show', array($this, 'plenigo_handle_content_shortcode'));
         add_shortcode('pl_content_hide', array($this, 'plenigo_handle_content_shortcode'));
+        add_shortcode('pl_user_profile', array($this, 'plenigo_handle_user_shortcode'));
 
         //TinyMCE
         // add new buttons
@@ -238,6 +273,37 @@ class PlenigoShortcodeManager {
     }
 
     /**
+     * This shortcode allows to show the user profile template with the data provided 
+     * from the plenigo SDK for the current, logged in, user. The content of the shortcode 
+     * can be used to customize the message for logged out users or users that doesnt have 
+     * plenigo information attached to it.
+     * 
+     * @param  array  $atts    an associative array of attributes, or an empty string if no attributes are given
+     * @param  string $content the enclosed content (if the shortcode is used in its enclosing form)
+     * @param  string $tag     the shortcode tag, useful for shared callback functions
+     * @return string the contents of the shortcode or the user profile
+     */
+    public function plenigo_handle_user_shortcode($atts, $content = null, $tag = null) {
+        $a = shortcode_atts(array(
+            'class' => "",
+                ), $atts);
+
+        $loggedIn = UserService::isLoggedIn();
+        //If it's logged in the we should the user profile template
+        if ($loggedIn) {
+            $user = PlenigoSDKManager::get()->getCacheValue("plenigo_user_data");
+            $userLoggedIn = UserService::getCustomerInfo();
+            if (!is_null($user) && !is_null($userLoggedIn)) {
+                return $this->get_profile_code($user);
+            } else {
+                return do_shortcode($content);
+            }
+        } else { // Else we show the shortcode contents to allow customize the logged out message
+            return do_shortcode($content);
+        }
+    }
+
+    /**
      * Fancy method to get the Button Title from the product with a backend call to obtain the managed product's information
      * 
      * @param string $prodId
@@ -262,4 +328,89 @@ class PlenigoShortcodeManager {
         return $prodName . " (" . $prodPrice . ")";
     }
 
+    /**
+     * Get the Profile Template, replaces the tags with appropiate data from the 
+     * UserData parameter and return the HTML for rendering.
+     * 
+     * @param UserData $user The userdata to replace the Tags in the HTML
+     * @return string teh HTML template to be shown in the content
+     */
+    private function get_profile_code($user) {
+        $profile_file = $this->locate_plenigo_template('plenigo-user-profile.html');
+        $profileTpl = 'ERROR:not found(' . $profile_file . ')';
+        if (!is_null($profile_file)) {
+            $profileTpl = file_get_contents($profile_file);
+            if ($profileTpl !== FALSE) {
+                $profileTpl = $this->replace_profile_tags($profileTpl,$user);
+            }
+        }
+
+        return $profileTpl;
+    }
+    
+    /**
+     * This method locates the file in theme directories if overriden, or gets it from the template directory
+     *
+     * @param  string $fileName name of the file that's needed and will be located
+     * @return string The located filename with full path in order to read the file, NULL if there was a problem
+     */
+    private function locate_plenigo_template($fileName) {
+        if (!is_null($fileName)) {
+            $themed_template = locate_template($fileName);
+            if (!is_null($themed_template) && is_string($themed_template) && $themed_template !== '') {
+                plenigo_log_message("Template from Theme: " + $fileName);
+                return $themed_template;
+            } else {
+                plenigo_log_message("Template from Plugin: " + $fileName);
+                return dirname(__FILE__) . '/../plenigo_template/' . $fileName;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 
+     * 
+     * @param string $profileTpl The template to replace Tags from
+     * @param \plenigo\models\UserData $user The UserData with the customer information
+     */
+    public function replace_profile_tags($profileTpl, $user) {
+        $html = $profileTpl;
+        
+        $html = str_ireplace(self::REPLACE_PLUGIN_DIR, plugins_url('', dirname(__FILE__)), $html);
+        
+        if(!is_null($user) && $user instanceof UserData){
+            $html = str_ireplace(self::REPLACE_PROFILE_TITLE, __('User Profile', self::PLENIGO_SETTINGS_GROUP), $html);
+            $html = str_ireplace(self::REPLACE_TITLE_CUSTNO, __('Customer No.:', self::PLENIGO_SETTINGS_GROUP), $html);
+            $html = str_ireplace(self::REPLACE_TITLE_EMAIL, __('Email Address:', self::PLENIGO_SETTINGS_GROUP), $html);
+            $html = str_ireplace(self::REPLACE_TITLE_USERNAME, __('User Name:', self::PLENIGO_SETTINGS_GROUP), $html);
+            $html = str_ireplace(self::REPLACE_TITLE_GENDER, __('Gender:', self::PLENIGO_SETTINGS_GROUP), $html);
+            $html = str_ireplace(self::REPLACE_TITLE_NAME, __('Full Name:', self::PLENIGO_SETTINGS_GROUP), $html);
+            $html = str_ireplace(self::REPLACE_TITLE_FIRST, __('First Name:', self::PLENIGO_SETTINGS_GROUP), $html);
+            $html = str_ireplace(self::REPLACE_TITLE_LAST, __('Last Name:', self::PLENIGO_SETTINGS_GROUP), $html);
+            $html = str_ireplace(self::REPLACE_TITLE_STREET, __('Street Address:', self::PLENIGO_SETTINGS_GROUP), $html);
+            $html = str_ireplace(self::REPLACE_TITLE_ADDINFO, __('Additional Information:', self::PLENIGO_SETTINGS_GROUP), $html);
+            $html = str_ireplace(self::REPLACE_TITLE_ZIP, __('ZIP Code:', self::PLENIGO_SETTINGS_GROUP), $html);
+            $html = str_ireplace(self::REPLACE_TITLE_CITY, __('City:', self::PLENIGO_SETTINGS_GROUP), $html);
+            $html = str_ireplace(self::REPLACE_TITLE_COUNTRY, __('Country:', self::PLENIGO_SETTINGS_GROUP), $html);
+            $html = str_ireplace(self::REPLACE_TITLE_PLENIGO_PROFILE, __('Edit this profile at plenigo', self::PLENIGO_SETTINGS_GROUP), $html);
+            
+            $html = str_ireplace(self::REPLACE_CLICK_PLENIGO_PROFILE, "", $html);
+            $html = str_ireplace(self::REPLACE_VALUE_CUSTNO, $user->getId(), $html);
+            $html = str_ireplace(self::REPLACE_VALUE_EMAIL, $user->getEmail(), $html);
+            $html = str_ireplace(self::REPLACE_VALUE_USERNAME, $user->getUsername(), $html);
+            $html = str_ireplace(self::REPLACE_VALUE_GENDER, $user->getGender(), $html);
+            $html = str_ireplace(self::REPLACE_VALUE_FIRST, $user->getFirstName(), $html);
+            $html = str_ireplace(self::REPLACE_VALUE_LAST, $user->getLastName(), $html);
+            $html = str_ireplace(self::REPLACE_VALUE_STREET, $user->getAddress()->getStreet(), $html);
+            $html = str_ireplace(self::REPLACE_VALUE_ADDINFO, $user->getAddress()->getAdditionalAddressInfo(), $html);
+            $html = str_ireplace(self::REPLACE_VALUE_ZIP, $user->getAddress()->getPostCode(), $html);
+            $html = str_ireplace(self::REPLACE_VALUE_CITY, $user->getAddress()->getCity(), $html);
+            $html = str_ireplace(self::REPLACE_VALUE_COUNTRY, strtoupper($user->getAddress()->getCountry()), $html);
+            $html = str_ireplace(self::REPLACE_VALUE_COUNTRY_LCASE, strtolower($user->getAddress()->getCountry()), $html);
+        }
+        
+        return $html;
+    }
 }

@@ -63,6 +63,32 @@ class PlenigoSDKManager {
     }
 
     /**
+     * Obtain a value or object from the request cache
+     * 
+     * @param string $cacheKey The Key to find
+     * @return mixed The value obtained or null
+     */
+    function getCacheValue($cacheKey = null) {
+        if (!is_null($cacheKey) && array_key_exists($cacheKey, $this->reqCache)) {
+            return $this->reqCache[$cacheKey];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Sets a cached value for this request
+     * 
+     * @param string $cacheKey The Cache Key
+     * @param mixed $cacheValue The Value object
+     */
+    function setCacheValue($cacheKey = null, $cacheValue = null) {
+        if (!is_null($cacheKey) && is_string($cacheKey) && !is_null($cacheValue)) {
+            $this->reqCache[$cacheKey] = $cacheValue;
+        }
+    }
+
+    /**
      * Creates or configures the plenigo SDK to be used in the class for calling the plenigo Services
      * 
      * @return \plenigo\PlenigoManager the new or reused instance of the PlenigoManager
@@ -75,8 +101,8 @@ class PlenigoSDKManager {
             }
             plenigo_log_message('Configuring SDK for company id: ' . $this->options["company_id"], E_USER_NOTICE);
             $this->plenigoSDK = \plenigo\PlenigoManager::configure(
-                    $this->options["company_secret"], $this->options["company_id"], $testValue
-                    , PLENIGO_SVC_URL, PLENIGO_OAUTH_SVC_URL
+                            $this->options["company_secret"], $this->options["company_id"], $testValue
+                            , PLENIGO_SVC_URL, PLENIGO_OAUTH_SVC_URL
             );
         }
         $this->plenigoSDK->setDebug((PLENIGO_DEBUG === true));

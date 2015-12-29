@@ -191,7 +191,7 @@ class PlenigoContentManager {
         }
 
         $strNoScript = $this->getNoScriptTag();
-        echo'<script type="application/javascript" '
+        echo'<script type="text/javascript" '
         . 'src="' . PLENIGO_JSSDK_URL . '/static_resources/javascript/'
         . $this->options["company_id"] . '/plenigo_sdk.min.js" '
         . $disableText . $meteredURLText . '></script>' . $strNoScript;
@@ -1050,7 +1050,7 @@ class PlenigoContentManager {
         $res = '';
         if (!is_null($content) && is_string($content) && trim($content) !== '') {
             $trimmedContent = trim($content);
-            $fstWord = strtok($trimmedContent, ' '); //get the very first work, it should be [aesop_ or any other tag
+            $fstWord = strtok($trimmedContent, ' '); //get the very first word, it should be [aesop_ or any other tag
             //if its a shortcode, check for allowed shortcodes and capture the teaser
             if (substr($fstWord, 0, 1) == '[') {
                 $this->addDebugLine("SHORTCODE");

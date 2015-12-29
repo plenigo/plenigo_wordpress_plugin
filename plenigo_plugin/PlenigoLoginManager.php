@@ -125,6 +125,9 @@ class PlenigoLoginManager {
         //obtain the TokenData object with the tokenService or get it from the session if you have already done that
         $userData = UserService::getUserData($tokenData->getAccessToken());
 
+        // Store the userData object for read only purposes in the SDKManager after login
+        PlenigoSDKManager::get()->setCacheValue("plenigo_user_data", $userData);
+        
         $currentUser = $this->perform_register($userData);
         do_action('plenigo_prelogin');
         $this->perform_login($currentUser);
