@@ -23,8 +23,8 @@ class PlenigoShortcodeManager {
     const PLENIGO_SETTINGS_GROUP = 'plenigo';
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
     const PLENIGO_META_NAME = 'plenigo_uid';
-
-        //Replacement tags
+    const PLENIGO_PROFILE_URL = "https://www.plenigo.com/customer/personal/data/show";
+    //Replacement tags
     const REPLACE_PLUGIN_DIR = "<!--[PLUGIN_DIR]-->";
     const REPLACE_PROFILE_TITLE = "<!--[PROFILE_TITLE]-->";
     const REPLACE_TITLE_CUSTNO = "<!--[TITLE_CUSTNO]-->";
@@ -53,7 +53,7 @@ class PlenigoShortcodeManager {
     const REPLACE_VALUE_CITY = "<!--[VALUE_CITY]-->";
     const REPLACE_VALUE_COUNTRY = "<!--[VALUE_COUNTRY]-->";
     const REPLACE_VALUE_COUNTRY_LCASE = "<!--[VALUE_COUNTRY_LCASE]-->";
-    
+
     /**
      * Holds the values to be used in the fields callbacks
      */
@@ -289,7 +289,7 @@ class PlenigoShortcodeManager {
         $loggedIn = UserService::isLoggedIn();
         //If it's logged in the we should the user profile template
         if ($loggedIn) {
-            $user = PlenigoSDKManager::get()->getCacheValue("plenigo_user_data");
+            $user = PlenigoSDKManager::get()->getSessionValue("plenigo_user_data");
             $userLoggedIn = UserService::getCustomerInfo();
             if (!is_null($user) && !is_null($userLoggedIn)) {
                 return $this->get_profile_code($user);
@@ -339,13 +339,13 @@ class PlenigoShortcodeManager {
         if (!is_null($profile_file)) {
             $profileTpl = file_get_contents($profile_file);
             if ($profileTpl !== FALSE) {
-                $profileTpl = $this->replace_profile_tags($profileTpl,$user);
+                $profileTpl = $this->replace_profile_tags($profileTpl, $user);
             }
         }
 
         return $profileTpl;
     }
-    
+
     /**
      * This method locates the file in theme directories if overriden, or gets it from the template directory
      *
@@ -375,12 +375,12 @@ class PlenigoShortcodeManager {
      */
     public function replace_profile_tags($profileTpl, $user) {
         $html = $profileTpl;
-        
+
         $html = str_ireplace(self::REPLACE_PLUGIN_DIR, plugins_url('', dirname(__FILE__)), $html);
-        
-        if(!is_null($user) && $user instanceof UserData){
+
+        if (!is_null($user) && $user instanceof UserData) {
             $html = str_ireplace(self::REPLACE_PROFILE_TITLE, __('User Profile', self::PLENIGO_SETTINGS_GROUP), $html);
-            $html = str_ireplace(self::REPLACE_TITLE_CUSTNO, __('Customer No.:', self::PLENIGO_SETTINGS_GROUP), $html);
+            $html = str_ireplace(self::REPLACE_TITLE_CUSTNO, __('Customer ID:', self::PLENIGO_SETTINGS_GROUP), $html);
             $html = str_ireplace(self::REPLACE_TITLE_EMAIL, __('Email Address:', self::PLENIGO_SETTINGS_GROUP), $html);
             $html = str_ireplace(self::REPLACE_TITLE_USERNAME, __('User Name:', self::PLENIGO_SETTINGS_GROUP), $html);
             $html = str_ireplace(self::REPLACE_TITLE_GENDER, __('Gender:', self::PLENIGO_SETTINGS_GROUP), $html);
@@ -393,8 +393,8 @@ class PlenigoShortcodeManager {
             $html = str_ireplace(self::REPLACE_TITLE_CITY, __('City:', self::PLENIGO_SETTINGS_GROUP), $html);
             $html = str_ireplace(self::REPLACE_TITLE_COUNTRY, __('Country:', self::PLENIGO_SETTINGS_GROUP), $html);
             $html = str_ireplace(self::REPLACE_TITLE_PLENIGO_PROFILE, __('Edit this profile at plenigo', self::PLENIGO_SETTINGS_GROUP), $html);
-            
-            $html = str_ireplace(self::REPLACE_CLICK_PLENIGO_PROFILE, "", $html);
+
+            $html = str_ireplace(self::REPLACE_CLICK_PLENIGO_PROFILE, self::PLENIGO_PROFILE_URL, $html);
             $html = str_ireplace(self::REPLACE_VALUE_CUSTNO, $user->getId(), $html);
             $html = str_ireplace(self::REPLACE_VALUE_EMAIL, $user->getEmail(), $html);
             $html = str_ireplace(self::REPLACE_VALUE_USERNAME, $user->getUsername(), $html);
@@ -408,7 +408,8 @@ class PlenigoShortcodeManager {
             $html = str_ireplace(self::REPLACE_VALUE_COUNTRY, strtoupper($user->getAddress()->getCountry()), $html);
             $html = str_ireplace(self::REPLACE_VALUE_COUNTRY_LCASE, strtolower($user->getAddress()->getCountry()), $html);
         }
-        
+
         return $html;
     }
+
 }

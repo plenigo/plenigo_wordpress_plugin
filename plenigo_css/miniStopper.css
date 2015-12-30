@@ -221,7 +221,6 @@ h3.Plenigo-login  {
 
 }
 
-
 /*   From Bootstrap 3  Definition lists*/
 dl.pl-dl-horizontal {
   margin-top: 0;
@@ -229,10 +228,11 @@ dl.pl-dl-horizontal {
 }
 dl.pl-dl-horizontal dt,
 dl.pl-dl-horizontal dd {
-  line-height: 1.42857143;
+  line-height: 2em;
 }
 dl.pl-dl-horizontal dt {
   font-weight: bold;
+  padding-right: 15px !important;
 }
 dl.pl-dl-horizontal dd {
   margin-left: 0;
@@ -240,7 +240,7 @@ dl.pl-dl-horizontal dd {
 @media (min-width: 768px) {
   .pl-dl-horizontal dt {
     float: left;
-    width: 160px;
+    width: 180px;
     overflow: hidden;
     clear: left;
     text-align: right;

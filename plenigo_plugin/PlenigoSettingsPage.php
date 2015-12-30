@@ -58,6 +58,7 @@ require_once __DIR__ . '/settings/SettingWooProductType.php';
 require_once __DIR__ . '/settings/SettingUseQuietReport.php';
 require_once __DIR__ . '/settings/SettingDebugMode.php';
 require_once __DIR__ . '/settings/SettingWelcomeURL.php';
+require_once __DIR__ . '/settings/SettingProfileURL.php';
 
 /**
  * PlenigoSettingsPage
@@ -135,7 +136,8 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseQuietReport());
         array_push($this->settings, new \plenigo_plugin\settings\SettingDebugMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingWelcomeURL());
-
+        array_push($this->settings, new \plenigo_plugin\settings\SettingProfileURL());
+        
         // Check the initialization of settings uppon upgrade
         if (!isset($this->options[self::PLENIGO_VERSION_OPT]) || $this->options[self::PLENIGO_VERSION_OPT] !== PLENIGO_VERSION) {
             $this->options[self::PLENIGO_VERSION_OPT] = PLENIGO_VERSION;
@@ -258,9 +260,9 @@ class PlenigoSettingsPage {
         settings_fields(self::PLENIGO_SETTINGS_GROUP);
         echo '<div class="tab-content">';
         do_settings_sections(self::PLENIGO_SETTINGS_PAGE);
-        echo '</div>&nbsp;';
+        echo '</div>&nbsp;<div style="padding-left:1.4em;">';
         submit_button();
-        echo '</form>';
+        echo '</div></form>';
         echo "</div></div>\n";
         echo "<script>jQuery( document ).ready(function() {\n"
         . "jQuery(\"#pl_load_settings\").hide();\n"
