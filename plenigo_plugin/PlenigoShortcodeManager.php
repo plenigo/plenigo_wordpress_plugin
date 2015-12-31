@@ -121,6 +121,8 @@ class PlenigoShortcodeManager {
         $plugin_array['plenigo_renew'] = plugins_url('../plenigo_js/tinymce-plenigo_renew-plugin.js', __file__);
         $plugin_array['plenigo_failed'] = plugins_url('../plenigo_js/tinymce-plenigo_failed-plugin.js', __file__);
         $plugin_array['plenigo_separator'] = plugins_url('../plenigo_js/tinymce-plenigo_separator-plugin.js', __file__);
+        $plugin_array['plenigo_show'] = plugins_url('../plenigo_js/tinymce-plenigo_show-plugin.js', __file__);
+        $plugin_array['plenigo_hide'] = plugins_url('../plenigo_js/tinymce-plenigo_hide-plugin.js', __file__);
         return $plugin_array;
     }
 
@@ -271,11 +273,11 @@ class PlenigoShortcodeManager {
     }
 
     /**
-     * This shortcode allows to show the user profile template with the data provided 
-     * from the plenigo SDK for the current, logged in, user. The content of the shortcode 
-     * can be used to customize the message for logged out users or users that doesnt have 
+     * This shortcode allows to show the user profile template with the data provided
+     * from the plenigo SDK for the current, logged in, user. The content of the shortcode
+     * can be used to customize the message for logged out users or users that doesnt have
      * plenigo information attached to it.
-     * 
+     *
      * @param  array  $atts    an associative array of attributes, or an empty string if no attributes are given
      * @param  string $content the enclosed content (if the shortcode is used in its enclosing form)
      * @param  string $tag     the shortcode tag, useful for shared callback functions
@@ -327,9 +329,9 @@ class PlenigoShortcodeManager {
     }
 
     /**
-     * Get the Profile Template, replaces the tags with appropiate data from the 
+     * Get the Profile Template, replaces the tags with appropiate data from the
      * UserData parameter and return the HTML for rendering.
-     * 
+     *
      * @param UserData $user The userdata to replace the Tags in the HTML
      * @return string teh HTML template to be shown in the content
      */
@@ -368,8 +370,8 @@ class PlenigoShortcodeManager {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param string $profileTpl The template to replace Tags from
      * @param \plenigo\models\UserData $user The UserData with the customer information
      */

@@ -137,7 +137,7 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingDebugMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingWelcomeURL());
         array_push($this->settings, new \plenigo_plugin\settings\SettingProfileURL());
-        
+
         // Check the initialization of settings uppon upgrade
         if (!isset($this->options[self::PLENIGO_VERSION_OPT]) || $this->options[self::PLENIGO_VERSION_OPT] !== PLENIGO_VERSION) {
             $this->options[self::PLENIGO_VERSION_OPT] = PLENIGO_VERSION;
