@@ -15,8 +15,7 @@ namespace plenigo_plugin;
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class PlenigoLoginWidget extends \WP_Widget
-{
+class PlenigoLoginWidget extends \WP_Widget {
 
     const PLENIGO_SETTINGS_GROUP = 'plenigo';
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
@@ -50,13 +49,12 @@ class PlenigoLoginWidget extends \WP_Widget
     /**
      * Register widget with WordPress.
      */
-    function __construct()
-    {
+    function __construct() {
         parent::__construct(
-            'plenigo_login_widget', // Base ID
-            __('Plenigo login', self::PLENIGO_SETTINGS_GROUP), // Name
-            array('description' => __('This is the Plegino Login widget. Here you will find the plenigo login button '
-                . 'or the user profile data related to the plenigo user.', self::PLENIGO_SETTINGS_GROUP),) // Args
+                'plenigo_login_widget', // Base ID
+                __('Plenigo login', self::PLENIGO_SETTINGS_GROUP), // Name
+                array('description' => __('This is the Plegino Login widget. Here you will find the plenigo login button '
+                    . 'or the user profile data related to the plenigo user.', self::PLENIGO_SETTINGS_GROUP),) // Args
         );
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME, array());
     }
@@ -69,8 +67,7 @@ class PlenigoLoginWidget extends \WP_Widget
      * @param array $args     Widget arguments.
      * @param array $instance Saved values from database.
      */
-    public function widget($args, $instance)
-    {
+    public function widget($args, $instance) {
         echo $args['before_widget'];
         if (!empty($instance['title'])) {
             echo $args['before_title'] . apply_filters('widget_title', $instance['title']) . $args['after_title'];
@@ -96,6 +93,8 @@ class PlenigoLoginWidget extends \WP_Widget
             if ($strLoginCode !== false) {
                 $strLoginCode = $this->replace_login_form($strLoginCode);
             }
+            //Cleanup user data
+            PlenigoSDKManager::get()->setSessionValue("plenigo_user_data");
         }
         echo '<div id="plenigo_login_container">';
         echo $strLoginCode;
@@ -111,8 +110,7 @@ class PlenigoLoginWidget extends \WP_Widget
      *
      * @param array $inst Previously saved values from database.
      */
-    public function form($inst)
-    {
+    public function form($inst) {
         $title = !empty($inst['title']) ? $inst['title'] : __('New title', self::PLENIGO_SETTINGS_GROUP);
         $username = !empty($inst['username']) ? $inst['username'] : __('Username:', self::PLENIGO_SETTINGS_GROUP);
         $password = !empty($inst['password']) ? $inst['password'] : __('Password:', self::PLENIGO_SETTINGS_GROUP);
@@ -143,8 +141,7 @@ class PlenigoLoginWidget extends \WP_Widget
         echo '<input class="widefat" id="' . $this->get_field_id('forgot') . '" name="'
         . $this->get_field_name('forgot') . '" type="text" value="' . esc_attr($forgot) . '"><br/>';
 
-        echo '<label for="' . $this->get_field_id('wp_login') . '">' . __('WordPress Login',
-            self::PLENIGO_SETTINGS_GROUP) . '</label> ';
+        echo '<label for="' . $this->get_field_id('wp_login') . '">' . __('WordPress Login', self::PLENIGO_SETTINGS_GROUP) . '</label> ';
         echo '<input class="widefat" id="' . $this->get_field_id('wp_login') . '" name="'
         . $this->get_field_name('wp_login') . '" type="text" value="' . esc_attr($wpLogin) . '"><br/>';
 
@@ -182,8 +179,7 @@ class PlenigoLoginWidget extends \WP_Widget
      *
      * @return array Updated safe values to be saved.
      */
-    public function update($new, $old)
-    {
+    public function update($new, $old) {
         $arrNew = array();
         $arrNew['title'] = (isset($new['title']) && !empty($new['title']) ) ? trim(strip_tags($new['title'])) : '';
         $arrNew['username'] = (isset($new['username']) && !empty($new['username']) ) ? trim(strip_tags($new['username'])) : '';
@@ -203,8 +199,7 @@ class PlenigoLoginWidget extends \WP_Widget
      * 
      * @return string the plenigo login snippet
      */
-    private function get_plenigo_snippet()
-    {
+    private function get_plenigo_snippet() {
         $redirectUrl = $this->options['redirect_url'];
         $config = new \plenigo\models\LoginConfig($redirectUrl, \plenigo\models\AccessScope::PROFILE);
         $builder = new \plenigo\builders\LoginSnippetBuilder($config);
@@ -221,8 +216,7 @@ class PlenigoLoginWidget extends \WP_Widget
      * @param  string $fileName name of the file that's needed and will be located
      * @return string The located filename with full path in order to read the file, NULL if there was a problem
      */
-    private function locate_plenigo_template($fileName)
-    {
+    private function locate_plenigo_template($fileName) {
         if (!is_null($fileName)) {
             $themed_template = locate_template($fileName);
             if (!is_null($themed_template) && is_string($themed_template) && $themed_template !== '') {
@@ -245,15 +239,19 @@ class PlenigoLoginWidget extends \WP_Widget
      * @param string $html the raw HTML from the template
      * @return string the HTML with actual information, ready to echo
      */
-    public function replace_login_status($html)
-    {
+    public function replace_login_status($html) {
         plenigo_log_message("Current user for showing status!", E_USER_NOTICE);
 
         $userdata = \get_userdata(\get_current_user_id());
         $loginFirstName = $userdata->user_firstname;
         $loginLastName = $userdata->user_lastname;
         $loginPrettyName = $userdata->display_name;
-        $profileURL = get_option('siteurl') . '/wp-admin/profile.php';
+        $plenigoUserData = PlenigoSDKManager::get()->getSessionValue("plenigo_user_data");
+        if (isset($this->options['profile_url']) && $this->options['profile_url'] != '' && !is_null($plenigoUserData)) {
+            $profileURL = $this->options['profile_url'];
+        } else {
+            $profileURL = get_option('siteurl') . '/wp-admin/profile.php';
+        }
         $logoutOnClick = "plenigo.logout();location.href='" . wp_logout_url($_SERVER['REQUEST_URI']) . "';";
 
         $html = str_ireplace(self::REPLACE_LOGIN_FIRST_NAME, $loginFirstName, $html);
@@ -276,8 +274,7 @@ class PlenigoLoginWidget extends \WP_Widget
      * @param string $html the raw HTML from the template
      * @return string the HTML with actual information, ready to echo
      */
-    public function replace_login_form($html)
-    {
+    public function replace_login_form($html) {
         $loginFormURL = wp_login_url();
         $loginForgotURL = wp_lostpassword_url();
         $registerLinks = wp_register('', '', false);

@@ -89,7 +89,7 @@ article .txt > p, article .txtblock > p {
     line-height: 1.33;
     border-radius: 6px;
     text-decoration: none;
-    width: 35%;
+    width: auto;
     display: inline-block;
 }
 #PlenigoLogin .btn:hover {
@@ -144,10 +144,6 @@ h3.Plenigo-login  {
 .widget_plenigo_login_widget h2 {
     margin-bottom: 15px;
     padding-top: 10px;
-}
-
-#PlenigoLogin .btn {
-    width: auto;
 }
 
 @media (max-width: 765px) {
@@ -223,4 +219,45 @@ h3.Plenigo-login  {
     padding: 10px;
     max-width: 500px;
 
+}
+
+/*   From Bootstrap 3  Definition lists*/
+dl.pl-dl-horizontal {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+dl.pl-dl-horizontal dt,
+dl.pl-dl-horizontal dd {
+  line-height: 2em;
+}
+dl.pl-dl-horizontal dt {
+  font-weight: bold;
+  padding-right: 15px !important;
+}
+dl.pl-dl-horizontal dd {
+  margin-left: 0;
+}
+@media (min-width: 768px) {
+  .pl-dl-horizontal dt {
+    float: left;
+    width: 180px;
+    overflow: hidden;
+    clear: left;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pl-dl-horizontal dd {
+    margin-left: 180px;
+  }
+}
+
+.pl-dl-horizontal dd:before, 
+.pl-dl-horizontal dd:after {
+  display: table;
+  content: " ";
+}
+
+.pl-dl-horizontal dd:after {
+      clear: both;
 }

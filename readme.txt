@@ -3,7 +3,7 @@ Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 4.0.0
 Tested up to: 4.4
-Stable tag: 1.4.9
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -221,6 +221,7 @@ To get help visit [help pages](https://developer.plenigo.com/plugins/wordpress/ 
 
 = Available Shortcodes =
 
+**Checkout Button**
 Creates a checkout button with optional title and optional css class.
 If the product is bought, the button won't e shown and the contents
 will be shown instead.
@@ -229,23 +230,57 @@ Note: You can use shotcodes and all formating inside the button shortcode
 [pl_checkout prod_id="{{PRODUCT ID}}" title="{{BUTTON TITLE}}"
 class="{{CSS CLASS}}"]{{DISPLAY TEXT AFTER PURCHASE}}[/pl_checkout]
 
+**Checkout Button (persistent)**
 Same as pl_checkout but it will show the checkout button even if the
 product is bought.
 
 [pl_checkout_button prod_id="{{PRODUCT ID}}" title="{{BUTTON TITLE}}"
 class="{{CSS CLASS}}"][/pl_checkout_button]
 
+**Failed Payments button**
 Same as pl_checkout_button but it will trigger the failed payments list
 instead of checking out a particular product.
 
 [pl_failed title="{{BUTTON TITLE}}" class="{{CSS CLASS}}"][/pl_failed]
 
+**Subscription renewal button**
 Same as pl_checkout but it will set the "Subcription Renew" flag for
 this purchase.
 
 [pl_renew prod_id="{{PRODUCT ID}}" title="{{BUTTON TITLE}}"
 class="{{CSS CLASS}}"]{{DISPLAY TEXT AFTER PURCHASE}}[/pl_renew]
 
+**Show content or Hide content based on purchases**
+PRO TIP: What if you want to do a Welcome page that knows what the customer 
+purchased and/or refer to other product that may be interested in?
+No problem! Just create a page and use this neat shortcodes (superpowers if you
+ask me) to show content if the product has been bought! We do the rocket science.
+
+TO SHOW CONTENT: 
+
+[pl_content_show prod_id="<Some plenigo Product ID>"]This content is shown if the 
+Product has been bought. Thank your customer and encourage to 
+buy orhter products[/pl_content_show]
+
+TO HIDE CONTENT:
+
+[pl_content_hide prod_id="<Some plenigo Product ID>"]We don't show and invitation 
+to buy the product if it has been already purchased. Don't annoy your customers
+[/pl_content_hide]
+
+Ok, combine this with purchase buttons and the sky is the limit!
+
+**Plenigo User Profile replacement**
+To render a complete user profile with the current data from plenigo, just
+create a nuew Page (i.e.: /PlenigoProfile ) and put the Shortcode below to 
+render a nice (and customizable) user profile.
+
+[pl_user_profile]Sorry the user is not logged in to plenigo[/pl_user_profile]
+
+After that copy the URL of the newly cerated page and paste it in the Profile URL
+setting at the Plenigo Login section.
+
+**Separator vs More tag**
 This hidden HTML tag will let plenigo know where the plugin should trim
 the contents of the post and show the payment curtain. This allows to
 manually slice the post without interferring with the "More..."
@@ -263,6 +298,12 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
+= 1.5.0 - Some presents for this holidays! = 
+- Changed all of our JavaScript snippets to "text/javascript" for compatibility with old IE versions.
+- New shortcode! **pl_content_show** and **pl_content_hide** to customize content display for bought products
+- New shortcode! **pl_user_profile** to show a (themeable) user profile report and a link to the plenigo account settings
+- Added a setting to change the Profile URL in the login widget to show a particular page instead the WP profile
+
 = 1.4.9 - Awesome Greetings for your awesome new users! = 
 - Added a Redirect URL for new users (registering using plenigo or already registered with plenigo).
 

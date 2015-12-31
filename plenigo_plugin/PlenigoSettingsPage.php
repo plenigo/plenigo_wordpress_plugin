@@ -58,6 +58,7 @@ require_once __DIR__ . '/settings/SettingWooProductType.php';
 require_once __DIR__ . '/settings/SettingUseQuietReport.php';
 require_once __DIR__ . '/settings/SettingDebugMode.php';
 require_once __DIR__ . '/settings/SettingWelcomeURL.php';
+require_once __DIR__ . '/settings/SettingProfileURL.php';
 
 /**
  * PlenigoSettingsPage
@@ -135,6 +136,7 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseQuietReport());
         array_push($this->settings, new \plenigo_plugin\settings\SettingDebugMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingWelcomeURL());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingProfileURL());
 
         // Check the initialization of settings uppon upgrade
         if (!isset($this->options[self::PLENIGO_VERSION_OPT]) || $this->options[self::PLENIGO_VERSION_OPT] !== PLENIGO_VERSION) {
@@ -156,8 +158,12 @@ class PlenigoSettingsPage {
      * Add Javascript imports
      */
     public function add_scripts() {
+        // Javascript
         wp_enqueue_script('jquery-ui-autocomplete');
         wp_enqueue_script('jquery-ui-tabs');
+        wp_register_script('plenigo-settings-js', plugins_url('plenigo_js/pl_settings.js', dirname(__FILE__)));
+        wp_enqueue_script('plenigo-settings-js');
+        // CSS
         wp_enqueue_style("jquery-ui");
         wp_enqueue_style("jquery-ui-core");
         wp_enqueue_style("jquery-ui-tabs");
@@ -254,9 +260,9 @@ class PlenigoSettingsPage {
         settings_fields(self::PLENIGO_SETTINGS_GROUP);
         echo '<div class="tab-content">';
         do_settings_sections(self::PLENIGO_SETTINGS_PAGE);
-        echo '</div>';
+        echo '</div>&nbsp;<div style="padding-left:1.4em;">';
         submit_button();
-        echo '</form>';
+        echo '</div></form>';
         echo "</div></div>\n";
         echo "<script>jQuery( document ).ready(function() {\n"
         . "jQuery(\"#pl_load_settings\").hide();\n"
@@ -479,6 +485,8 @@ class PlenigoSettingsPage {
         foreach ($this->settings as $setInstance) {
             if (!isset($this->options[$setInstance::SETTING_ID])) {
                 $this->options[$setInstance::SETTING_ID] = $setInstance->getDefaultValue();
+                add_settings_error(self::PLENIGO_SETTINGS_PAGE, "plenigo",
+                        sprintf(__('Setting has been set to default value: %s', $setInstance::SETTING_ID), $setInstance->getTitle()), 'updated');
             }
         }
         update_option(self::PLENIGO_SETTINGS_NAME, $this->options);
