@@ -242,6 +242,10 @@ class PlenigoShortcodeManager {
         $prodId = $a['prod_id'];
         $showContent = false;
         $returnString = "";
+        if (is_null($content) || $content === FALSE || !is_string($content)) {
+            $content = "";
+        }
+
         $isBought = ($prodId !== "" && PlenigoSDKManager::get()->plenigo_bought($prodId));
 
         if ($tag == 'pl_content_show') {
