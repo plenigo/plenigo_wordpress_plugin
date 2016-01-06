@@ -264,13 +264,13 @@ class PlenigoShortcodeManager {
         }
         if ($showContent) {
             if ($cssClass != "") {
-                $returnString+='<div class="' . $cssClass . '">';
+                $returnString .= '<div class="' . $cssClass . '">';
             }
 
-            $returnString+=do_shortcode($content);
+            $returnString .= do_shortcode($content);
 
             if ($cssClass != "") {
-                $returnString+='</div>';
+                $returnString .= '</div>';
             }
         }
 
