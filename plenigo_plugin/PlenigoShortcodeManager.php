@@ -246,7 +246,7 @@ class PlenigoShortcodeManager {
             $content = "";
         }
 
-        $isBought = ($prodId !== "" && PlenigoSDKManager::get()->plenigo_bought($prodId));
+        $isBought = ($prodId !== "" && PlenigoSDKManager::get()->plenigo_bought(explode( ',', $prodId )));
 
         if ($tag == 'pl_content_show') {
             if ($isBought) {
