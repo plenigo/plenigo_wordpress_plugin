@@ -73,10 +73,10 @@ abstract class PlenigoWPSetting
     abstract protected function getSanitizedValue($value = null);
 
     /**
-     * Overridable method that validates the value and return if the value is valid. 
+     * Overridable method that validates the value and return if the value is valid.
      * Optionally this method can trigger add_settings_error() errors for the user.
      * 
-     * @param string $value The incomming value from the HTML form
+     * @param string $value The incoming value from the HTML form
      * @return bool TRUE if the value given is valid, FALSE otherwise
      */
     public function getValidationForValue($value = null)
@@ -96,8 +96,10 @@ abstract class PlenigoWPSetting
     final public function sanitize($options = null)
     {
         if (is_null($options) || !is_array($options) || !isset($options[static::SETTING_ID])) {
-            add_settings_error(self::PLENIGO_SETTINGS_PAGE, self::PLENIGO_SETTINGS_GROUP,
-                "Could not sanitize the setting:" . static::SETTING_ID, 'error');
+            if (function_exists("add_settings_error")) {
+                add_settings_error(self::PLENIGO_SETTINGS_PAGE, self::PLENIGO_SETTINGS_GROUP,
+                    "Could not sanitize the setting:" . static::SETTING_ID, 'error');
+            }
             return null;
         }
         return $this->getSanitizedValue($options[static::SETTING_ID]);

@@ -368,7 +368,9 @@ class PlenigoSettingsPage {
             $message = __('Data can not be empty', self::PLENIGO_SETTINGS_GROUP);
         }
         $this->plenigo_settings_validation($new_input);
-        add_settings_error(self::PLENIGO_SETTINGS_PAGE, "plenigo", $message, $type);
+        if (function_exists("add_settings_error")) {
+            add_settings_error(self::PLENIGO_SETTINGS_PAGE, "plenigo", $message, $type);
+        }
         return $new_input;
     }
 
@@ -469,7 +471,7 @@ class PlenigoSettingsPage {
         foreach ($this->settings as $setInstance) {
             if (isset($inputOptions[$setInstance::SETTING_ID])) {
                 $resValid = $setInstance->getValidationForValue($inputOptions[$setInstance::SETTING_ID]);
-                if ($resValid === false) {
+                if ($resValid === false && function_exists("add_settings_error")) {
                     add_settings_error(self::PLENIGO_SETTINGS_PAGE, "plenigo",
                         sprintf(__('Validation failed: %s', self::PLENIGO_SETTINGS_GROUP), $setInstance->getTitle()), 'error');
                 }
@@ -478,15 +480,17 @@ class PlenigoSettingsPage {
     }
 
     /**
-     * Makes sure that all vriables are present in the options, 
+     * Makes sure that all variables are present in the options,
      * if not, it obtains its default value and creates the setting.
      */
     private function initialize_defaults() {
         foreach ($this->settings as $setInstance) {
             if (!isset($this->options[$setInstance::SETTING_ID])) {
                 $this->options[$setInstance::SETTING_ID] = $setInstance->getDefaultValue();
-                add_settings_error(self::PLENIGO_SETTINGS_PAGE, "plenigo",
+                if (function_exists("add_settings_error")) {
+                    add_settings_error(self::PLENIGO_SETTINGS_PAGE, "plenigo",
                         sprintf(__('Setting has been set to default value: %s', $setInstance::SETTING_ID), $setInstance->getTitle()), 'updated');
+                }
             }
         }
         update_option(self::PLENIGO_SETTINGS_NAME, $this->options);

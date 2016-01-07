@@ -136,12 +136,14 @@ class SettingProductTagDB extends PlenigoWPSetting
             }
         }
         if ($booDBFormatError === true) {
-            add_settings_error(
-                self::PLENIGO_SETTINGS_PAGE, "plenigo",
-                __("There is a problem with the TAG list."
-                    . " <br/> The correct format is lines of TAG->PRODUCTID[,PRODUCTID...] pairs",
-                    self::PLENIGO_SETTINGS_GROUP), 'error'
-            );
+            if (function_exists("add_settings_error")) {
+                add_settings_error(
+                    self::PLENIGO_SETTINGS_PAGE, "plenigo",
+                    __("There is a problem with the TAG list."
+                        . " <br/> The correct format is lines of TAG->PRODUCTID[,PRODUCTID...] pairs",
+                        self::PLENIGO_SETTINGS_GROUP), 'error'
+                );
+            }
             return false;
         }
     }
