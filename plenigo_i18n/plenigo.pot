@@ -1,14 +1,17 @@
+# Loco Gettext template
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: plenigo_plugin 1.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-16 15:18-0300\n"
-"PO-Revision-Date: Tue Jan 12 2016 07:41:05 GMT-0300 (Hora estándar de "
+"POT-Revision-Date: Tue Jan 12 2016 07:39:46 GMT-0300 (Hora estándar de "
 "Argentina)\n"
-"Last-Translator: SebaSOFT <sdieguez@okkralabs.com>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Sebastian Dieguez <sdieguez@okkralabs.com>\n"
 "Language-Team: \n"
-"Language: English\n"
-"Plural-Forms: nplurals=2; plural=n != 1\n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,21 +23,15 @@ msgstr ""
 "_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
 "esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
 "esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPath-1: ./plenigo_plugin\n"
-"X-Loco-Target-Locale: en_US"
-
-#: ../plenigo_plugin/settings/SettingUseWPLogin.php:86
-msgid "Show the Wordpress login form"
-msgstr "Show the Wordpress login form"
+"X-Poedit-SearchPath-0: ."
 
 #. Name of the plugin
 msgid "Plenigo"
-msgstr "Plenigo"
+msgstr ""
 
 #. URI of the plugin
 msgid "http://wordpress.org/plugins/plenigo"
-msgstr "http://wordpress.org/plugins/plenigo"
+msgstr ""
 
 #. Description of the plugin
 msgid ""
@@ -42,615 +39,610 @@ msgid ""
 "and costly for publishing houses and media companies. plenigo puts an end to "
 "this."
 msgstr ""
-"So far, the technical implementation of paid content has been time-consuming "
-"and costly for publishing houses and media companies. plenigo puts an end to "
-"this."
 
 #. Author URI of the plugin
 msgid "https://www.plenigo.com"
-msgstr "https://www.plenigo.com"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:185
 msgid "Failed Payments"
-msgstr "Failed Payments"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:325 ..
 #: plenigo_plugin/PlenigoContentManager.php:801
 msgid "Choose payment!"
-msgstr "Choose payment!"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:389
 msgid "User Profile"
-msgstr "User Profile"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:390
 msgid "Customer ID:"
-msgstr "Customer ID:"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:391
 msgid "Email Address:"
-msgstr "Email Address:"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:392
 msgid "User Name:"
-msgstr "User Name:"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:393
 msgid "Gender:"
-msgstr "Gender:"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:394
 msgid "Full Name:"
-msgstr "Full Name:"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:395
 msgid "First Name:"
-msgstr "First Name:"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:396
 msgid "Last Name:"
-msgstr "Last Name:"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:397
 msgid "Street Address:"
-msgstr "Street Address:"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:398
 msgid "Additional Information:"
-msgstr "Additional Information:"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:399
 msgid "ZIP Code:"
-msgstr "ZIP Code:"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:400
 msgid "City:"
-msgstr "City:"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:401
 msgid "Country:"
-msgstr "Country:"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoShortcodeManager.php:402
 msgid "Edit this profile at plenigo"
-msgstr "Edit this profile at plenigo"
+msgstr ""
 
 #. Base ID
 #: ../plenigo_plugin/PlenigoLoginWidget.php:55
 msgid "Plenigo login"
-msgstr "Plenigo login"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoLoginWidget.php:114
 msgid "New title"
-msgstr "New title"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoLoginWidget.php:115 ..
 #: plenigo_plugin/PlenigoLoginWidget.php:132
 msgid "Username:"
-msgstr "User:"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoLoginWidget.php:116 ..
 #: plenigo_plugin/PlenigoLoginWidget.php:136
 msgid "Password:"
-msgstr "Pass"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoLoginWidget.php:117 ..
 #: plenigo_plugin/PlenigoLoginWidget.php:140
 msgid "Forgot password"
-msgstr "Forgot password"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoLoginWidget.php:118 ..
 #: plenigo_plugin/PlenigoLoginWidget.php:144
 msgid "WordPress Login"
-msgstr "WordPress Login"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoLoginWidget.php:119 ..
 #: plenigo_plugin/PlenigoLoginWidget.php:148
 msgid "Plenigo Login"
-msgstr "Plenigo Login"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoLoginWidget.php:120
 msgid "Welcome, "
-msgstr "Welcome"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoLoginWidget.php:121 ..
 #: plenigo_plugin/PlenigoLoginWidget.php:161
 msgid "Edit Profile"
-msgstr "Edit Profile"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoLoginWidget.php:122 ..
 #: plenigo_plugin/PlenigoLoginWidget.php:165
 msgid "Logout"
-msgstr "Logout"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoLoginWidget.php:125
 msgid "Title:"
-msgstr "Title:"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoLoginWidget.php:157
 msgid "Welcome, <name>"
-msgstr "Welcome, <name>"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoLoginManager.php:293
 msgid "Mr./Mis"
-msgstr "Mr./Mis"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:181
 msgid "Plenigo Help"
-msgstr "Plenigo Help"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:195
 msgid "plenigo OAuth Help"
-msgstr "plenigo OAuth Help"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:196
 msgid "In order to configure plenigo OAuth Login: "
-msgstr "In order to configure plenigo OAuth Login: "
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:197
 msgid ""
 "1 - Add Login redirect URL to plenigo (Usually: <b>{YOUR BLOG URL}/wp-login."
 "php</b>) "
 msgstr ""
-"1 - Add Login redirect URL to plenigo (Usually: <b>{YOUR BLOG URL}/wp-login."
-"php</b>) "
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:198 ..
 #: plenigo_plugin/PlenigoSettingsPage.php:204
 msgid "clicking this link"
-msgstr "clicking this link"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:200
 msgid "2 - Fill the same URL in the <b>OAuth redirect URL</b> below"
-msgstr "2 - Fill the same URL in the <b>OAuth redirect URL</b> below"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:201
 msgid ""
 "3 - (Optional) Fill the URL in the <b>URL After Login</b> for login "
 "redirection"
 msgstr ""
-"3 - (Optional) Fill the URL in the <b>URL After Login</b> for login "
-"redirection"
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:202
 msgid ""
 "4 - Enable the plenigo Login clicking <b>Use plenigo Authentication "
 "Provider</b> "
 msgstr ""
-"4 - Enable the plenigo Login clicking <b>Use plenigo Authentication "
-"Provider</b> "
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:203
 msgid "5 - Put the plenigo Login Widget in a widget area of the site "
-msgstr "5 - Put the plenigo Login Widget in a widget area of the site "
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:205
 msgid "6 - Enjoy logging in with plenigo! "
-msgstr "6 - Enjoy logging in with plenigo! "
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:223
 msgid "Loading..."
-msgstr "Loading..."
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:231 ..
 #: plenigo_plugin/PlenigoSettingsPage.php:382
 msgid "General"
-msgstr "General"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:235 ..
 #: plenigo_plugin/PlenigoSettingsPage.php:394
 msgid "OAuth Login"
-msgstr "OAuth Login"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:239
 msgid "Premium Content"
-msgstr "Premium Content"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:243
 msgid "Metered Views"
-msgstr "Metered Views"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:247 ..
 #: plenigo_plugin/PlenigoSettingsPage.php:427
 msgid "Curtain Customization"
-msgstr "Curtain Customization"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:251
 msgid "WooCommerce"
-msgstr "WooCommerce"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:255
 msgid "Advanced"
-msgstr "Advanced"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:365
 msgid "Plenigo settings saved!"
-msgstr "Plenigo settings saved!"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:368
 msgid "Data can not be empty"
-msgstr "Data can not be empty"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:405
 msgid "Premium Content settings"
-msgstr "Premium Content settings"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:416
 msgid "Metered Views settings"
-msgstr "Metered Views settings"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:437
 msgid "Woo Commerce"
-msgstr "WooCommerce"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:449
 msgid "Advanced settings"
-msgstr "Advanced settings"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:476
 #, php-format
 msgid "Validation failed: %s"
-msgstr "Validation failed: %s"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:492
 #, php-format
 msgid "Setting has been set to default value: %s"
-msgstr "Setting has been set to default value: %s"
+msgstr ""
 
 #: ../plenigo_plugin/PlenigoContentManager.php:1010 ..
 #: plenigo_plugin/settings/SettingNoscriptTitle.php:46
 msgid "You need JavaScript"
-msgstr "You need JavaScript"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingUseLogin.php:61
 msgid "Use OAuth Login"
-msgstr "Use OAuth Login"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingUseLogin.php:104
 msgid "Use plenigo Authentication Provider"
-msgstr "Use plenigo Authentication Provider"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingUseLogin.php:113
 msgid "Regular Wordpress login"
-msgstr "Regular Wordpress login"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCompanySecret.php:65
 msgid "Company Private Key"
-msgstr "Company Private Key"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingProductTagDB.php:70
 msgid "Premium Content Products"
-msgstr "Premium Content Products"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingProductTagDB.php:79 ..
 #: plenigo_plugin/settings/SettingCategoryTagDB.php:79 ..
 #: plenigo_plugin/settings/SettingPreventTag.php:80 ..
 #: plenigo_plugin/settings/SettingCurtainBuyTextDB.php:79
 msgid "Enter Tag name..."
-msgstr "Enter Tag name..."
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingProductTagDB.php:81
 msgid "Enter Product ID(s)..."
-msgstr "Enter Product ID(s)..."
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingProductTagDB.php:83 ..
 #: plenigo_plugin/settings/SettingCategoryTagDB.php:83 ..
 #: plenigo_plugin/settings/SettingCurtainBuyTextDB.php:83
 msgid "Add values"
-msgstr "Add values"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingWelcomeURL.php:54
 msgid "URL After NEW USER"
-msgstr "URL After NEW USER"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingWelcomeURL.php:62 ..
 #: plenigo_plugin/settings/SettingLoginURL.php:62
 msgid "Leave empty for no redirection..."
-msgstr "Leave empty for no redirection..."
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingDebugMode.php:61
 msgid "Debug Mode"
-msgstr "Debug Mode"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingDebugMode.php:90
 msgid "NO DEBUG mode"
-msgstr "NO DEBUG mode"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingDebugMode.php:92
 msgid "VERBOSE DEBUG mode"
-msgstr "VERBOSE DEBUG mode"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingDebugMode.php:94
 msgid "VERBOSE LOG FILE mode. Up to: "
-msgstr "VERBOSE LOG FILE mode. Up to: "
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainTitleMembers.php:43
 msgid "Curtain Title (for members)"
-msgstr "Curtain Title (for members)"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCategoryTagDB.php:70
 msgid "Premium Content Categories"
-msgstr "Premium Content Categories"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCategoryTagDB.php:81
 msgid "Enter Category ID(s)..."
-msgstr "Enter Category ID(s)..."
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingWooProductType.php:65
 msgid "Product Type"
-msgstr "Product Type"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingLoginURL.php:54
 msgid "URL After Login"
-msgstr "URL After Login"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingPreventTag.php:70
 msgid "Prevent Payment Tag"
-msgstr "Prevent Payment Tag"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainBuyTextDB.php:70
 msgid "Buy Button Text (based on tag)"
-msgstr "Buy Button Text (based on tag)"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainBuyTextDB.php:81
 msgid "Buy button text..."
-msgstr "Buy button text..."
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCompanyId.php:65
 msgid "Company ID"
-msgstr "Company ID"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingWooOrderTitle.php:41
 msgid "Order Title Format"
-msgstr "Order Title Format"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingWooOrderTitle.php:60
 msgid "Order Title Format: replacement variables"
-msgstr "Order Title Format: replacement variables"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingUseWPLogin.php:65
 msgid "Enable Wordpress Login"
-msgstr "Enable Wordpress Login"
+msgstr ""
+
+#: ../plenigo_plugin/settings/SettingUseWPLogin.php:86
+msgid "Show the Wordpress login form"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingUseWPLogin.php:89
 msgid "Only show plenigo login Button"
-msgstr "Only show plenigo login Button"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingNoscriptMessage.php:55
 msgid "no-Javascript overlay Message"
-msgstr "no-Javascript overlay Message"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonBuy.php:58
 msgid "Sign up"
-msgstr "Sign up"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonBuy.php:66
 msgid "BUY Button Text"
-msgstr "BUY Button Text"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonCustomURL.php:54
 msgid "CUSTOM Button URL"
-msgstr "CUSTOM Button URL"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingUseNoscript.php:63
 msgid "Notify non-JavaScript users"
-msgstr "Notify non-JavaScript users"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingUseNoscript.php:72
 msgid "Show the no-Javascript overlay"
-msgstr "Show the no-Javascript overlay"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingUseNoscript.php:81
 msgid "Allow users to deactivate Javascript"
-msgstr "Allow users to deactivate Javascript"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonCatCustomURL.php:54
 msgid "CUSTOM Button URL (Category tag)"
-msgstr "CUSTOM Button URL (Category tag)"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainTextMembers.php:43
 msgid "Curtain Message (for members)"
-msgstr "Curtain Message (for members)"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCheckMetered.php:65
 msgid "Metered Views switch"
-msgstr "Metered Views switch"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCheckMetered.php:101
 msgid "Check for Metered Views"
-msgstr "Check for Metered Views"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCheckMetered.php:104
 msgid "Disable Metered Views"
-msgstr "Disable Metered Views"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainCategoryMode.php:61
 msgid "Curtain Button Scheme (Category tag)"
-msgstr "Curtain Button Scheme (Category tag)"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonCatCustom.php:46
 msgid "Subscribe"
-msgstr "Subscribe"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonCatCustom.php:54
 msgid "CUSTOM Button Text (Category tag)"
-msgstr "CUSTOM Button Text (Category tag)"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonCustom.php:46
 msgid "See our prices"
-msgstr "See our prices"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonCustom.php:54
 msgid "CUSTOM Button Text"
-msgstr "CUSTOM Button Text"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonLogin.php:46
 msgid "Sign in"
-msgstr "Sign in"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonLogin.php:54
 msgid "LOGIN Button Text"
-msgstr "LOGIN Button Text"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainMode.php:65
 msgid "Curtain Button Scheme"
-msgstr "Curtain Button Scheme"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingNoscriptTitle.php:53
 msgid "no-Javascript overlay Title"
-msgstr "no-Javascript overlay Title"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainText.php:68
 msgid "Curtain Message"
-msgstr "Curtain Message"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingMeteredExemptionTag.php:45
 msgid "Metered exemption tag"
-msgstr "Metered exemption tag"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainTitle.php:58
 msgid "Do you want to continue reading?"
-msgstr "Do you want to continue reading?"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingCurtainTitle.php:66
 msgid "Curtain Title"
-msgstr "Curtain Title"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingUseWoo.php:63
 msgid "Use Woo Commerce Payment Gateway"
-msgstr "Use Woo Commerce Payment Gateway"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingUseWoo.php:72
 msgid "Enable Payment Gateway"
-msgstr "Enable Payment Gateway"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingUseWoo.php:81
 msgid "Disable Payment Gateway"
-msgstr "Disable Payment Gateway"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingGACode.php:66
 msgid "Google Analytics ID"
-msgstr "Google Analytics ID"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingUseQuietReport.php:63
 msgid "Enable \"Quiet\" mini report"
-msgstr "Enable \"Quiet\" mini report"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingUseQuietReport.php:72
 msgid "Show an HTML comment tag with verbose information about the purchase"
-msgstr "Show an HTML comment tag with verbose information about the purchase"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingUseQuietReport.php:81
 msgid "Do NO show the verbose information, keep my site clean and secure"
-msgstr "Do NO show the verbose information, keep my site clean and secure"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingOverrideProfiles.php:54
 msgid "Override WP Profile data"
-msgstr "Override WP Profile data"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingOverrideProfiles.php:66
 msgid "Override Wordpress profile data with the plenigo data"
-msgstr "Override Wordpress profile data with the plenigo data"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingOverrideProfiles.php:69
 msgid "Allow Wordpress users to modify their data"
-msgstr "Allow Wordpress users to modify their data"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingMeteredURL.php:53
 msgid "Metered explanation URL"
-msgstr "Metered explanation URL"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingMeteredURL.php:60
 msgid "https://"
-msgstr "https://"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingTestMode.php:65
 msgid "Test Mode"
-msgstr "Test Mode"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingTestMode.php:85
 msgid "Test mode sandbox"
-msgstr "Test mode sandbox"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingTestMode.php:88
 msgid "Production mode"
-msgstr "Production mode"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingProfileURL.php:54
 msgid "User Profile URL"
-msgstr "User Profile URL"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingProfileURL.php:62
 msgid "Leave empty for default WordPress profile..."
-msgstr "Leave empty for default WordPress profile..."
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingRedirectURL.php:62
 msgid "OAuth redirect URL"
-msgstr "OAuth redirect URL"
+msgstr ""
 
 #: ../plenigo_plugin/settings/SettingRedirectURL.php:80
 msgid "http://"
-msgstr "http://"
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:72 ..
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:73
 msgid "Plenigo Payment"
-msgstr "Plenigo Payment"
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:74 ..
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:75
 msgid "WooCommerce plenigo Description"
-msgstr "WooCommerce plenigo Description"
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:76
 msgid "Pay with plenigo"
-msgstr "Pay with plenigo"
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:127
 msgid "Awaiting plenigo checkout process"
-msgstr "Awaiting plenigo checkout process"
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:169
 msgid "Plenigo checkout stating"
-msgstr "Plenigo checkout starting"
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:212
 msgid "Continue to plenigo checkout"
-msgstr "Continue to plenigo checkout"
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:215
 msgid "Plenigo not configured, contact the administrators"
-msgstr "Plenigo not configured, contact the administrators"
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:221
 msgid "You already purchased this order! Thank You!"
-msgstr "You already purchased this order! Thank You!"
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:223 ..
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:299
 msgid "Plenigo payment complete. Thank you!"
-msgstr "Plenigo payment complete. Thank you!"
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:235
 msgid "View your purchase"
-msgstr "View your purchase"
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:261
 msgid "Gateway Disabled"
-msgstr "Gateway Disabled"
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:262
 msgid "Please complete the configuration in the plenigo settings."
-msgstr "Please complete the configuration in the plenigo settings."
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:273
 msgid "Enable/Disable"
-msgstr "Enable/Disable"
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:275
 msgid "Enable Cheque Payment"
-msgstr "Enable Cheque Payment"
+msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:329
 msgid "Product type is not configured, contact the administrators"
-msgstr "Product type is not configured, contact the administrators"
+msgstr ""
