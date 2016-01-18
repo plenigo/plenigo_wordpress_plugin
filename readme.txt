@@ -299,7 +299,7 @@ separator, native Wordpress tag.
 
 == Changelog ==
 = 1.5.7 - plenigo in a language near you =
-- Updated english, spanish and deutch translations.
+- Updated english, spanish and german translations.
 
 = 1.5.6 - Bug fixes =
 - Added multiple product id support for **pl_content_show** and **pl_content_hide**

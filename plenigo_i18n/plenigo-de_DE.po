@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: plenigo_plugin 1.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-16 15:18-0300\n"
-"PO-Revision-Date: Tue Jan 12 2016 07:43:02 GMT-0300 (Hora estándar de "
+"PO-Revision-Date: Mon Jan 18 2016 08:52:29 GMT-0300 (Hora estándar de "
 "Argentina)\n"
 "Last-Translator: SebaSOFT <sdieguez@okkralabs.com>\n"
 "Language-Team: \n"
@@ -205,8 +205,8 @@ msgid ""
 "3 - (Optional) Fill the URL in the <b>URL After Login</b> for login "
 "redirection"
 msgstr ""
-"3 - (Optional) Hinterlegen Sie eine URL in <b>URL After Login</b> für eine "
-"Umleitung nach dem Login"
+"3 - (Optional) Hinterlegen Sie eine URL in <b>URL nach Anmeldung</b> für "
+"eine Umleitung nach dem Login"
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:202
 msgid ""
@@ -300,7 +300,7 @@ msgstr "Sie benötigen JavaScript"
 
 #: ../plenigo_plugin/settings/SettingUseLogin.php:61
 msgid "Use OAuth Login"
-msgstr "Verwenden OAuth Einloggen"
+msgstr "Verwende OAuth Anmeldung"
 
 #: ../plenigo_plugin/settings/SettingUseLogin.php:104
 msgid "Use plenigo Authentication Provider"
@@ -308,7 +308,7 @@ msgstr "plenigo als Authentifizierungsanbieter verwenden"
 
 #: ../plenigo_plugin/settings/SettingUseLogin.php:113
 msgid "Regular Wordpress login"
-msgstr "Standardmäßig Wordpress Login"
+msgstr "Standard Wordpress Login"
 
 #: ../plenigo_plugin/settings/SettingCompanySecret.php:65
 msgid "Company Private Key"
@@ -316,18 +316,18 @@ msgstr "Unternehmen privaten Schlüssel"
 
 #: ../plenigo_plugin/settings/SettingProductTagDB.php:70
 msgid "Premium Content Products"
-msgstr "Premium-Inhalten Produkte"
+msgstr "Premium Produkte"
 
 #: ../plenigo_plugin/settings/SettingProductTagDB.php:79 ..
 #: plenigo_plugin/settings/SettingCategoryTagDB.php:79 ..
 #: plenigo_plugin/settings/SettingPreventTag.php:80 ..
 #: plenigo_plugin/settings/SettingCurtainBuyTextDB.php:79
 msgid "Enter Tag name..."
-msgstr "Geben Sie Tag-Name ..."
+msgstr "Geben Sie einen Tag-Namen ein ..."
 
 #: ../plenigo_plugin/settings/SettingProductTagDB.php:81
 msgid "Enter Product ID(s)..."
-msgstr "Enter Product ID(s)..."
+msgstr "Geben Sie die Produkt-Ids ein ..."
 
 #: ../plenigo_plugin/settings/SettingProductTagDB.php:83 ..
 #: plenigo_plugin/settings/SettingCategoryTagDB.php:83 ..
@@ -354,23 +354,23 @@ msgstr "Keine Debug-Modus"
 
 #: ../plenigo_plugin/settings/SettingDebugMode.php:92
 msgid "VERBOSE DEBUG mode"
-msgstr "Ausführlichen Debugmodus"
+msgstr "Erweiterter Debugmodus"
 
 #: ../plenigo_plugin/settings/SettingDebugMode.php:94
 msgid "VERBOSE LOG FILE mode. Up to: "
-msgstr "Ausführlichen Protokolldatei-Modus. Bis zu:"
+msgstr "Erweitertes Logging aktivieren. Bis zu:"
 
 #: ../plenigo_plugin/settings/SettingCurtainTitleMembers.php:43
 msgid "Curtain Title (for members)"
-msgstr "Vorhang Titel (für Mitglieder)"
+msgstr "Curtain Titel"
 
 #: ../plenigo_plugin/settings/SettingCategoryTagDB.php:70
 msgid "Premium Content Categories"
-msgstr "Premium-Content-Kategorien"
+msgstr "Premium Kategorien"
 
 #: ../plenigo_plugin/settings/SettingCategoryTagDB.php:81
 msgid "Enter Category ID(s)..."
-msgstr "Geben Kategorie ID(s) ..."
+msgstr "Geben Sie die Kategorie-Ids ein ..."
 
 #: ../plenigo_plugin/settings/SettingWooProductType.php:65
 msgid "Product Type"
@@ -378,15 +378,15 @@ msgstr "Produktart"
 
 #: ../plenigo_plugin/settings/SettingLoginURL.php:54
 msgid "URL After Login"
-msgstr "URL Nach Einloggen"
+msgstr "URL nach Anmeldung"
 
 #: ../plenigo_plugin/settings/SettingPreventTag.php:70
 msgid "Prevent Payment Tag"
-msgstr "Zahlungs-Schlagwort verhinden"
+msgstr "Zahlungs Schlagwort zur Verhinderung der Paywall"
 
 #: ../plenigo_plugin/settings/SettingCurtainBuyTextDB.php:70
 msgid "Buy Button Text (based on tag)"
-msgstr "Kaufen Button-Text (basierend auf den Schlagwort)"
+msgstr "Kaufen Button-Text (basierend auf dem Schlagwort"
 
 #: ../plenigo_plugin/settings/SettingCurtainBuyTextDB.php:81
 msgid "Buy button text..."
@@ -446,11 +446,11 @@ msgstr "Benutzern erlauben, Javascript zu deaktivieren"
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonCatCustomURL.php:54
 msgid "CUSTOM Button URL (Category tag)"
-msgstr "Benutzerdefinierte Schaltfläche URL (Kategorie-Schlagwort)"
+msgstr "URL für benutzerdefinierte Schaltfläche"
 
 #: ../plenigo_plugin/settings/SettingCurtainTextMembers.php:43
 msgid "Curtain Message (for members)"
-msgstr "Vorhang Nachricht (für Mitglieder)"
+msgstr "Curtain Nachricht (für Mitglieder)"
 
 #: ../plenigo_plugin/settings/SettingCheckMetered.php:65
 msgid "Metered Views switch"
@@ -478,7 +478,7 @@ msgstr "Benutzerdefinierte Schaltfläche (Kategorie Schlagwort)"
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonCustom.php:46
 msgid "See our prices"
-msgstr "Sehen unsere Preise"
+msgstr "Sehen Sie unsere Preise"
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonCustom.php:54
 msgid "CUSTOM Button Text"
@@ -486,7 +486,7 @@ msgstr "Benutzerdefinierte Schaltfläche"
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonLogin.php:46
 msgid "Sign in"
-msgstr "Einloggen"
+msgstr "Anmelden"
 
 #: ../plenigo_plugin/settings/SettingCurtainButtonLogin.php:54
 msgid "LOGIN Button Text"
@@ -502,7 +502,7 @@ msgstr "kein Javascript Overlay-Titel"
 
 #: ../plenigo_plugin/settings/SettingCurtainText.php:68
 msgid "Curtain Message"
-msgstr "Vorhang Nachricht"
+msgstr "Curtain Nachricht"
 
 #: ../plenigo_plugin/settings/SettingMeteredExemptionTag.php:45
 msgid "Metered exemption tag"
@@ -558,7 +558,7 @@ msgstr "Wordpress erlauben Benutzern, ihre Daten zu ändern"
 
 #: ../plenigo_plugin/settings/SettingMeteredURL.php:53
 msgid "Metered explanation URL"
-msgstr "Freiansichten Erkläungs-URL"
+msgstr "Freiansichten Erklärungs-URL"
 
 #: ../plenigo_plugin/settings/SettingMeteredURL.php:60
 msgid "https://"
