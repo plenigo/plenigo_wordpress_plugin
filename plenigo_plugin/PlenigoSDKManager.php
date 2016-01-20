@@ -283,7 +283,7 @@ class PlenigoSDKManager {
                 $res = session_id() === '' ? FALSE : TRUE;
             }
         }
-        if (($res === FALSE && !headers_sent()) || (!isset($_SESSION))) {
+        if (($res === FALSE && !headers_sent()) || (!isset($_SESSION) && !headers_sent())) {
             session_start();
         }
     }
