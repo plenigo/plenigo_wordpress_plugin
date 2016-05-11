@@ -41,6 +41,7 @@ final class Checkout extends ServerInterface {
     const PROD_ID_MAX_LENGTH = 20;
     const ERR_MSG_TITLE_TOO_LONG = "The Product title is too long and it will be truncated (100 chars max.)";
     const ERR_MSG_PROD_ID_TOO_LONG = "The Product ID can be up to 20 chars long!";
+    const ERR_MSG_PROD_ID_REPL_TOO_LONG = "The Product ID replacement can be up to 20 chars long!";
     const ERR_MSG_INVALID_SHIPPING = "This product type doesn't allow shipping cost!";
 
     protected $productId;
@@ -49,6 +50,7 @@ final class Checkout extends ServerInterface {
     protected $type;
     protected $title;
     protected $categoryId;
+    protected $segmentId;
     protected $showBuyingAgainScreen;
     protected $showCheckoutConfirmationScreen;
     protected $oauth2RedirectUrl;
@@ -59,6 +61,7 @@ final class Checkout extends ServerInterface {
     protected $shippingCost;
     protected $overrideMode;
     protected $testMode;
+    protected $productIdReplacement;
     private $allowedShippingTypes = array(ProductBase::TYPE_BOOK, ProductBase::TYPE_NEWSPAPER);
 
     /**
@@ -98,11 +101,13 @@ final class Checkout extends ServerInterface {
         ArrayUtils::addIfDefined($map, 'price', $productMap, 'price');
         ArrayUtils::addIfDefined($map, 'title', $productMap, 'title');
         ArrayUtils::addIfDefined($map, 'categoryId', $productMap, 'categoryId');
+        ArrayUtils::addIfDefined($map, 'segmentId', $productMap, 'segmentIds');
         ArrayUtils::addIfDefined($map, 'currency', $productMap, 'currency');
         ArrayUtils::addIfDefined($map, 'type', $productMap, 'type');
         ArrayUtils::addIfDefined($map, 'subscriptionRenewal', $productMap, 'subscriptionRenewal');
         ArrayUtils::addIfDefined($map, 'failedPayment', $productMap, 'failedPayment');
         ArrayUtils::addIfDefined($map, 'shippingCost', $productMap, 'shippingCost');
+        ArrayUtils::addIfDefined($map, 'productIdReplacement', $productMap, 'productIdReplacement');
 
         $this->setValuesFromMap($map);
     }
@@ -116,6 +121,7 @@ final class Checkout extends ServerInterface {
      */
     public function setValuesFromMap($map) {
         $this->setValueFromMapIfNotEmpty('productId', $map);
+        $this->setValueFromMapIfNotEmpty('segmentId', $map);
         $this->setValueFromMapIfNotEmpty('price', $map);
         $this->setValueFromMapIfNotEmpty('overrideMode', $map);
         $this->setValueFromMapIfNotEmpty('currency', $map);
@@ -131,6 +137,7 @@ final class Checkout extends ServerInterface {
         $this->setValueFromMapIfNotEmpty('subscriptionRenewal', $map);
         $this->setValueFromMapIfNotEmpty('failedPayment', $map);
         $this->setValueFromMapIfNotEmpty('shippingCost', $map);
+        $this->setValueFromMapIfNotEmpty('productIdReplacement', $map);
 
         $this->performValidation();
     }
@@ -259,6 +266,15 @@ final class Checkout extends ServerInterface {
     }
 
     /**
+     * Sets the Segment Id.
+     *
+     * @param string $si The segment ID.
+     */
+    public function setSegmentId($si) {
+        $this->segmentId = $si;
+    }
+
+    /**
      * Sets the Currency.
      *
      * @param string $currency The Currency.
@@ -315,6 +331,16 @@ final class Checkout extends ServerInterface {
     }
 
     /**
+     * Set the replacement for product id. This is used if the same product should be sold multiple times. The real product id is only used to fill the object
+     * and then replaced by this id. Can only be used in combination with overwrite mode.
+     *
+     * @param string $productIdReplacement replacement for product id
+     */
+    public function setProductIdReplacement($productIdReplacement) {
+        $this->productIdReplacement = $productIdReplacement;
+    }
+
+    /**
      * Gets the map data to be used for the transaction.
      *
      * @return array The map with the non null values assigned to the instance.
@@ -327,6 +353,7 @@ final class Checkout extends ServerInterface {
         $this->insertIntoMapIfDefined($map, 'type', 'pt');
         $this->insertIntoMapIfDefined($map, 'title', 'ti');
         $this->insertIntoMapIfDefined($map, 'productId', 'pi');
+        $this->insertIntoMapIfDefined($map, 'segmentId', 'si');
         $this->insertIntoMapIfDefined($map, 'showBuyingAgainScreen', 'sab');
         $this->insertIntoMapIfDefined($map, 'showCheckoutConfirmationScreen', 'spf');
         $this->insertIntoMapIfDefined($map, 'oauth2RedirectUrl', 'sso');
@@ -338,6 +365,7 @@ final class Checkout extends ServerInterface {
         $this->insertIntoMapIfDefined($map, 'failedPayment', 'fp');
         $this->insertIntoMapIfDefined($map, 'shippingCost', 'sc');
         $this->insertIntoMapIfDefined($map, 'overrideMode', 'om');
+        $this->insertIntoMapIfDefined($map, 'productIdReplacement', 'pir');
 
         return $map;
     }
@@ -354,6 +382,9 @@ final class Checkout extends ServerInterface {
         }
         if (!is_null($this->productId) && strlen($this->productId) > self::PROD_ID_MAX_LENGTH) {
             throw new PlenigoException(self::ERR_MSG_PROD_ID_TOO_LONG);
+        }
+        if (!is_null($this->productIdReplacement) && strlen($this->productIdReplacement) > self::PROD_ID_MAX_LENGTH) {
+            throw new PlenigoException(self::ERR_MSG_PROD_ID_REPL_TOO_LONG);
         }
         if (!is_null($this->type) && trim($this->type !== '') && !in_array($this->type, $this->allowedShippingTypes)) {
             if (!is_null($this->shippingCost) && is_numeric($this->shippingCost) && $this->shippingCost > 0) {
