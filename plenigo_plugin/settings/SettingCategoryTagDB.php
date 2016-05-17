@@ -20,6 +20,10 @@
 
 namespace plenigo_plugin\settings;
 
+include_once __DIR__ . '../PlenigoSDKManager.php';
+
+use \plenigo_plugin\PlenigoSDKManager;
+
 /**
  * Setting class for plenigo_cat_tag_db
  *
@@ -34,6 +38,7 @@ class SettingCategoryTagDB extends PlenigoWPSetting
     //These should be overriden
     const SECTION_ID = 'plenigo_content_section';
     const SETTING_ID = 'plenigo_cat_tag_db';
+    const PREFIX_ID = 'plenigo_cat_tag';
 
     /**
      * Holds values for storing values, so they are generated just once per request
@@ -76,29 +81,10 @@ class SettingCategoryTagDB extends PlenigoWPSetting
     public function renderCallback()
     {
         $currValue = $this->getDefaultValue($this->getStoredValue());
-        echo '<input type="text" id="tag_cat_adder" name="ignore_cat_tag_adder" size="35" placeholder="' . __('Enter Tag name...',
-            parent::PLENIGO_SETTINGS_GROUP) . '" /> -&gt; '
-        . '<input type="text" id="category_adder" name="ignore_cat_adder" size="35" placeholder="' . __('Enter Category ID(s)...',
-            parent::PLENIGO_SETTINGS_GROUP) . '" /> '
-        . '<input type="button" onclick="addValuesToCatArea();" value="' . __("Add values", self::PLENIGO_SETTINGS_GROUP) . '" /><br/><br/>';
-
-        printf('<textarea cols="100" wrap="off" rows="10" id="plenigo_cat_tag_db" name="' . self::PLENIGO_SETTINGS_NAME
-            . '[' . static::SETTING_ID . ']">%s</textarea>', $currValue);
-
-        echo '<script type="text/javascript">'
-        . 'jQuery(document).ready(function(){'
-        . 'var data = "' . $this->get_term_data() . '".split(",");'
-        . 'jQuery("#tag_cat_adder").autocomplete({source:data,autoFocus:true});});'
-        . 'function addValuesToCatArea(){'
-        . 'var strPrev=jQuery("#plenigo_cat_tag_db").val();'
-        . 'if(strPrev!==""){strPrev+="\n"}'
-        . 'jQuery("#plenigo_cat_tag_db").val('
-        . 'strPrev+jQuery("#tag_cat_adder").val()+"->"+jQuery("#category_adder").val()'
-        . ');'
-        . 'jQuery("#tag_cat_adder").val("");'
-        . 'jQuery("#category_adder").val("");'
-        . '}'
-        . '</script>';
+        $tagList = $this->get_term_data();
+        $itemList = $this->get_category_data();
+        include __DIR__ . '/SettingTagDB_TPL.php';
+        echo '<script type="text/javascript">jQuery(document).ready(function(){plenigoSettings.init("plenigo_cat_tag");});</script>';
     }
 
     /**
@@ -175,4 +161,22 @@ class SettingCategoryTagDB extends PlenigoWPSetting
         return $res;
     }
 
+    private function get_category_data() {
+        $res = "";
+        $sdk = PlenigoSDKManager::get();
+
+        try {
+            $prodArray = $sdk->getCategoryList();
+        } catch (Exception $exc) {
+            $prodArray = array();
+        }
+        foreach ($prodArray as $prodItem) {
+            if ($res != "") {
+                $res.="|";
+            }
+            $res.=$prodItem->categoryId . "," . $prodItem->title . " (" . $prodItem->categoryId . ")";
+        }
+
+        return $res;
+    }
 }

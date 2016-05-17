@@ -270,6 +270,26 @@ class PlenigoSDKManager {
 
         return $result;
     }
+    
+    /**
+     * Returns a list of the first 100 Products of the company
+     * 
+     * @return array  
+     */
+    public function getProductList(){
+        $prodList = \plenigo\services\ProductService::getProductList(100);
+        return $prodList['elements'];
+    }
+
+    /**
+     * Returns a list of the first 100 Categories of the company
+     * 
+     * @return array
+     */
+    public function getCategoryList(){
+        $catList = \plenigo\services\ProductService::getCategoryList(100);
+        return $catList['elements'];
+    }
 
     /**
      * Checks if a session is already started (with PHP compatibility) and starts it if there isnt one

@@ -20,6 +20,10 @@
 
 namespace plenigo_plugin\settings;
 
+include_once __DIR__ . '../PlenigoSDKManager.php';
+
+use \plenigo_plugin\PlenigoSDKManager;
+
 /**
  * Setting class for plenigo_tag_db
  *
@@ -28,23 +32,22 @@ namespace plenigo_plugin\settings;
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class SettingProductTagDB extends PlenigoWPSetting
-{
+class SettingProductTagDB extends PlenigoWPSetting {
 
     //These should be overriden
     const SECTION_ID = 'plenigo_content_section';
     const SETTING_ID = 'plenigo_tag_db';
+    const PREFIX_ID = 'plenigo_tag';
 
     /**
      * Holds values for the SQL requests, so they are made just once per request
      */
     private $reqCache = array();
-    
+
     /**
      * @see PlenigoWPSetting::getSanitizedValue()
      */
-    protected function getSanitizedValue($value = null)
-    {
+    protected function getSanitizedValue($value = null) {
         if (is_null($value)) {
             return $this->getDefaultValue();
         }
@@ -54,8 +57,7 @@ class SettingProductTagDB extends PlenigoWPSetting
     /**
      * @see PlenigoWPSetting::getDefaultValue()
      */
-    public function getDefaultValue($current = null)
-    {
+    public function getDefaultValue($current = null) {
         if (!is_null($current)) {
             return $current;
         }
@@ -65,47 +67,25 @@ class SettingProductTagDB extends PlenigoWPSetting
     /**
      * @see PlenigoWPSetting::getTitle()
      */
-    public function getTitle()
-    {
+    public function getTitle() {
         return __('Premium Content Products', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
      * @see PlenigoWPSetting::renderCallback()
      */
-    public function renderCallback()
-    {
+    public function renderCallback() {
         $currValue = $this->getDefaultValue($this->getStoredValue());
-        echo '<input type="text" id="tag_adder" name="ignore_tag_adder" size="35" placeholder="' . __('Enter Tag name...',
-            parent::PLENIGO_SETTINGS_GROUP) . '" /> -&gt; '
-        . '<input type="text" id="product_adder" name="ignore_prod_adder" size="35" placeholder="' . __('Enter Product ID(s)...',
-            parent::PLENIGO_SETTINGS_GROUP) . '" /> '
-        . '<input type="button" onclick="addValuesToArea();" value="' . __("Add values", self::PLENIGO_SETTINGS_GROUP) . '" /><br/><br/>';
-
-        printf('<textarea cols="100" wrap="off" rows="10" id="plenigo_tag_db" name="' . self::PLENIGO_SETTINGS_NAME
-            . '[' . static::SETTING_ID . ']">%s</textarea>', $currValue);
-
-        echo '<script type="text/javascript">'
-        . 'jQuery(document).ready(function(){'
-        . 'var data = "' . $this->get_term_data() . '".split(",");'
-        . 'jQuery("#tag_adder").autocomplete({source:data,autoFocus:true});});'
-        . 'function addValuesToArea(){'
-        . 'var strPrev=jQuery("#plenigo_tag_db").val();'
-        . 'if(strPrev!==""){strPrev+="\n"}'
-        . 'jQuery("#plenigo_tag_db").val('
-        . 'strPrev+jQuery("#tag_adder").val()+"->"+jQuery("#product_adder").val()'
-        . ');'
-        . 'jQuery("#tag_adder").val("");'
-        . 'jQuery("#product_adder").val("");'
-        . '}'
-        . '</script>';
+        $tagList = $this->get_term_data();
+        $itemList = $this->get_product_data();
+        include __DIR__ . '/SettingTagDB_TPL.php';
+        echo '<script type="text/javascript">jQuery(document).ready(function(){plenigoSettings.init("plenigo_tag");});</script>';
     }
 
     /**
      * @see PlenigoWPSetting::getValidationForValue()
      */
-    public function getValidationForValue($value = null)
-    {
+    public function getValidationForValue($value = null) {
         if (empty($value)) {
             return true;
         }
@@ -138,18 +118,15 @@ class SettingProductTagDB extends PlenigoWPSetting
         if ($booDBFormatError === true) {
             if (function_exists("add_settings_error")) {
                 add_settings_error(
-                    self::PLENIGO_SETTINGS_PAGE, "plenigo",
-                    __("There is a problem with the TAG list."
-                        . " <br/> The correct format is lines of TAG->PRODUCTID[,PRODUCTID...] pairs",
-                        self::PLENIGO_SETTINGS_GROUP), 'error'
+                        self::PLENIGO_SETTINGS_PAGE, "plenigo", __("There is a problem with the TAG list."
+                                . " <br/> The correct format is lines of TAG->PRODUCTID[,PRODUCTID...] pairs", self::PLENIGO_SETTINGS_GROUP), 'error'
                 );
             }
             return false;
         }
     }
 
-    private function get_term_data()
-    {
+    private function get_term_data() {
         if (isset($this->reqCache['term-query'])) {
             return $this->reqCache['term-query'];
         }
@@ -157,8 +134,8 @@ class SettingProductTagDB extends PlenigoWPSetting
         $res = '';
 
         $search_tags = $wpdb->get_results("SELECT a.name,a.slug FROM " . $wpdb->terms
-            . " a," . $wpdb->term_taxonomy . " b WHERE a.term_id=b.term_id "
-            . " and b.taxonomy='post_tag' ");
+                . " a," . $wpdb->term_taxonomy . " b WHERE a.term_id=b.term_id "
+                . " and b.taxonomy='post_tag' ");
         foreach ($search_tags as $mytag) {
             if (strlen($res) !== 0) {
                 $res.=",";
@@ -166,6 +143,25 @@ class SettingProductTagDB extends PlenigoWPSetting
             $res.= $mytag->name . "{" . $mytag->slug . "}";
         }
         $this->reqCache['term-query'] = $res;
+        return $res;
+    }
+
+    private function get_product_data() {
+        $res = "";
+        $sdk = PlenigoSDKManager::get();
+
+        try {
+            $prodArray = $sdk->getProductList();
+        } catch (Exception $exc) {
+            $prodArray = array();
+        }
+        foreach ($prodArray as $prodItem) {
+            if ($res != "") {
+                $res.="|";
+            }
+            $res.=$prodItem->productId . "," . $prodItem->title . " (" . $prodItem->productId . ")";
+        }
+
         return $res;
     }
 
