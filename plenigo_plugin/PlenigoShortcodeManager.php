@@ -4,7 +4,6 @@ namespace plenigo_plugin;
 
 use \plenigo\services\UserService;
 use \plenigo\models\UserData;
-use \plenigo\internal\models\Address;
 
 /**
  * PlenigoShortcodeManager
@@ -73,6 +72,7 @@ class PlenigoShortcodeManager {
         add_shortcode('pl_content_show', array($this, 'plenigo_handle_content_shortcode'));
         add_shortcode('pl_content_hide', array($this, 'plenigo_handle_content_shortcode'));
         add_shortcode('pl_user_profile', array($this, 'plenigo_handle_user_shortcode'));
+        add_shortcode('pl_snippet', array($this, 'plenigo_handle_snippet_shortcode'));
 
         //TinyMCE
         // add new buttons
@@ -110,7 +110,7 @@ class PlenigoShortcodeManager {
         // We are attempting to only allow the shortcode appearance to editors.
         if (\current_user_can('edit_posts') || \current_user_can('edit_pages')) {
             if (\get_user_option('rich_editing') == 'true') {
-                array_push($buttons, 'separator', 'plenigo', 'plenigo_renew', 'plenigo_failed', 'plenigo_separator');
+                array_push($buttons, 'separator', 'plenigo', 'plenigo_renew', 'plenigo_failed', 'plenigo_separator', 'plenigo_snippet');
             }
         }
         return $buttons;
@@ -121,6 +121,7 @@ class PlenigoShortcodeManager {
         $plugin_array['plenigo_renew'] = plugins_url('../plenigo_js/tinymce-plenigo_renew-plugin.js', __file__);
         $plugin_array['plenigo_failed'] = plugins_url('../plenigo_js/tinymce-plenigo_failed-plugin.js', __file__);
         $plugin_array['plenigo_separator'] = plugins_url('../plenigo_js/tinymce-plenigo_separator-plugin.js', __file__);
+        $plugin_array['plenigo_snippet'] = plugins_url('../plenigo_js/tinymce-plenigo_snippet-plugin.js', __file__);
         // TODO add missing JS files
         //$plugin_array['plenigo_show'] = plugins_url('../plenigo_js/tinymce-plenigo_show-plugin.js', __file__);
         //$plugin_array['plenigo_hide'] = plugins_url('../plenigo_js/tinymce-plenigo_hide-plugin.js', __file__);
@@ -246,7 +247,7 @@ class PlenigoShortcodeManager {
             $content = "";
         }
 
-        $isBought = ($prodId !== "" && PlenigoSDKManager::get()->plenigo_bought(explode( ',', $prodId )));
+        $isBought = ($prodId !== "" && PlenigoSDKManager::get()->plenigo_bought(explode(',', $prodId)));
 
         if ($tag == 'pl_content_show') {
             if ($isBought) {
@@ -306,6 +307,43 @@ class PlenigoShortcodeManager {
         } else { // Else we show the shortcode contents to allow customize the logged out message
             return do_shortcode($content);
         }
+    }
+
+    public function plenigo_handle_snippet_shortcode($atts, $content = null, $tag = null) {
+        $a = shortcode_atts(array(
+            'name' => ""
+                ), $atts);
+        $arr_types = array();
+        $arr_types[] = "plenigo.Snippet.PERSONAL_DATA";
+        $arr_types[] = "plenigo.Snippet.ORDER";
+        $arr_types[] = "plenigo.Snippet.PAYMENT_METHODS";
+        $arr_types[] = "plenigo.Snippet.ADDRESS_DATA";
+
+        $startTag = '<script type="text/javascript">' . "\n";
+        $endTag = '</script>';
+        $startJQuery = 'jQuery(document).ready(function($) {';
+        $endJQuery = '});';
+        if (stristr($a['name'], "all")) {
+            foreach ($arr_types as $snippet) {
+                $genID = uniqid("snip");
+                $content.='<div id="' . $genID . '"></div>' . "\n";
+                $content.=$startTag . "\n" . $startJQuery . "\n";
+                $content.='console.log("rendering snippet: ' . $snippet . '");' . "\n";
+                $content.='plenigo.renderSnippet("' . $genID . '","' . $snippet . '");' . "\n";
+                $content.=$endJQuery . "\n" . $endTag;
+            }
+        } else {
+            if (in_array($a['name'], $arr_types)) {
+                $genID = uniqid("snip");
+                $content.='<div id="' . $genID . '"></div>' . "\n";
+                $content.=$startTag . "\n" . $startJQuery . "\n";
+                $content.='console.log("rendering snippet: ' . $a['name'] . '");' . "\n";
+                $content.='plenigo.renderSnippet("' . $genID . '","' . $a['name'] . '");' . "\n";
+                $content.=$endJQuery . "\n" . $endTag;
+            }
+        }
+
+        return do_shortcode($content);
     }
 
     /**
