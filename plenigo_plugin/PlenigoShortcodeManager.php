@@ -3,6 +3,7 @@
 namespace plenigo_plugin;
 
 use \plenigo\services\UserService;
+use \plenigo\services\AppManagementService;
 use \plenigo\models\UserData;
 use \plenigo\internal\models\Address;
 
@@ -73,6 +74,7 @@ class PlenigoShortcodeManager {
         add_shortcode('pl_content_show', array($this, 'plenigo_handle_content_shortcode'));
         add_shortcode('pl_content_hide', array($this, 'plenigo_handle_content_shortcode'));
         add_shortcode('pl_user_profile', array($this, 'plenigo_handle_user_shortcode'));
+        add_shortcode('pl_mobile_admin', array($this, 'plenigo_handle_mobile_admin'));
 
         //TinyMCE
         // add new buttons
@@ -246,7 +248,7 @@ class PlenigoShortcodeManager {
             $content = "";
         }
 
-        $isBought = ($prodId !== "" && PlenigoSDKManager::get()->plenigo_bought(explode( ',', $prodId )));
+        $isBought = ($prodId !== "" && PlenigoSDKManager::get()->plenigo_bought(explode(',', $prodId)));
 
         if ($tag == 'pl_content_show') {
             if ($isBought) {
@@ -306,6 +308,156 @@ class PlenigoShortcodeManager {
         } else { // Else we show the shortcode contents to allow customize the logged out message
             return do_shortcode($content);
         }
+    }
+
+    /**
+     * Draws a table with all the product bought and their Mobile Application Id
+     * 
+     * @param  array  $atts    an associative array of attributes, or an empty string if no attributes are given
+     * @param  string $content the enclosed content (if the shortcode is used in its enclosing form)
+     * @param  string $tag     the shortcode tag, useful for shared callback functions
+     * @return string the contents of the shortcode or the mobile administration
+     */
+    public function plenigo_handle_mobile_admin($atts, $content = null, $tag = null) {
+        $a = shortcode_atts(array(
+            'class' => "",
+                ), $atts);
+        $loggedIn = UserService::isLoggedIn();
+        $notLoggedMesage = "The user is not logged in with plenigo";
+        //If it's logged in the we should the user profile template
+        if ($loggedIn) {
+            $user = PlenigoSDKManager::get()->getSessionValue("plenigo_user_data");
+            $userLoggedIn = UserService::getCustomerInfo();
+            if (!is_null($user) && !is_null($userLoggedIn)) {
+                return $this->render_mobile_admin($user, $a["class"]);
+            } else {
+                return '(' . __($notLoggedMesage, self::PLENIGO_SETTINGS_GROUP) . ')';
+            }
+        } else { // Else we show the shortcode contents to allow customize the logged out message
+            return '(' . __($notLoggedMesage, self::PLENIGO_SETTINGS_GROUP) . ')';
+        }
+    }
+
+    public function render_mobile_admin($user, $className) {
+        $res = '';
+        $customerID = $user->getCustomerId();
+        $arrProducts = UserService::getProductsBought($customerID);
+        $arrBought = array_merge($arrProducts['singleProducts'], $arrProducts['subscriptions']);
+
+        if (count($arrBought) > 0) {
+            $arrAppID = AppManagementService::getCustomerApps($customerID);
+            $hasModified = $this->add_del_mobile_aid($customerID,$arrAppID);
+            if($hasModified){ // Reload Array
+                $arrAppID = AppManagementService::getCustomerApps($customerID);
+            }
+            $res.= $this->add_mobile_admin_row(
+                    __("Product ID", self::PLENIGO_SETTINGS_GROUP), 
+                    __("Product Name", self::PLENIGO_SETTINGS_GROUP), 
+                    __("Mobile Code", self::PLENIGO_SETTINGS_GROUP), true, false);
+            foreach ($arrBought as $product) {
+                if (isset($product['status']) && $product['status'] != 'CANCELLED') { // Check for products not cancelled
+                    if(!isset($product['cancellationDate']) || 
+                            !is_string($product['cancellationDate']) || 
+                            !is_object($product['cancellationDate']) || 
+                            strlen($product['cancellationDate']) == 0){ // Check for subscriptions not cancelled
+                                $mobileAppIdCode = $this->get_mobile_admin_code($arrAppID,$customerID,$product['productId']);
+                                $res.= $this->add_mobile_admin_row(
+                                    $this->elipsize($product['productId']), 
+                                    $this->elipsize($product['title']), 
+                                    $mobileAppIdCode);
+                            }
+                }
+            }
+            $res.= $this->add_mobile_admin_row(null, null, null, false, true);
+        } else {
+            $res = '(' . __("The user hasn't bought any product yet.", self::PLENIGO_SETTINGS_GROUP) . ')';
+        }
+        return $res;
+    }
+
+    private function add_mobile_admin_row($idColumn, $nameColumn, $mobileColumn, $startTable = false, $endTable = false) {
+        $res = "";
+        $tdTag = "td";
+        if ($startTable) {
+            $res . '<table class="table table-bordered table-striped"><thead>';
+            $tdTag = "th";
+        }
+        if (is_null($idColumn)) {
+            $res.='<tr><' . $tdTag . '>' . $idColumn . '</' . $tdTag . '><' . $tdTag . '>' . $nameColumn . '</' . $tdTag . '><' . $tdTag . '>' . $mobileColumn . '</' . $tdTag . '></tr>';
+        }
+        if ($startTable) {
+            $res.='</thead><tbody>';
+        }
+        if ($endTable) {
+            $res.='</tbody></table>';
+        }
+        return $res;
+    }
+
+    private function get_mobile_admin_code($arrAppID, $customerID, $productId) {
+        $url = filter_var(urldecode($_SERVER['REQUEST_URI']), FILTER_SANITIZE_URL);
+        $query = urlencode("mobilePID=" . $productId . "&mobileCID=" . $customerID);
+        $urlRes = (stristr($url, '?') === FALSE) ? $url . '?' . $query : $url . '&' . $query;
+        $requestButton = '<a class="button button-secondary btn btn-success" href="' . $urlRes . '" >' . __("Request Mobile Code", self::PLENIGO_SETTINGS_GROUP) . '</a>';
+        $deleteButton = '<a class="button btn btn-danger" href="' . $urlRes . '&removeAID=true" >X</a>';
+        if (is_array($arrAppID) && count($arrAppID) > 0) {
+            $found = "";
+            foreach ($arrAppID as $mobileAID) {
+                if ($mobileAID->getProductId() == $productId && $mobileAID->getProductId() == $productId) {
+                    $aid = $mobileAID->getCustomerAppId();
+                    $found = $aid . " " . $deleteButton;
+                }
+            }
+            if (!is_null($found) && is_string($found) && strlen($found) > 0) {
+                return $found;
+            } else {
+                return $requestButton;
+            }
+        } else {
+            return $requestButton;
+        }
+    }
+
+    private function add_del_mobile_aid($customerID, $arrAppID = array()) {
+        $res = false;
+        $paramCID = filter_input(INPUT_GET, "mobileCID");
+        $paramPID = filter_input(INPUT_GET, "mobilePID");
+        $paramREM = filter_input(INPUT_GET, "removeAID", FILTER_VALIDATE_BOOLEAN);
+
+        if ($paramCID == $customerID) {
+            $found = false;
+            if ($paramREM) {
+                foreach ($arrAppID as $prodAID) {
+                    if ($prodAID->getCustomerId() == $customerID &&
+                            $prodAID->getProductId() == $paramPID) {
+                        AppManagementService::deleteCustomerApp($customerID, $prodAID->getCustomerAppId());
+                        $found=true;
+                        break;
+                    }
+                }
+                $res = $found;
+            } else {
+                foreach ($arrAppID as $prodAID) {
+                    if ($prodAID->getCustomerId() == $customerID &&
+                            $prodAID->getProductId() == $paramPID) {
+                        $found=true;
+                        break;
+                    }
+                }
+                if(!$found){
+                    $appToken = AppManagementService::requestAppToken($customerID, $paramPID, __("App ID Requested on Administration page", self::PLENIGO_SETTINGS_GROUP));
+                    if(!is_null($appToken)){
+                        $token = $appToken->getAppToken();
+                        $newAppId = AppManagementService::requestAppId($customerID, $token);
+                        if(is_null($newAppId)){
+                            $res = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $res;
     }
 
     /**
@@ -419,4 +571,7 @@ class PlenigoShortcodeManager {
         return $html;
     }
 
+    private function elipsize($strText) {
+        return strlen($strText) > 50 ? substr($strText,0,47)."..." : $strText;
+    }
 }
