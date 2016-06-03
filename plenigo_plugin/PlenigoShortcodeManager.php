@@ -338,16 +338,26 @@ class PlenigoShortcodeManager {
         }
     }
 
-    public function render_mobile_admin($user, $className) {
+    public function render_mobile_admin(UserData $user, $className) {
         $res = '';
-        $customerID = $user->getCustomerId();
+        $customerID = $user->getId();
         $arrProducts = UserService::getProductsBought($customerID);
-        $arrBought = array_merge($arrProducts['singleProducts'], $arrProducts['subscriptions']);
+        //FIXME TODO for subscriptions
+        $arrBought = array();
+        if (isset($arrProducts['singleProducts'])) {
+            $arrBought = $arrProducts['singleProducts'];
+        }
 
         if (count($arrBought) > 0) {
             $arrAppID = AppManagementService::getCustomerApps($customerID);
-            $hasModified = $this->add_del_mobile_aid($customerID,$arrAppID);
-            if($hasModified){ // Reload Array
+            try {
+                $hasModified = $this->add_del_mobile_aid($customerID, $arrAppID);
+            } catch (Exception $exc) {
+                $res.='(' . __("There was a problem on the creation/deletion of the App ID.", self::PLENIGO_SETTINGS_GROUP) . ')<br/>';
+                $hasModified = false;
+            }
+
+            if ($hasModified) { // Reload Array
                 $arrAppID = AppManagementService::getCustomerApps($customerID);
             }
             $res.= $this->add_mobile_admin_row(
@@ -355,20 +365,20 @@ class PlenigoShortcodeManager {
                     __("Product Name", self::PLENIGO_SETTINGS_GROUP), 
                     __("Mobile Code", self::PLENIGO_SETTINGS_GROUP), true, false);
             foreach ($arrBought as $product) {
-                if (isset($product['status']) && $product['status'] != 'CANCELLED') { // Check for products not cancelled
-                    if(!isset($product['cancellationDate']) || 
-                            !is_string($product['cancellationDate']) || 
-                            !is_object($product['cancellationDate']) || 
-                            strlen($product['cancellationDate']) == 0){ // Check for subscriptions not cancelled
-                                $mobileAppIdCode = $this->get_mobile_admin_code($arrAppID,$customerID,$product['productId']);
-                                $res.= $this->add_mobile_admin_row(
-                                    $this->elipsize($product['productId']), 
-                                    $this->elipsize($product['title']), 
-                                    $mobileAppIdCode);
-                            }
+                if (!property_exists($product, "status") || $product->status != 'CANCELLED') { // Check for products not cancelled
+                    plenigo_log_message("Product Check OK");
+                    if (!property_exists($product, "cancellationDate") ||
+                            !is_string($product->cancellationDate) ||
+                            strlen($product->cancellationDate) == 0) { // Check for subscriptions not cancelled
+                        plenigo_log_message("Subscription Check OK");
+                        $mobileAppIdCode = $this->get_mobile_admin_code($arrAppID, $customerID, $product->productId);
+                        $res.= $this->add_mobile_admin_row(
+                                $this->elipsize($product->productId), $this->elipsize($product->title), $mobileAppIdCode);
+                    }
                 }
             }
             $res.= $this->add_mobile_admin_row(null, null, null, false, true);
+            plenigo_log_message("Product Loop finished");
         } else {
             $res = '(' . __("The user hasn't bought any product yet.", self::PLENIGO_SETTINGS_GROUP) . ')';
         }
@@ -379,16 +389,18 @@ class PlenigoShortcodeManager {
         $res = "";
         $tdTag = "td";
         if ($startTable) {
-            $res . '<table class="table table-bordered table-striped"><thead>';
+            plenigo_log_message("Adding ROW First");
+            $res.= '<table class="table table-bordered table-striped"><thead>';
             $tdTag = "th";
         }
-        if (is_null($idColumn)) {
+        if (!is_null($idColumn)) {
             $res.='<tr><' . $tdTag . '>' . $idColumn . '</' . $tdTag . '><' . $tdTag . '>' . $nameColumn . '</' . $tdTag . '><' . $tdTag . '>' . $mobileColumn . '</' . $tdTag . '></tr>';
         }
         if ($startTable) {
             $res.='</thead><tbody>';
         }
         if ($endTable) {
+            plenigo_log_message("Adding ROW Last");
             $res.='</tbody></table>';
         }
         return $res;
@@ -396,7 +408,7 @@ class PlenigoShortcodeManager {
 
     private function get_mobile_admin_code($arrAppID, $customerID, $productId) {
         $url = filter_var(urldecode($_SERVER['REQUEST_URI']), FILTER_SANITIZE_URL);
-        $query = urlencode("mobilePID=" . $productId . "&mobileCID=" . $customerID);
+        $query = "mobilePID=" . $productId . "&mobileCID=" . $customerID;
         $urlRes = (stristr($url, '?') === FALSE) ? $url . '?' . $query : $url . '&' . $query;
         $requestButton = '<a class="button button-secondary btn btn-success" href="' . $urlRes . '" >' . __("Request Mobile Code", self::PLENIGO_SETTINGS_GROUP) . '</a>';
         $deleteButton = '<a class="button btn btn-danger" href="' . $urlRes . '&removeAID=true" >X</a>';
@@ -426,31 +438,36 @@ class PlenigoShortcodeManager {
         $paramREM = filter_input(INPUT_GET, "removeAID", FILTER_VALIDATE_BOOLEAN);
 
         if ($paramCID == $customerID) {
+            plenigo_log_message("Mobile App Editor: Customer check OK");
             $found = false;
             if ($paramREM) {
+                plenigo_log_message("Mobile App Editor: Removing current App ID");
                 foreach ($arrAppID as $prodAID) {
                     if ($prodAID->getCustomerId() == $customerID &&
                             $prodAID->getProductId() == $paramPID) {
                         AppManagementService::deleteCustomerApp($customerID, $prodAID->getCustomerAppId());
-                        $found=true;
+                        $found = true;
                         break;
                     }
                 }
                 $res = $found;
             } else {
+                plenigo_log_message("Mobile App Editor: Obtaining new App ID");
                 foreach ($arrAppID as $prodAID) {
                     if ($prodAID->getCustomerId() == $customerID &&
                             $prodAID->getProductId() == $paramPID) {
-                        $found=true;
+                        plenigo_log_message("Mobile App Editor: Cant'create App ID, already exists!");
+                        $found = true;
                         break;
                     }
                 }
-                if(!$found){
-                    $appToken = AppManagementService::requestAppToken($customerID, $paramPID, __("App ID Requested on Administration page", self::PLENIGO_SETTINGS_GROUP));
-                    if(!is_null($appToken)){
+                if (!$found) {
+                    plenigo_log_message("Mobile App Editor: Getting App Token CID=" . $customerID . " PID=" . $paramPID);
+                    $appToken = AppManagementService::requestAppToken($customerID, $paramPID, __("Web generated App ID", self::PLENIGO_SETTINGS_GROUP));
+                    if (!is_null($appToken)) {
                         $token = $appToken->getAppToken();
                         $newAppId = AppManagementService::requestAppId($customerID, $token);
-                        if(is_null($newAppId)){
+                        if (is_null($newAppId)) {
                             $res = true;
                         }
                     }
