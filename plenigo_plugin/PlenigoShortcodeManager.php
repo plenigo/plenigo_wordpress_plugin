@@ -406,6 +406,7 @@ class PlenigoShortcodeManager {
                 if ($mobileAID->getProductId() == $productId && $mobileAID->getProductId() == $productId) {
                     $aid = $mobileAID->getCustomerAppId();
                     $found = $aid . " " . $deleteButton;
+                    break;
                 }
             }
             if (!is_null($found) && is_string($found) && strlen($found) > 0) {
