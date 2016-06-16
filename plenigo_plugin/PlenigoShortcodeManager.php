@@ -61,6 +61,12 @@ class PlenigoShortcodeManager {
     private $options = null;
 
     /**
+     * A list of tokens that has just been created
+     * @var array
+     */
+    private $tokenList = array();
+
+    /**
      * Default constructor, called from the main php file
      */
     public function __construct() {
@@ -357,13 +363,13 @@ class PlenigoShortcodeManager {
                 $hasModified = false;
             }
 
-            if ($hasModified) { // Reload Array
-                $arrAppID = AppManagementService::getCustomerApps($customerID);
-            }
+            /* if ($hasModified) { // Reload Array
+              $res.='<script type="text/javascript">window.location.href="' . $_SESSION['plenigo_throwback_url'] . '";</script>';
+              return $res;
+              //$arrAppID = AppManagementService::getCustomerApps($customerID);
+              } */
             $res.= $this->add_mobile_admin_row(
-                    __("Product ID", self::PLENIGO_SETTINGS_GROUP), 
-                    __("Product Name", self::PLENIGO_SETTINGS_GROUP), 
-                    __("Mobile Code", self::PLENIGO_SETTINGS_GROUP), true, false);
+                    __("Product ID", self::PLENIGO_SETTINGS_GROUP), __("Product Name", self::PLENIGO_SETTINGS_GROUP), __("Mobile Code", self::PLENIGO_SETTINGS_GROUP), true, false);
             foreach ($arrBought as $product) {
                 if (!property_exists($product, "status") || $product->status != 'CANCELLED') { // Check for products not cancelled
                     plenigo_log_message("Product Check OK");
@@ -410,21 +416,25 @@ class PlenigoShortcodeManager {
         $url = filter_var(urldecode($_SERVER['REQUEST_URI']), FILTER_SANITIZE_URL);
         $query = "mobilePID=" . $productId . "&mobileCID=" . $customerID;
         $urlRes = (stristr($url, '?') === FALSE) ? $url . '?' . $query : $url . '&' . $query;
-        $requestButton = '<a class="button button-secondary btn btn-success" href="' . $urlRes . '" >' . __("Request Mobile Code", self::PLENIGO_SETTINGS_GROUP) . '</a>';
-        $deleteButton = '<a class="button btn btn-danger" href="' . $urlRes . '&removeAID=true" >X</a>';
+        $requestButton = '<a class="button button-secondary btn btn-success" href="' . $urlRes . '" >' . __("Create", self::PLENIGO_SETTINGS_GROUP) . '</a>';
+        $deleteButton = '<a class="button btn btn-danger" href="' . $urlRes . '&removeAID=true" >' . __("Remove", self::PLENIGO_SETTINGS_GROUP) . '</a>';
         if (is_array($arrAppID) && count($arrAppID) > 0) {
             $found = "";
             foreach ($arrAppID as $mobileAID) {
                 if ($mobileAID->getProductId() == $productId && $mobileAID->getProductId() == $productId) {
-                    $aid = $mobileAID->getCustomerAppId();
-                    $found = $aid . " " . $deleteButton;
+                    if (isset($this->tokenList[$productId])) {
+                        $found = '<pre>' . $this->tokenList[$productId] . '</pre>';
+                    } else {
+                        $description = $mobileAID->getDescription();
+                        $found = __("Created for", self::PLENIGO_SETTINGS_GROUP).": ".$description . " " . $deleteButton;
+                    }
                     break;
                 }
             }
             if (!is_null($found) && is_string($found) && strlen($found) > 0) {
                 return $found;
             } else {
-                return $requestButton;
+                return __("Create for", self::PLENIGO_SETTINGS_GROUP).": " . $requestButton;
             }
         } else {
             return $requestButton;
@@ -466,10 +476,11 @@ class PlenigoShortcodeManager {
                     $appToken = AppManagementService::requestAppToken($customerID, $paramPID, __("Web generated App ID", self::PLENIGO_SETTINGS_GROUP));
                     if (!is_null($appToken)) {
                         $token = $appToken->getAppToken();
-                        $newAppId = AppManagementService::requestAppId($customerID, $token);
-                        if (is_null($newAppId)) {
-                            $res = true;
-                        }
+                        plenigo_log_message("Mobile App Editor: Generated Token:" . $token);
+                        $this->tokenList[$paramPID] = $token;
+                        $res = true;
+                    } else {
+                        plenigo_log_message("Mobile App Editor: Can't create App ID (no token)");
                     }
                 }
             }
@@ -590,6 +601,7 @@ class PlenigoShortcodeManager {
     }
 
     private function elipsize($strText) {
-        return strlen($strText) > 50 ? substr($strText,0,47)."..." : $strText;
+        return strlen($strText) > 50 ? substr($strText, 0, 47) . "..." : $strText;
     }
+
 }

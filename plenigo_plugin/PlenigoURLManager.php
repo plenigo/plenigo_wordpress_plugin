@@ -32,7 +32,7 @@ class PlenigoURLManager {
     private $forbiddenParams = array(
         "state", "code", "plppsuccess", "plppfailure", "token", "PayerID", "plsofortsuccess", "plsofortfailure", "plpfsuccess", "plpffailure", "LANGUAGE", "OrderID",
         "CN", "NCErrorCN", "CardNo", "Brand", "NCErrorCardNo", "CVC", "NCErrorCVC", "ED", "NCErrorED", "NCError", "Alias", "status", "SHASign",
-        "ALIASPERSISTEDAFTERUSE");
+        "ALIASPERSISTEDAFTERUSE","mobileCID","mobilePID","removeAID");
 
     /**
      * Holds the plugin configuration options
