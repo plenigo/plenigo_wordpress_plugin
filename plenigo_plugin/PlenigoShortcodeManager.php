@@ -91,6 +91,9 @@ class PlenigoShortcodeManager {
         // Enqueue TinyMCE CSS
         add_action('admin_enqueue_scripts', array($this, 'add_scripts'));
         add_action('admin_init', array($this, 'plenigo_add_editor_styles'));
+
+        // Mobile Token Scripts
+        add_action('wp_enqueue_scripts', array($this, 'add_mtoken_scripts'));
     }
 
     /**
@@ -325,23 +328,36 @@ class PlenigoShortcodeManager {
      * @return string the contents of the shortcode or the mobile administration
      */
     public function plenigo_handle_mobile_admin($atts, $content = null, $tag = null) {
+        plenigo_log_message("Plenigo Mobile Token Admin: START");
         $a = shortcode_atts(array(
             'class' => "",
                 ), $atts);
+        plenigo_log_message("Plenigo Mobile Token Admin: CHECKING LOGIN");
         $loggedIn = UserService::isLoggedIn();
         $notLoggedMesage = "The user is not logged in with plenigo";
         //If it's logged in the we should the user profile template
         if ($loggedIn) {
+            plenigo_log_message("Plenigo Mobile Token Admin: LOGGED IN");
             $user = PlenigoSDKManager::get()->getSessionValue("plenigo_user_data");
             $userLoggedIn = UserService::getCustomerInfo();
             if (!is_null($user) && !is_null($userLoggedIn)) {
+                plenigo_log_message("Plenigo Mobile Token Admin: RENDERING");
                 return $this->render_mobile_admin($user, $a["class"]);
             } else {
+                plenigo_log_message("Plenigo Mobile Token Admin: NOT PLENIGO?");
                 return '(' . __($notLoggedMesage, self::PLENIGO_SETTINGS_GROUP) . ')';
             }
         } else { // Else we show the shortcode contents to allow customize the logged out message
+            plenigo_log_message("Plenigo Mobile Token Admin: NOT LOGGED IN");
             return '(' . __($notLoggedMesage, self::PLENIGO_SETTINGS_GROUP) . ')';
         }
+        plenigo_log_message("Plenigo Mobile Token Admin: END");
+    }
+
+    public function add_mtoken_scripts() {
+        plenigo_log_message("Plenigo Mobile Token Admin: REGISTER SCRIPT");
+        wp_register_script('plenigo-mtoken-js', plugins_url('plenigo_js/pl_mtoken.js', dirname(__FILE__)), array('jquery'), '4', true);
+        wp_enqueue_script('plenigo-mtoken-js');
     }
 
     public function render_mobile_admin(UserData $user, $className) {
@@ -413,37 +429,36 @@ class PlenigoShortcodeManager {
     }
 
     private function get_mobile_admin_code($arrAppID, $customerID, $productId) {
-        $url = filter_var(urldecode($_SERVER['REQUEST_URI']), FILTER_SANITIZE_URL);
-        $query = "mobilePID=" . $productId . "&mobileCID=" . $customerID;
-        $urlRes = (stristr($url, '?') === FALSE) ? $url . '?' . $query : $url . '&' . $query;
-        $requestButton = '<a class="button button-secondary btn btn-success" href="' . $urlRes . '" >' . __("Create", self::PLENIGO_SETTINGS_GROUP) . '</a>';
-        $deleteButton = '<a class="button btn btn-danger" href="' . $urlRes . '&removeAID=true" >' . __("Remove", self::PLENIGO_SETTINGS_GROUP) . '</a>';
+        $requestButton = '<button class="btn btn-success" type="button" onclick="plenigo_create_mtoken(\'' . $productId . '\',\'' . $customerID . '\');return false;">' . __("Create", self::PLENIGO_SETTINGS_GROUP) . '</button>';
+        $deleteButton = '<button class="btn btn-danger" type="button" onclick="plenigo_remove_mtoken(\'' . $productId . '\',\'' . $customerID . '\');return false;">' . __("Remove", self::PLENIGO_SETTINGS_GROUP) . '</button>';
+        $descInputName = 'plenigo_' . $productId . '_desc';
+        $descInput = '<input type="text" class="form-control" id="' . $descInputName . '" maxlength="30" size="25" name="' . $descInputName . '" placeholder="' . __("Device Description", self::PLENIGO_SETTINGS_GROUP) . '"/>';
+        $found = "";
         if (is_array($arrAppID) && count($arrAppID) > 0) {
-            $found = "";
             foreach ($arrAppID as $mobileAID) {
                 if ($mobileAID->getProductId() == $productId && $mobileAID->getProductId() == $productId) {
-                    if (isset($this->tokenList[$productId])) {
-                        $found = '<pre>' . $this->tokenList[$productId] . '</pre>';
-                    } else {
-                        $description = $mobileAID->getDescription();
-                        $found = __("Created for", self::PLENIGO_SETTINGS_GROUP).": ".$description . " " . $deleteButton;
-                    }
+                    $description = $mobileAID->getDescription();
+                    $found = __("Created for", self::PLENIGO_SETTINGS_GROUP) . ": " . $description . " " . $deleteButton;
                     break;
                 }
             }
-            if (!is_null($found) && is_string($found) && strlen($found) > 0) {
-                return $found;
-            } else {
-                return __("Create for", self::PLENIGO_SETTINGS_GROUP).": " . $requestButton;
-            }
+        }
+        if (!is_null($found) && is_string($found) && strlen($found) > 0) {
+            return $found;
         } else {
-            return $requestButton;
+            plenigo_log_message("Lookin in:" . print_r($this->tokenList, true) . " for key:" . $productId);
+            if (isset($this->tokenList[$productId])) {
+                return __("Your Token", self::PLENIGO_SETTINGS_GROUP) .': <input type="text" class="form-control" readonly="true" value="' . $this->tokenList[$productId] . '"/> ' . $deleteButton;
+            } else {
+                return __("Create for", self::PLENIGO_SETTINGS_GROUP) . ": " . $descInput . " " . $requestButton;
+            }
         }
     }
 
     private function add_del_mobile_aid($customerID, $arrAppID = array()) {
         $res = false;
         $paramCID = filter_input(INPUT_GET, "mobileCID");
+        $paramDEV = filter_input(INPUT_GET, "mobileDEV",FILTER_SANITIZE_SPECIAL_CHARS);
         $paramPID = filter_input(INPUT_GET, "mobilePID");
         $paramREM = filter_input(INPUT_GET, "removeAID", FILTER_VALIDATE_BOOLEAN);
 
@@ -473,10 +488,10 @@ class PlenigoShortcodeManager {
                 }
                 if (!$found) {
                     plenigo_log_message("Mobile App Editor: Getting App Token CID=" . $customerID . " PID=" . $paramPID);
-                    $appToken = AppManagementService::requestAppToken($customerID, $paramPID, __("Web generated App ID", self::PLENIGO_SETTINGS_GROUP));
+                    $appToken = AppManagementService::requestAppToken($customerID, $paramPID, $paramDEV);
                     if (!is_null($appToken)) {
                         $token = $appToken->getAppToken();
-                        plenigo_log_message("Mobile App Editor: Generated Token:" . $token);
+                        plenigo_log_message("Mobile App Editor: Generated Token: " . $token);
                         $this->tokenList[$paramPID] = $token;
                         $res = true;
                     } else {
