@@ -365,11 +365,11 @@ class PlenigoShortcodeManager {
         $customerID = $user->getId();
         $arrProducts = UserService::getProductsBought($customerID);
         $arrBought = array();
-        if (isset($arrProducts['singleProducts'])) {
+        if (isset($arrProducts['singleProducts']) && count($arrProducts['singleProducts']) > 0) {
             $arrTmpProd = $arrProducts['singleProducts'];
             $arrBought = array_merge($arrBought, $arrTmpProd);
         }
-        if (isset($arrProducts['subscription'])) {
+        if (isset($arrProducts['subscription']) && count($arrProducts['subscription']) > 0) {
             $arrTmpSubs = $arrProducts['subscription'];
             $arrBought = array_merge($arrBought, $arrTmpSubs);
         }
@@ -383,11 +383,6 @@ class PlenigoShortcodeManager {
                 $hasModified = false;
             }
 
-            /* if ($hasModified) { // Reload Array
-              $res.='<script type="text/javascript">window.location.href="' . $_SESSION['plenigo_throwback_url'] . '";</script>';
-              return $res;
-              //$arrAppID = AppManagementService::getCustomerApps($customerID);
-              } */
             $res.= $this->add_mobile_admin_row(
                     __("Product ID", self::PLENIGO_SETTINGS_GROUP), __("Product Name", self::PLENIGO_SETTINGS_GROUP), __("Mobile Code", self::PLENIGO_SETTINGS_GROUP), true, false);
             foreach ($arrBought as $product) {
