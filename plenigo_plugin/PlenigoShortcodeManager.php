@@ -364,10 +364,14 @@ class PlenigoShortcodeManager {
         $res = '';
         $customerID = $user->getId();
         $arrProducts = UserService::getProductsBought($customerID);
-        //FIXME TODO for subscriptions
         $arrBought = array();
         if (isset($arrProducts['singleProducts'])) {
-            $arrBought = $arrProducts['singleProducts'];
+            $arrTmpProd = $arrProducts['singleProducts'];
+            $arrBought = array_merge($arrBought, $arrTmpProd);
+        }
+        if (isset($arrProducts['subscription'])) {
+            $arrTmpSubs = $arrProducts['subscription'];
+            $arrBought = array_merge($arrBought, $arrTmpSubs);
         }
 
         if (count($arrBought) > 0) {
@@ -448,7 +452,7 @@ class PlenigoShortcodeManager {
         } else {
             plenigo_log_message("Lookin in:" . print_r($this->tokenList, true) . " for key:" . $productId);
             if (isset($this->tokenList[$productId])) {
-                return __("Your Token", self::PLENIGO_SETTINGS_GROUP) .': <input type="text" class="form-control" readonly="true" value="' . $this->tokenList[$productId] . '"/> ' . $deleteButton;
+                return __("Your Token", self::PLENIGO_SETTINGS_GROUP) . ': <input type="text" class="form-control" readonly="true" value="' . $this->tokenList[$productId] . '"/> ' . $deleteButton;
             } else {
                 return __("Create for", self::PLENIGO_SETTINGS_GROUP) . ": " . $descInput . " " . $requestButton;
             }
@@ -458,7 +462,7 @@ class PlenigoShortcodeManager {
     private function add_del_mobile_aid($customerID, $arrAppID = array()) {
         $res = false;
         $paramCID = filter_input(INPUT_GET, "mobileCID");
-        $paramDEV = filter_input(INPUT_GET, "mobileDEV",FILTER_SANITIZE_SPECIAL_CHARS);
+        $paramDEV = filter_input(INPUT_GET, "mobileDEV", FILTER_SANITIZE_SPECIAL_CHARS);
         $paramPID = filter_input(INPUT_GET, "mobilePID");
         $paramREM = filter_input(INPUT_GET, "removeAID", FILTER_VALIDATE_BOOLEAN);
 
