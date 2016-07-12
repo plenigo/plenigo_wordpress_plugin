@@ -383,8 +383,8 @@ class PlenigoShortcodeManager {
                 $res.='(' . __("There was a problem on the creation/deletion of the App ID.", self::PLENIGO_SETTINGS_GROUP) . ')<br/>';
                 $hasModified = false;
             }
-
-            $res.= $this->add_mobile_admin_row(
+            $prodCount = 0;
+            $prodHeader = $this->add_mobile_admin_row(
                     __("Product ID", self::PLENIGO_SETTINGS_GROUP), __("Product Name", self::PLENIGO_SETTINGS_GROUP), __("Mobile Code", self::PLENIGO_SETTINGS_GROUP), true, false);
             foreach ($arrBought as $product) {
                 if (!property_exists($product, "status") || $product->status != 'CANCELLED') { // Check for products not cancelled
@@ -393,15 +393,35 @@ class PlenigoShortcodeManager {
                             !is_string($product->cancellationDate) ||
                             strlen($product->cancellationDate) == 0) { // Check for subscriptions not cancelled
                         plenigo_log_message("Subscription Check OK");
-                        $mobileAppIdCode = $this->get_mobile_admin_code($arrAppID, $customerID, $product->productId);
-                        $res.= $this->add_mobile_admin_row(
-                                $this->elipsize($product->productId), $this->elipsize($product->title), $mobileAppIdCode);
+                        $endDateOK = false;
+                        if (property_exists($product, "endDate")) {
+                            $endDate = strtotime($product->endDate);
+                            $today = strtotime("now");
+                            if ($today < $endDate) {
+                                plenigo_log_message("Subscription Period Check OK");
+                                $endDateOK = true;
+                            }
+                        }
+                        if ($endDateOK) {
+                            plenigo_log_message("Subscription Check OK");
+                            $mobileAppIdCode = $this->get_mobile_admin_code($arrAppID, $customerID, $product->productId);
+                            $res.= $this->add_mobile_admin_row(
+                                    $this->elipsize($product->productId), $this->elipsize($product->title), $mobileAppIdCode);
+                            $prodCount++;
+                        }
                     }
                 }
             }
             $res.= $this->add_mobile_admin_row(null, null, null, false, true);
+
+            if ($prodCount > 0) {
+                $res = $prodHeader . $res;
+            } else {
+                $res.='(' . __("There are no products bought available for use", self::PLENIGO_SETTINGS_GROUP) . ')<br/>';
+            }
+
             //Add javascript message, with translation support
-            $res.= "\n".'<script>var pl_mtoken_remove_msg = "'.__("Are you sure you want to remove this App ID?", self::PLENIGO_SETTINGS_GROUP).'";</script>';
+            $res.= "\n" . '<script>var pl_mtoken_remove_msg = "' . __("Are you sure you want to remove this App ID?", self::PLENIGO_SETTINGS_GROUP) . '";</script>';
             plenigo_log_message("Product Loop finished");
         } else {
             $res = '(' . __("The user hasn't bought any product yet.", self::PLENIGO_SETTINGS_GROUP) . ')';
@@ -441,9 +461,9 @@ class PlenigoShortcodeManager {
                 if ($mobileAID->getProductId() == $productId && $mobileAID->getProductId() == $productId) {
                     $description = $mobileAID->getDescription();
                     plenigo_log_message("Lookin in:" . print_r($this->delTokenList, true) . " for key:" . $productId);
-                    if(isset($this->delTokenList[$productId])){
-                        $found =  __("Create for", self::PLENIGO_SETTINGS_GROUP) . ": " . $descInput . " " . $requestButton;
-                    }else{
+                    if (isset($this->delTokenList[$productId])) {
+                        $found = __("Create for", self::PLENIGO_SETTINGS_GROUP) . ": " . $descInput . " " . $requestButton;
+                    } else {
                         $found = __("Created for", self::PLENIGO_SETTINGS_GROUP) . ": " . $description . " " . $deleteButton;
                     }
                     break;
