@@ -65,6 +65,7 @@ class PlenigoShortcodeManager {
      * @var array
      */
     private $tokenList = array();
+    private $delTokenList = array();
 
     /**
      * Default constructor, called from the main php file
@@ -399,6 +400,8 @@ class PlenigoShortcodeManager {
                 }
             }
             $res.= $this->add_mobile_admin_row(null, null, null, false, true);
+            //Add javascript message, with translation support
+            $res.= "\n".'<script>var pl_mtoken_remove_msg = "'.__("Are you sure you want to remove this App ID?", self::PLENIGO_SETTINGS_GROUP).'";</script>';
             plenigo_log_message("Product Loop finished");
         } else {
             $res = '(' . __("The user hasn't bought any product yet.", self::PLENIGO_SETTINGS_GROUP) . ')';
@@ -437,7 +440,12 @@ class PlenigoShortcodeManager {
             foreach ($arrAppID as $mobileAID) {
                 if ($mobileAID->getProductId() == $productId && $mobileAID->getProductId() == $productId) {
                     $description = $mobileAID->getDescription();
-                    $found = __("Created for", self::PLENIGO_SETTINGS_GROUP) . ": " . $description . " " . $deleteButton;
+                    plenigo_log_message("Lookin in:" . print_r($this->delTokenList, true) . " for key:" . $productId);
+                    if(isset($this->delTokenList[$productId])){
+                        $found =  __("Create for", self::PLENIGO_SETTINGS_GROUP) . ": " . $descInput . " " . $requestButton;
+                    }else{
+                        $found = __("Created for", self::PLENIGO_SETTINGS_GROUP) . ": " . $description . " " . $deleteButton;
+                    }
                     break;
                 }
             }
@@ -470,6 +478,7 @@ class PlenigoShortcodeManager {
                     if ($prodAID->getCustomerId() == $customerID &&
                             $prodAID->getProductId() == $paramPID) {
                         AppManagementService::deleteCustomerApp($customerID, $prodAID->getCustomerAppId());
+                        $this->delTokenList[$paramPID] = true;
                         $found = true;
                         break;
                     }

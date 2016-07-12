@@ -1,4 +1,5 @@
 var pl_mtoken_loaded = false;
+var pl_mtoken_remove_msg = pl_mtoken_remove_msg || "Are you sure you want to remove this App ID?";
 jQuery(document).ready(function () {
     pl_mtoken_loaded = true;
 });
@@ -23,7 +24,7 @@ function plenigo_create_mtoken(product, customer) {
 function plenigo_remove_mtoken(product, customer) {
     if (pl_mtoken_loaded) {
         var address = plenigo_mtoken_address(product, customer);
-        if(confirm()){
+        if(confirm(pl_mtoken_remove_msg)){
             address += "&removeAID=true";
             window.location.href = address;
         }
