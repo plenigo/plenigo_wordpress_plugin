@@ -21,11 +21,11 @@ function plenigo_create_mtoken(product, customer) {
     }
 }
 
-function plenigo_remove_mtoken(product, customer) {
+function plenigo_remove_mtoken(product, customer, appID) {
     if (pl_mtoken_loaded) {
         var address = plenigo_mtoken_address(product, customer);
         if(confirm(pl_mtoken_remove_msg)){
-            address += "&removeAID=true";
+            address += "&removeAID="+appID;
             window.location.href = address;
         }
     }
