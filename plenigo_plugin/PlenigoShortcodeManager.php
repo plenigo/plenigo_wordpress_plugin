@@ -486,20 +486,18 @@ class PlenigoShortcodeManager {
         $res = "";
         if (is_array($arrAppID) && count($arrAppID) > 0) {
             foreach ($arrAppID as $currAID => $currAIDdata) {
-                if ($res !== "") {
-                    $res.="</br>";
-                }
+                $res.='<div class="plenigoMToken">';
                 if ($currAIDdata["new"]) {
                     $res .= __("Your Token", self::PLENIGO_SETTINGS_GROUP) . ': <input type="text" class="form-control" readonly="true" value="' . $currAID . '"/> ' . $deleteButton;
                 } else {
                     $res .= __("Created for", self::PLENIGO_SETTINGS_GROUP) . ": " . $currAIDdata["desc"] . " " . str_replace("[REP-APP-ID]", $currAID, $deleteButton);
                 }
+                $res.='</div>';
             }
         }
-        if ($res !== "") {
-            $res.="</br>";
-        }
+        $res.='<div class="plenigoMToken plenigoTokenCreate">';
         $res.= __("Create for", self::PLENIGO_SETTINGS_GROUP) . ": " . $descInput . " " . $requestButton;
+        $res.='</div>';
         return $res;
     }
 
