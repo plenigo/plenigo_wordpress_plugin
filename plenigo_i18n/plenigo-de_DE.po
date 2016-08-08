@@ -3,9 +3,9 @@ msgstr ""
 "Project-Id-Version: plenigo_plugin 1.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-16 15:18-0300\n"
-"PO-Revision-Date: Mon Jan 18 2016 08:52:29 GMT-0300 (Hora estándar de "
+"PO-Revision-Date: Thu Jul 28 2016 11:10:07 GMT-0300 (Hora estándar de "
 "Argentina)\n"
-"Last-Translator: SebaSOFT <sdieguez@okkralabs.com>\n"
+"Last-Translator: admin <info@plenigo.com>\n"
 "Language-Team: \n"
 "Language: German\n"
 "Plural-Forms: nplurals=2; plural=n != 1\n"
@@ -23,6 +23,9 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPath-1: ./plenigo_plugin\n"
 "X-Loco-Target-Locale: de_DE"
+
+msgid "The user is not logged in with plenigo"
+msgstr "Der Nutzer ist nicht mit plenigo eingeloggt"
 
 #. Name of the plugin
 msgid "Plenigo"
@@ -46,257 +49,118 @@ msgstr ""
 msgid "https://www.plenigo.com"
 msgstr "https://www.plenigo.com"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:185
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:197
 msgid "Failed Payments"
 msgstr "Gescheiterte Zahlungen"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:325 ..
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:432
+msgid "Could not create or delete App ID."
+msgstr "Keine Möglichkeit eine App ID zu erstellen oder löschen"
+
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:438
+msgid "Product ID"
+msgstr "Produkt ID"
+
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:439
+msgid "Product Name"
+msgstr "Produkt Name"
+
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:440
+msgid "Mobile Code"
+msgstr "Mobiler Code"
+
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:452
+msgid "There are no products bought available for use"
+msgstr "Es stehen keine gekauften Produkte zur Nutzung zur Verfügung"
+
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:455
+msgid "Are you sure you want to remove this App ID?"
+msgstr "Sind Sie sich sicher, dass Sie diese App ID löschen wollen?"
+
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:482
+msgid "Create"
+msgstr "Erstellen"
+
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:483
+msgid "Remove"
+msgstr "Entfernen"
+
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:485
+msgid "Device Description"
+msgstr "Geräte Beschreibung"
+
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:491
+msgid "Your Token"
+msgstr "Ihr Token"
+
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:493
+msgid "Created for"
+msgstr "Erstellt für"
+
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:499
+msgid "Create for"
+msgstr "Erstellen für"
+
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:553 ..
 #: plenigo_plugin/PlenigoContentManager.php:801
 msgid "Choose payment!"
 msgstr "Zahlungsmethode wählen!"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:389
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:617
 msgid "User Profile"
 msgstr "Benutzerprofil"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:390
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:618
 msgid "Customer ID:"
 msgstr "Kunden ID:"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:391
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:619
 msgid "Email Address:"
 msgstr "E-Mail:"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:392
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:620
 msgid "User Name:"
 msgstr "Benutzername:"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:393
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:621
 msgid "Gender:"
 msgstr "Anrede:"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:394
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:622
 msgid "Full Name:"
 msgstr "Vollständiger Name:"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:395
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:623
 msgid "First Name:"
 msgstr "Vorname:"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:396
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:624
 msgid "Last Name:"
 msgstr "Nachname:"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:397
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:625
 msgid "Street Address:"
 msgstr "Straße und Nummer:"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:398
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:626
 msgid "Additional Information:"
 msgstr "Zusatzinformationen:"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:399
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:627
 msgid "ZIP Code:"
 msgstr "PLZ:"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:400
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:628
 msgid "City:"
 msgstr "Ort:"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:401
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:629
 msgid "Country:"
 msgstr "Land:"
 
-#: ../plenigo_plugin/PlenigoShortcodeManager.php:402
+#: ../plenigo_plugin/PlenigoShortcodeManager.php:630
 msgid "Edit this profile at plenigo"
 msgstr "Profil bei plenigo bearbeiten"
-
-#. Base ID
-#: ../plenigo_plugin/PlenigoLoginWidget.php:55
-msgid "Plenigo login"
-msgstr "plenigo Anmelden"
-
-#: ../plenigo_plugin/PlenigoLoginWidget.php:114
-msgid "New title"
-msgstr "Neuer Titel"
-
-#: ../plenigo_plugin/PlenigoLoginWidget.php:115 ..
-#: plenigo_plugin/PlenigoLoginWidget.php:132
-msgid "Username:"
-msgstr "Benutzer"
-
-#: ../plenigo_plugin/PlenigoLoginWidget.php:116 ..
-#: plenigo_plugin/PlenigoLoginWidget.php:136
-msgid "Password:"
-msgstr "Passwort"
-
-#: ../plenigo_plugin/PlenigoLoginWidget.php:117 ..
-#: plenigo_plugin/PlenigoLoginWidget.php:140
-msgid "Forgot password"
-msgstr "Passwort vergessen"
-
-#: ../plenigo_plugin/PlenigoLoginWidget.php:118 ..
-#: plenigo_plugin/PlenigoLoginWidget.php:144
-msgid "WordPress Login"
-msgstr "WordPress Login"
-
-#: ../plenigo_plugin/PlenigoLoginWidget.php:119 ..
-#: plenigo_plugin/PlenigoLoginWidget.php:148
-msgid "Plenigo Login"
-msgstr "Plenigo Login"
-
-#: ../plenigo_plugin/PlenigoLoginWidget.php:120
-msgid "Welcome, "
-msgstr "Willkommen"
-
-#: ../plenigo_plugin/PlenigoLoginWidget.php:121 ..
-#: plenigo_plugin/PlenigoLoginWidget.php:161
-msgid "Edit Profile"
-msgstr "Profil bearbeiten"
-
-#: ../plenigo_plugin/PlenigoLoginWidget.php:122 ..
-#: plenigo_plugin/PlenigoLoginWidget.php:165
-msgid "Logout"
-msgstr "Logout"
-
-#: ../plenigo_plugin/PlenigoLoginWidget.php:125
-msgid "Title:"
-msgstr "Titel:"
-
-#: ../plenigo_plugin/PlenigoLoginWidget.php:157
-msgid "Welcome, <name>"
-msgstr "Willkommen, <name>"
-
-#: ../plenigo_plugin/PlenigoLoginManager.php:293
-msgid "Mr./Mis"
-msgstr "Herr / Frau:"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:181
-msgid "Plenigo Help"
-msgstr "Plenigo Hilfe"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:195
-msgid "plenigo OAuth Help"
-msgstr "plenigo OAuth Hilfe"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:196
-msgid "In order to configure plenigo OAuth Login: "
-msgstr "Um den plenigo OAuth-Login zu konfigurieren:"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:197
-msgid ""
-"1 - Add Login redirect URL to plenigo (Usually: <b>{YOUR BLOG URL}/wp-login."
-"php</b>) "
-msgstr ""
-"1 - Fügen Sie die Umleitungs-URL zu plenigo hinzu (In der Regel: <b>(Die URL "
-"Ihres Blogs)/wp-login.php</b>) "
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:198 ..
-#: plenigo_plugin/PlenigoSettingsPage.php:204
-msgid "clicking this link"
-msgstr "klicken Sie diesen Link"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:200
-msgid "2 - Fill the same URL in the <b>OAuth redirect URL</b> below"
-msgstr "2 - Fügen Sie die selbe URL in die <b>OAuth redirect URL</b> ein"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:201
-msgid ""
-"3 - (Optional) Fill the URL in the <b>URL After Login</b> for login "
-"redirection"
-msgstr ""
-"3 - (Optional) Hinterlegen Sie eine URL in <b>URL nach Anmeldung</b> für "
-"eine Umleitung nach dem Login"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:202
-msgid ""
-"4 - Enable the plenigo Login clicking <b>Use plenigo Authentication "
-"Provider</b> "
-msgstr ""
-"4 - Aktivieren Sie die den plenigo Login mit einem Klick auf <b> plenigo als "
-"Authentifizierungsanbieter verwenden</b>"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:203
-msgid "5 - Put the plenigo Login Widget in a widget area of the site "
-msgstr "5 - Fügen Sie das plenigo Login-Widget in den Widget Bereich der Website ein"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:205
-msgid "6 - Enjoy logging in with plenigo! "
-msgstr "6 - Genießen die Anmeldung mit plenigo!"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:223
-msgid "Loading..."
-msgstr "Wird geladen..."
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:231 ..
-#: plenigo_plugin/PlenigoSettingsPage.php:382
-msgid "General"
-msgstr "Allgemein"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:235 ..
-#: plenigo_plugin/PlenigoSettingsPage.php:394
-msgid "OAuth Login"
-msgstr "OAuth Login"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:239
-msgid "Premium Content"
-msgstr "Premium-Inhalte"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:243
-msgid "Metered Views"
-msgstr "Freiansichten"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:247 ..
-#: plenigo_plugin/PlenigoSettingsPage.php:427
-msgid "Curtain Customization"
-msgstr "Vorhang individuell gestaltet"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:251
-msgid "WooCommerce"
-msgstr "WooCommerce"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:255
-msgid "Advanced"
-msgstr "Erweiterte"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:365
-msgid "Plenigo settings saved!"
-msgstr "Plenigo Einstellungen wurden gespeichert!"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:368
-msgid "Data can not be empty"
-msgstr "Daten dürfen nichte leer sein"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:405
-msgid "Premium Content settings"
-msgstr "Inhaltseinstellungen"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:416
-msgid "Metered Views settings"
-msgstr "Einstellungen für Freiansichten"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:437
-msgid "Woo Commerce"
-msgstr "WooCommerce"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:449
-msgid "Advanced settings"
-msgstr "Erweiterte Einstellungen"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:476
-#, php-format
-msgid "Validation failed: %s"
-msgstr "Validierung fehlgeschlagen: %s"
-
-#: ../plenigo_plugin/PlenigoSettingsPage.php:492
-#, php-format
-msgid "Setting has been set to default value: %s"
-msgstr "Einstellung wurde auf den Standardwert gesetzt: %s"
-
-#: ../plenigo_plugin/PlenigoContentManager.php:1010 ..
-#: plenigo_plugin/settings/SettingNoscriptTitle.php:46
-msgid "You need JavaScript"
-msgstr "Sie benötigen JavaScript"
 
 #: ../plenigo_plugin/settings/SettingUseLogin.php:61
 msgid "Use OAuth Login"
@@ -496,6 +360,11 @@ msgstr "LOGIN Button Text"
 msgid "Curtain Button Scheme"
 msgstr "Curtain Button Optionen"
 
+#: ../plenigo_plugin/settings/SettingNoscriptTitle.php:46 ..
+#: plenigo_plugin/PlenigoContentManager.php:1010
+msgid "You need JavaScript"
+msgstr "Sie benötigen JavaScript"
+
 #: ../plenigo_plugin/settings/SettingNoscriptTitle.php:53
 msgid "no-Javascript overlay Title"
 msgstr "kein Javascript Overlay-Titel"
@@ -592,6 +461,66 @@ msgstr "OAuthUmleitung URL"
 msgid "http://"
 msgstr "http://"
 
+#. Base ID
+#: ../plenigo_plugin/PlenigoLoginWidget.php:55
+msgid "Plenigo login"
+msgstr "plenigo Anmelden"
+
+#: ../plenigo_plugin/PlenigoLoginWidget.php:114
+msgid "New title"
+msgstr "Neuer Titel"
+
+#: ../plenigo_plugin/PlenigoLoginWidget.php:115 ..
+#: plenigo_plugin/PlenigoLoginWidget.php:132
+msgid "Username:"
+msgstr "Benutzer"
+
+#: ../plenigo_plugin/PlenigoLoginWidget.php:116 ..
+#: plenigo_plugin/PlenigoLoginWidget.php:136
+msgid "Password:"
+msgstr "Passwort"
+
+#: ../plenigo_plugin/PlenigoLoginWidget.php:117 ..
+#: plenigo_plugin/PlenigoLoginWidget.php:140
+msgid "Forgot password"
+msgstr "Passwort vergessen"
+
+#: ../plenigo_plugin/PlenigoLoginWidget.php:118 ..
+#: plenigo_plugin/PlenigoLoginWidget.php:144
+msgid "WordPress Login"
+msgstr "WordPress Login"
+
+#: ../plenigo_plugin/PlenigoLoginWidget.php:119 ..
+#: plenigo_plugin/PlenigoLoginWidget.php:148
+msgid "Plenigo Login"
+msgstr "Plenigo Login"
+
+#: ../plenigo_plugin/PlenigoLoginWidget.php:120
+msgid "Welcome, "
+msgstr "Willkommen"
+
+#: ../plenigo_plugin/PlenigoLoginWidget.php:121 ..
+#: plenigo_plugin/PlenigoLoginWidget.php:161
+msgid "Edit Profile"
+msgstr "Profil bearbeiten"
+
+#: ../plenigo_plugin/PlenigoLoginWidget.php:122 ..
+#: plenigo_plugin/PlenigoLoginWidget.php:165
+msgid "Logout"
+msgstr "Logout"
+
+#: ../plenigo_plugin/PlenigoLoginWidget.php:125
+msgid "Title:"
+msgstr "Titel:"
+
+#: ../plenigo_plugin/PlenigoLoginWidget.php:157
+msgid "Welcome, <name>"
+msgstr "Willkommen, <name>"
+
+#: ../plenigo_plugin/PlenigoLoginManager.php:293
+msgid "Mr./Mis"
+msgstr "Herr / Frau:"
+
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:72 ..
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:73
 msgid "Plenigo Payment"
@@ -654,3 +583,125 @@ msgstr "Aktivieren Scheck Zahlung"
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:329
 msgid "Product type is not configured, contact the administrators"
 msgstr "Produkttyp nicht konfiguriert ist, wenden Sie sich die Administratoren"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:181
+msgid "Plenigo Help"
+msgstr "Plenigo Hilfe"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:195
+msgid "plenigo OAuth Help"
+msgstr "plenigo OAuth Hilfe"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:196
+msgid "In order to configure plenigo OAuth Login: "
+msgstr "Um den plenigo OAuth-Login zu konfigurieren:"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:197
+msgid ""
+"1 - Add Login redirect URL to plenigo (Usually: <b>{YOUR BLOG URL}/wp-login."
+"php</b>) "
+msgstr ""
+"1 - Fügen Sie die Umleitungs-URL zu plenigo hinzu (In der Regel: <b>(Die URL "
+"Ihres Blogs)/wp-login.php</b>) "
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:198 ..
+#: plenigo_plugin/PlenigoSettingsPage.php:204
+msgid "clicking this link"
+msgstr "klicken Sie diesen Link"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:200
+msgid "2 - Fill the same URL in the <b>OAuth redirect URL</b> below"
+msgstr "2 - Fügen Sie die selbe URL in die <b>OAuth redirect URL</b> ein"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:201
+msgid ""
+"3 - (Optional) Fill the URL in the <b>URL After Login</b> for login "
+"redirection"
+msgstr ""
+"3 - (Optional) Hinterlegen Sie eine URL in <b>URL nach Anmeldung</b> für "
+"eine Umleitung nach dem Login"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:202
+msgid ""
+"4 - Enable the plenigo Login clicking <b>Use plenigo Authentication "
+"Provider</b> "
+msgstr ""
+"4 - Aktivieren Sie die den plenigo Login mit einem Klick auf <b> plenigo als "
+"Authentifizierungsanbieter verwenden</b>"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:203
+msgid "5 - Put the plenigo Login Widget in a widget area of the site "
+msgstr "5 - Fügen Sie das plenigo Login-Widget in den Widget Bereich der Website ein"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:205
+msgid "6 - Enjoy logging in with plenigo! "
+msgstr "6 - Genießen die Anmeldung mit plenigo!"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:223
+msgid "Loading..."
+msgstr "Wird geladen..."
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:231 ..
+#: plenigo_plugin/PlenigoSettingsPage.php:382
+msgid "General"
+msgstr "Allgemein"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:235 ..
+#: plenigo_plugin/PlenigoSettingsPage.php:394
+msgid "OAuth Login"
+msgstr "OAuth Login"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:239
+msgid "Premium Content"
+msgstr "Premium-Inhalte"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:243
+msgid "Metered Views"
+msgstr "Freiansichten"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:247 ..
+#: plenigo_plugin/PlenigoSettingsPage.php:427
+msgid "Curtain Customization"
+msgstr "Vorhang individuell gestaltet"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:251
+msgid "WooCommerce"
+msgstr "WooCommerce"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:255
+msgid "Advanced"
+msgstr "Erweiterte"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:365
+msgid "Plenigo settings saved!"
+msgstr "Plenigo Einstellungen wurden gespeichert!"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:368
+msgid "Data can not be empty"
+msgstr "Daten dürfen nichte leer sein"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:405
+msgid "Premium Content settings"
+msgstr "Inhaltseinstellungen"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:416
+msgid "Metered Views settings"
+msgstr "Einstellungen für Freiansichten"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:437
+msgid "Woo Commerce"
+msgstr "WooCommerce"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:449
+msgid "Advanced settings"
+msgstr "Erweiterte Einstellungen"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:476
+#, php-format
+msgid "Validation failed: %s"
+msgstr "Validierung fehlgeschlagen: %s"
+
+#: ../plenigo_plugin/PlenigoSettingsPage.php:492
+#, php-format
+msgid "Setting has been set to default value: %s"
+msgstr "Einstellung wurde auf den Standardwert gesetzt: %s"
