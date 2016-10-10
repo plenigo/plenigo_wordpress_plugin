@@ -3,6 +3,7 @@
 namespace plenigo_plugin;
 
 use \plenigo\services\UserService;
+use \plenigo\services\AppManagementService;
 use \plenigo\models\UserData;
 
 /**
@@ -59,6 +60,13 @@ class PlenigoShortcodeManager {
     private $options = null;
 
     /**
+     * A list of tokens that has just been created
+     * @var array
+     */
+    private $tokenList = array();
+    private $delTokenList = array();
+
+    /**
      * Default constructor, called from the main php file
      */
     public function __construct() {
@@ -73,6 +81,7 @@ class PlenigoShortcodeManager {
         add_shortcode('pl_content_hide', array($this, 'plenigo_handle_content_shortcode'));
         add_shortcode('pl_user_profile', array($this, 'plenigo_handle_user_shortcode'));
         add_shortcode('pl_snippet', array($this, 'plenigo_handle_snippet_shortcode'));
+        add_shortcode('pl_mobile_admin', array($this, 'plenigo_handle_mobile_admin'));
 
         //TinyMCE
         // add new buttons
@@ -83,6 +92,9 @@ class PlenigoShortcodeManager {
         // Enqueue TinyMCE CSS
         add_action('admin_enqueue_scripts', array($this, 'add_scripts'));
         add_action('admin_init', array($this, 'plenigo_add_editor_styles'));
+
+        // Mobile Token Scripts
+        add_action('wp_enqueue_scripts', array($this, 'add_mtoken_scripts'));
     }
 
     /**
@@ -347,6 +359,222 @@ class PlenigoShortcodeManager {
     }
 
     /**
+     * Draws a table with all the product bought and their Mobile Application Id
+     * 
+     * @param  array  $atts    an associative array of attributes, or an empty string if no attributes are given
+     * @param  string $content the enclosed content (if the shortcode is used in its enclosing form)
+     * @param  string $tag     the shortcode tag, useful for shared callback functions
+     * @return string the contents of the shortcode or the mobile administration
+     */
+    public function plenigo_handle_mobile_admin($atts, $content = null, $tag = null) {
+        plenigo_log_message("Plenigo Mobile Token Admin: START");
+        $a = shortcode_atts(array(
+            'class' => "",
+                ), $atts);
+        plenigo_log_message("Plenigo Mobile Token Admin: CHECKING LOGIN");
+        $loggedIn = UserService::isLoggedIn();
+        $notLoggedMesage = "The user is not logged in with plenigo";
+        //If it's logged in the we should the user profile template
+        if ($loggedIn) {
+            plenigo_log_message("Plenigo Mobile Token Admin: LOGGED IN");
+            $user = PlenigoSDKManager::get()->getSessionValue("plenigo_user_data");
+            $userLoggedIn = UserService::getCustomerInfo();
+            if (!is_null($user) && !is_null($userLoggedIn)) {
+                plenigo_log_message("Plenigo Mobile Token Admin: RENDERING");
+                return $this->render_mobile_admin($user, $a["class"]);
+            } else {
+                plenigo_log_message("Plenigo Mobile Token Admin: NOT PLENIGO?");
+                return '(' . __($notLoggedMesage, self::PLENIGO_SETTINGS_GROUP) . ')';
+            }
+        } else { // Else we show the shortcode contents to allow customize the logged out message
+            plenigo_log_message("Plenigo Mobile Token Admin: NOT LOGGED IN");
+            return '(' . __($notLoggedMesage, self::PLENIGO_SETTINGS_GROUP) . ')';
+        }
+        plenigo_log_message("Plenigo Mobile Token Admin: END");
+    }
+
+    public function add_mtoken_scripts() {
+        plenigo_log_message("Plenigo Mobile Token Admin: REGISTER SCRIPT");
+        wp_register_script('plenigo-mtoken-js', plugins_url('plenigo_js/pl_mtoken.js', dirname(__FILE__)), array('jquery'), '5', true);
+        wp_enqueue_script('plenigo-mtoken-js');
+    }
+
+    public function render_mobile_admin(UserData $user, $className) {
+        $res = '';
+        $customerID = $user->getId();
+        $arrProducts = UserService::getProductsBought($customerID);
+        $arrProdStruct = array();
+        // Add Single Products
+        if (isset($arrProducts['singleProducts']) && count($arrProducts['singleProducts']) > 0) {
+            foreach ($arrProducts['singleProducts'] as $sglProduct) {
+                // Product purchase has not been cancelled
+                if (property_exists($sglProduct, "status") && $sglProduct->status == 'CANCELLED') {
+                    continue;
+                }
+                // Other checks made in "has_bought" query to the services
+                if (PlenigoSDKManager::get()->plenigo_bought($sglProduct->productId) === FALSE) {
+                    continue;
+                }
+                //Create the product entry
+                $arrProdStruct[$sglProduct->productId] = array(
+                    "type" => "PRODUCT",
+                    "title" => $sglProduct->title,
+                    "date" => $sglProduct->buyDate,
+                    "appids" => array(),
+                    "token" => ""
+                );
+            }
+        }
+        // Add subcriptions
+        if (isset($arrProducts['subscription']) && count($arrProducts['subscription']) > 0) {
+            foreach ($arrProducts['subscription'] as $subProduct) {
+                // Subscriptions are not cancelled
+                if (property_exists($subProduct, "cancellationDate") &&
+                        is_string($subProduct->cancellationDate) &&
+                        strlen($subProduct->cancellationDate) != 0) {
+                    continue;
+                }
+                // Check subscription period
+                $startDate = (property_exists($subProduct, "startDate")) ? strtotime($subProduct->startDate) : strtotime("-1 day");
+                $endDate = (property_exists($subProduct, "endDate")) ? strtotime($subProduct->endDate) : strtotime("+1 day");
+                $today = strtotime("now");
+                if ($today < $startDate || $today > $endDate) {
+                    continue;
+                }
+                $arrProdStruct[$subProduct->productId] = array(
+                    "type" => "SUBSCRIPTION",
+                    "title" => $subProduct->title,
+                    "date" => $subProduct->endDate,
+                    "appids" => array(),
+                    "token" => ""
+                );
+            }
+        }
+        if (count($arrProdStruct) > 0) {
+            $arrAppids = AppManagementService::getCustomerApps($customerID);
+            foreach ($arrAppids as $appid) {
+                $currPID = $appid->getProductId();
+                $currAID = $appid->getCustomerAppId();
+                $currDES = $appid->getDescription();
+                if (isset($arrProdStruct[$currPID])) {
+                    $arrProdStruct[$currPID]["appids"][$currAID] = array(
+                        "appid" => $currAID,
+                        "desc" => $currDES,
+                        "new" => false
+                    );
+                }
+            }
+            try {
+                $arrProdStruct = $this->add_del_mobile_aid($customerID, $arrProdStruct);
+            } catch (Exception $exc) {
+                $res.='(' . __("Could not create or delete App ID.", self::PLENIGO_SETTINGS_GROUP) . ')<br/>';
+            }
+        }
+
+        if (count($arrProdStruct) > 0) {
+            $res.= $this->add_mobile_admin_row(
+                    __("Product ID", self::PLENIGO_SETTINGS_GROUP)
+                    , __("Product Name", self::PLENIGO_SETTINGS_GROUP)
+                    , __("Mobile Code", self::PLENIGO_SETTINGS_GROUP)
+                    , true, false);
+
+            foreach ($arrProdStruct as $currPID => $currPIDdata) {
+                $mobileAppIdCode = $this->get_mobile_admin_code($currPIDdata["appids"], $customerID, $currPID);
+                $res.= $this->add_mobile_admin_row(
+                        $this->elipsize($currPID)
+                        , $this->elipsize($currPIDdata["title"])
+                        , $mobileAppIdCode);
+            }
+            $res.= $this->add_mobile_admin_row(null, null, null, false, true);
+        } else {
+            $res.='(' . __("There are no products bought available for use", self::PLENIGO_SETTINGS_GROUP) . ')<br/>';
+        }
+        //Add javascript message, with translation support
+        $res.= "\n" . '<script>var pl_mtoken_remove_msg = "' . __("Are you sure you want to remove this App ID?", self::PLENIGO_SETTINGS_GROUP) . '";</script>';
+
+        return $res;
+    }
+
+    private function add_mobile_admin_row($idColumn, $nameColumn, $mobileColumn, $startTable = false, $endTable = false) {
+        $res = "";
+        $tdTag = "td";
+        if ($startTable) {
+            plenigo_log_message("Adding ROW First");
+            $res.= '<table class="table table-bordered table-striped"><thead>';
+            $tdTag = "th";
+        }
+        if (!is_null($idColumn)) {
+            $res.='<tr><' . $tdTag . '>' . $idColumn . '</' . $tdTag . '><' . $tdTag . '>' . $nameColumn . '</' . $tdTag . '><' . $tdTag . '>' . $mobileColumn . '</' . $tdTag . '></tr>';
+        }
+        if ($startTable) {
+            $res.='</thead><tbody>';
+        }
+        if ($endTable) {
+            plenigo_log_message("Adding ROW Last");
+            $res.='</tbody></table>';
+        }
+        return $res;
+    }
+
+    private function get_mobile_admin_code($arrAppID, $customerID, $productId) {
+        $requestButton = '<button class="btn btn-success" type="button" onclick="plenigo_create_mtoken(\'' . $productId . '\',\'' . $customerID . '\');return false;">' . __("Create", self::PLENIGO_SETTINGS_GROUP) . '</button>';
+        $deleteButton = '<button class="btn btn-danger" type="button" onclick="plenigo_remove_mtoken(\'' . $productId . '\',\'' . $customerID . '\',\'[REP-APP-ID]\');return false;">' . __("Remove", self::PLENIGO_SETTINGS_GROUP) . '</button>';
+        $descInputName = 'plenigo_' . $productId . '_desc';
+        $descInput = '<input type="text" class="form-control" id="' . $descInputName . '" maxlength="30" size="25" name="' . $descInputName . '" placeholder="' . __("Device Description", self::PLENIGO_SETTINGS_GROUP) . '"/>';
+        $res = "";
+        if (is_array($arrAppID) && count($arrAppID) > 0) {
+            foreach ($arrAppID as $currAID => $currAIDdata) {
+                $res.='<div class="plenigoMToken">';
+                if ($currAIDdata["new"]) {
+                    $res .= __("Your Token", self::PLENIGO_SETTINGS_GROUP) . ': <input type="text" class="form-control" readonly="true" value="' . $currAID . '"/> ' . $deleteButton;
+                } else {
+                    $res .= __("Created for", self::PLENIGO_SETTINGS_GROUP) . ": " . $currAIDdata["desc"] . " " . str_replace("[REP-APP-ID]", $currAID, $deleteButton);
+                }
+                $res.='</div>';
+            }
+        }
+        $res.='<div class="plenigoMToken plenigoTokenCreate">';
+        $res.= __("Create for", self::PLENIGO_SETTINGS_GROUP) . ": " . $descInput . " " . $requestButton;
+        $res.='</div>';
+        return $res;
+    }
+
+    private function add_del_mobile_aid($customerID, $arrProdStruct = array()) {
+        $paramCID = filter_input(INPUT_GET, "mobileCID");
+        $paramDEV = filter_input(INPUT_GET, "mobileDEV", FILTER_SANITIZE_SPECIAL_CHARS);
+        $paramPID = filter_input(INPUT_GET, "mobilePID");
+        $paramREM = filter_input(INPUT_GET, "removeAID");
+
+        if ($paramCID == $customerID) {
+            plenigo_log_message("Mobile App Editor: Customer check OK");
+            if (!is_null($paramREM) && $paramREM !== FALSE) {
+                plenigo_log_message("Mobile App Editor: Removing current App ID");
+                AppManagementService::deleteCustomerApp($customerID, $paramREM);
+                // Remove the AppID from the Struct
+                if (isset($arrProdStruct[$paramPID]["appids"][$paramREM])) {
+                    unset($arrProdStruct[$paramPID]["appids"][$paramREM]);
+                }
+            } else {
+                plenigo_log_message("Mobile App Editor: Getting App Token CID=" . $customerID . " PID=" . $paramPID);
+                $appToken = AppManagementService::requestAppToken($customerID, $paramPID, $paramDEV);
+                if (!is_null($appToken)) {
+                    $token = $appToken->getAppToken();
+                    plenigo_log_message("Mobile App Editor: Generated Token: " . $token);
+                    $this->tokenList[$paramPID] = $token;
+                    $arrProdStruct[$paramPID]["appids"][$token] = array(
+                        "appid" => $token,
+                        "desc" => $paramDEV,
+                        "new" => true
+                    );
+                } else {
+                    plenigo_log_message("Mobile App Editor: Can't create App token");
+                }
+            }
+        }
+        return $arrProdStruct;
+    }
+
+    /**
      * Fancy method to get the Button Title from the product with a backend call to obtain the managed product's information
      * 
      * @param string $prodId
@@ -455,6 +683,10 @@ class PlenigoShortcodeManager {
         }
 
         return $html;
+    }
+
+    private function elipsize($strText) {
+        return strlen($strText) > 50 ? substr($strText, 0, 47) . "..." : $strText;
     }
 
 }
