@@ -12,7 +12,13 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                 body: [
                     {type: 'textbox', name: 'prodId', label: 'Product ID*'},
                     {type: 'textbox', name: 'title', label: 'Button Title'},
-                    {type: 'textbox', name: 'cssClass', label: 'Button CSS class'}
+                    {type: 'textbox', name: 'cssClass', label: 'Button CSS class'},
+                    {type: 'combobox', name: 'register', label: 'Show Register form',
+                        values: [
+                            {text: 'Yes', value: '1'},
+                            {text: 'No', value: '0'}
+                        ]
+                    }
                 ],
                 onsubmit: function (e) {
                     var selected_text = editor.selection.getContent();
@@ -30,10 +36,14 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                         if (e.data.cssClass.trim() !== '') {
                             class_text = ' class="' + e.data.cssClass.trim() + '" ';
                         }
+                        if (e.data.register.trim() !== '') {
+                            register_text = ' register="' + e.data.register.trim() + '" ';
+                        }
                         return_text = '[pl_checkout '
                                 + prod_text
                                 + title_text
                                 + class_text
+                                + register_text
                                 + ' ]'
                                 + selected_text
                                 + '[/pl_checkout]';

@@ -59,6 +59,7 @@ require_once __DIR__ . '/settings/SettingUseQuietReport.php';
 require_once __DIR__ . '/settings/SettingDebugMode.php';
 require_once __DIR__ . '/settings/SettingWelcomeURL.php';
 require_once __DIR__ . '/settings/SettingProfileURL.php';
+require_once __DIR__ . '/settings/SettingUseRegister.php';
 
 /**
  * PlenigoSettingsPage
@@ -137,6 +138,7 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingDebugMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingWelcomeURL());
         array_push($this->settings, new \plenigo_plugin\settings\SettingProfileURL());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingUseRegister());
 
         // Check the initialization of settings uppon upgrade
         if (!isset($this->options[self::PLENIGO_VERSION_OPT]) || $this->options[self::PLENIGO_VERSION_OPT] !== PLENIGO_VERSION) {

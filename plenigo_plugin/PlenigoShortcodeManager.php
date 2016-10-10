@@ -155,11 +155,13 @@ class PlenigoShortcodeManager {
             'title' => "",
             'prod_id' => "",
             'class' => "",
+            'register' => "0"
                 ), $atts);
 
         $btnTitle = $a['title'];
         $cssClass = $a['class'];
         $prodId = $a['prod_id'];
+        $regCheck = $a['register'];
         $isIgnoringTag = ($tag == 'pl_checkout_button' || $tag == 'pl_renew');
 
         //evaluate the condition
@@ -189,6 +191,11 @@ class PlenigoShortcodeManager {
                 $useOauthLogin = false;
             } else {
                 $useOauthLogin = true;
+            }
+            if ($regCheck == "1") {
+                $useRegister = false;
+            } else {
+                $useRegister = true;
             }
             $btnOnClick = "alert('The button was not configured correctly')";
 
@@ -230,7 +237,7 @@ class PlenigoShortcodeManager {
                     }
 
                     // checkout snippet
-                    $btnOnClick = $checkoutBuilder->build($coSettings);
+                    $btnOnClick = $checkoutBuilder->build($coSettings, null, $useRegister);
                 } catch (\Exception $exc) {
                     plenigo_log_message($exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING);
                     error_log($exc->getMessage() . ': ' . $exc->getTraceAsString());

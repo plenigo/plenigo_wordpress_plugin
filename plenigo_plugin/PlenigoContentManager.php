@@ -772,9 +772,15 @@ class PlenigoContentManager {
                         $coSettings['oauth2RedirectUrl'] = $this->options['redirect_url'];
                         plenigo_log_message("url: " . $coSettings['oauth2RedirectUrl']);
                     }
+                    
+                    if(isset($this->options['use_register']) && $this->options['use_register'] == 1){
+                        $useRegister=true;
+                    }else{
+                        $useRegister=false;
+                    }
 
                     // checkout snippet
-                    $buyOnClick = $checkoutBuilder->build($coSettings);
+                    $buyOnClick = $checkoutBuilder->build($coSettings,null,$useRegisters);
                 }
                 if (stristr($html, self::REPLACE_PRODUCT_NAME) !== FALSE ||
                         stristr($html, self::REPLACE_PRODUCT_PRICE) !== FALSE ||
