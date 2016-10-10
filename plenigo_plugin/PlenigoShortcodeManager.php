@@ -328,6 +328,7 @@ class PlenigoShortcodeManager {
         $arr_types = array();
         $arr_types[] = "plenigo.Snippet.PERSONAL_DATA";
         $arr_types[] = "plenigo.Snippet.ORDER";
+        $arr_types[] = "plenigo.Snippet.SUBSCRIPTION";
         $arr_types[] = "plenigo.Snippet.PAYMENT_METHODS";
         $arr_types[] = "plenigo.Snippet.ADDRESS_DATA";
 
