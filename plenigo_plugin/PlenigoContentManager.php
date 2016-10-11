@@ -344,7 +344,7 @@ class PlenigoContentManager {
             $hasAnyCatTag = $this->hasAnyCategoryTag();
             //Checking for Product IDs
             $hasAnyProdTag = $this->hasAnyProductTag();
-            if($hasAnyCatTag && $hasAnyProdTag) {
+            if ($hasAnyCatTag && $hasAnyProdTag) {
                 plenigo_log_message("A Category and a Product tag was found matching");
                 $this->addGAEvent("curtain|category-product-matched");
                 return TRUE;
@@ -773,8 +773,14 @@ class PlenigoContentManager {
                         plenigo_log_message("url: " . $coSettings['oauth2RedirectUrl']);
                     }
 
+                    if (isset($this->options['use_register']) && $this->options['use_register'] == 1) {
+                        $useRegister = true;
+                    } else {
+                        $useRegister = false;
+                    }
+
                     // checkout snippet
-                    $buyOnClick = $checkoutBuilder->build($coSettings);
+                    $buyOnClick = $checkoutBuilder->build($coSettings, null, $useRegisters);
                 }
                 if (stristr($html, self::REPLACE_PRODUCT_NAME) !== FALSE ||
                         stristr($html, self::REPLACE_PRODUCT_PRICE) !== FALSE ||

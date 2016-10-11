@@ -2,8 +2,8 @@
 Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 4.0.0
-Tested up to: 4.5.3
-Stable tag: 1.6.1
+Tested up to: 4.6.1
+Stable tag: 1.6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -298,6 +298,9 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
+= 1.6.2 - Embed plenigo on your site =
+- New Snippet shortcode/Editor button to put parts of plenigo workflow screens on your site (idealy pages) like Order status, User profile information, etc.
+
 = 1.6.1 - App ID Administration =
 - Got a mobile app for your site? Checkout our Mobile SDKs for iOS and Android! Want your user to create Mobile App IDs for your product and redeem them in you app? No problem just create a post/page and put the shortcode *[pl_mobile_admin]* in it. Voila!
 
