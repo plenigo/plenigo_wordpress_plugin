@@ -193,9 +193,9 @@ class PlenigoShortcodeManager {
                 $useOauthLogin = true;
             }
             if ($regCheck == "1") {
-                $useRegister = false;
-            } else {
                 $useRegister = true;
+            } else {
+                $useRegister = false;
             }
             $btnOnClick = "alert('The button was not configured correctly')";
 
