@@ -26,26 +26,26 @@ class SnippetType extends BasicEnum {
     /**
      * Personal profile snippet
      */
-    const PERSONAL_DATA = "personal";
+    const PERSONAL_DATA = "plenigo.Snippet.PERSONAL_DATA";
     
     /**
      * Order list snippet
      */
-    const ORDER = "orders";
+    const ORDER = "plenigo.Snippet.ORDER";
     
     /**
      * Subscription status snippet
      */
-    const SUBSCRIPTION = "subscriptions";
+    const SUBSCRIPTION = "plenigo.Snippet.SUBSCRIPTION";
     
     /**
      * Payment methods screen snippet
      */
-    const PAYMENT_METHODS = "payments";
+    const PAYMENT_METHODS = "plenigo.Snippet.PAYMENT_METHODS";
     
     /**
      * Address information snippet
      */
-    const ADDRESS_DATA = "addresses";
+    const ADDRESS_DATA = "plenigo.Snippet.ADDRESS_DATA";
 
 }
