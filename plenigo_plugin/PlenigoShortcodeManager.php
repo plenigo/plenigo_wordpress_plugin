@@ -155,13 +155,19 @@ class PlenigoShortcodeManager {
             'title' => "",
             'prod_id' => "",
             'class' => "",
-            'register' => "0"
+            'register' => "0",
+            'source' => "",
+            'target' => "",
+            'affiliate' => ""
                 ), $atts);
 
         $btnTitle = $a['title'];
         $cssClass = $a['class'];
         $prodId = $a['prod_id'];
         $regCheck = $a['register'];
+        $sourceURL = $a['soiurce'];
+        $targetURL = $a['target'];
+        $affiliate = $a['affiliate'];
         $isIgnoringTag = ($tag == 'pl_checkout_button' || $tag == 'pl_renew');
 
         //evaluate the condition
@@ -236,8 +242,18 @@ class PlenigoShortcodeManager {
                         plenigo_log_message("url: " . $coSettings['oauth2RedirectUrl']);
                     }
 
+                    if (trim($sourceURL) == "") {
+                        $sourceURL = null;
+                    }
+                    if (trim($targetURL) == "") {
+                        $targetURL = null;
+                    }
+                    if (trim($affiliate) == "") {
+                        $affiliate = null;
+                    }
+
                     // checkout snippet
-                    $btnOnClick = $checkoutBuilder->build($coSettings, null, $useRegister);
+                    $btnOnClick = $checkoutBuilder->build($coSettings, null, $useRegister, $sourceURL, $targetURL, $affiliate);
                 } catch (\Exception $exc) {
                     plenigo_log_message($exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING);
                     error_log($exc->getMessage() . ': ' . $exc->getTraceAsString());
