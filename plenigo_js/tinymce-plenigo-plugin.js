@@ -18,7 +18,10 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                             {text: 'Yes', value: '1'},
                             {text: 'No', value: '0'}
                         ]
-                    }
+                    },
+                    {type: 'textbox', name: 'source', label: 'Source URL'},
+                    {type: 'textbox', name: 'target', label: 'Target URL'},
+                    {type: 'textbox', name: 'affiliate', label: 'Affiliate ID'}
                 ],
                 onsubmit: function (e) {
                     var selected_text = editor.selection.getContent();
