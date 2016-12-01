@@ -165,7 +165,7 @@ class PlenigoShortcodeManager {
         $cssClass = $a['class'];
         $prodId = $a['prod_id'];
         $regCheck = $a['register'];
-        $sourceURL = $a['soiurce'];
+        $sourceURL = $a['source'];
         $targetURL = $a['target'];
         $affiliate = $a['affiliate'];
         $isIgnoringTag = ($tag == 'pl_checkout_button' || $tag == 'pl_renew');
