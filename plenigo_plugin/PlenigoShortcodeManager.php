@@ -155,13 +155,19 @@ class PlenigoShortcodeManager {
             'title' => "",
             'prod_id' => "",
             'class' => "",
-            'register' => "0"
+            'register' => "0",
+            'source' => "",
+            'target' => "",
+            'affiliate' => ""
                 ), $atts);
 
         $btnTitle = $a['title'];
         $cssClass = $a['class'];
         $prodId = $a['prod_id'];
         $regCheck = $a['register'];
+        $sourceURL = $a['source'];
+        $targetURL = $a['target'];
+        $affiliate = $a['affiliate'];
         $isIgnoringTag = ($tag == 'pl_checkout_button' || $tag == 'pl_renew');
 
         //evaluate the condition
@@ -236,8 +242,18 @@ class PlenigoShortcodeManager {
                         plenigo_log_message("url: " . $coSettings['oauth2RedirectUrl']);
                     }
 
+                    if (trim($sourceURL) == "") {
+                        $sourceURL = null;
+                    }
+                    if (trim($targetURL) == "") {
+                        $targetURL = null;
+                    }
+                    if (trim($affiliate) == "") {
+                        $affiliate = null;
+                    }
+
                     // checkout snippet
-                    $btnOnClick = $checkoutBuilder->build($coSettings, null, $useRegister);
+                    $btnOnClick = $checkoutBuilder->build($coSettings, null, $useRegister, $sourceURL, $targetURL, $affiliate);
                 } catch (\Exception $exc) {
                     plenigo_log_message($exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING);
                     error_log($exc->getMessage() . ': ' . $exc->getTraceAsString());
@@ -339,6 +355,8 @@ class PlenigoShortcodeManager {
         $arr_types[] = "plenigo.Snippet.PAYMENT_METHODS";
         $arr_types[] = "plenigo.Snippet.ADDRESS_DATA";
 
+        $redirectUrl = $this->options['redirect_url'];
+
         $startTag = '<script type="text/javascript">' . "\n";
         $endTag = '</script>';
         $startJQuery = 'jQuery(document).ready(function($) {';
@@ -347,18 +365,24 @@ class PlenigoShortcodeManager {
             foreach ($arr_types as $snippet) {
                 $genID = uniqid("snip");
                 $content.='<div id="' . $genID . '"></div>' . "\n";
+
+                $sConfig = new \plenigo\models\SnippetConfig($genID, $snippet, $redirectUrl, null, false);
+                $sBuilder = new \plenigo\builders\PlenigoSnippetBuilder($sConfig);
+
                 $content.=$startTag . "\n" . $startJQuery . "\n";
-                $content.='console.log("rendering snippet: ' . $snippet . '");' . "\n";
-                $content.='plenigo.renderSnippet("' . $genID . '","' . $snippet . '");' . "\n";
+                $content.=$sBuilder->build() . "\n";
                 $content.=$endJQuery . "\n" . $endTag;
             }
         } else {
             if (in_array($a['name'], $arr_types)) {
                 $genID = uniqid("snip");
                 $content.='<div id="' . $genID . '"></div>' . "\n";
+
+                $sConfig = new \plenigo\models\SnippetConfig($genID, $a['name'], $redirectUrl, null, false);
+                $sBuilder = new \plenigo\builders\PlenigoSnippetBuilder($sConfig);
+
                 $content.=$startTag . "\n" . $startJQuery . "\n";
-                $content.='console.log("rendering snippet: ' . $a['name'] . '");' . "\n";
-                $content.='plenigo.renderSnippet("' . $genID . '","' . $a['name'] . '");' . "\n";
+                $content.=$sBuilder->build() . "\n";
                 $content.=$endJQuery . "\n" . $endTag;
             }
         }

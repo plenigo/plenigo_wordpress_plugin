@@ -8,8 +8,6 @@ require_once __DIR__ . '/../internal/ApiURLs.php';
 require_once __DIR__ . '/../internal/services/Service.php';
 require_once __DIR__ . '/../internal/utils/SdkUtils.php';
 require_once __DIR__ . '/../models/CompanyUserList.php';
-require_once __DIR__ . '/../models/FailedPaymentList.php';
-require_once __DIR__ . '/../models/OrderList.php';
 require_once __DIR__ . '/../models/ErrorCode.php';
 
 use plenigo\models\SubscriptionList;
@@ -19,8 +17,6 @@ use \plenigo\internal\ApiURLs;
 use \plenigo\internal\services\Service;
 use plenigo\internal\utils\SdkUtils;
 use \plenigo\models\CompanyUserList;
-use \plenigo\models\FailedPaymentList;
-use \plenigo\models\OrderList;
 use \plenigo\models\ErrorCode;
 
 /**
@@ -57,7 +53,7 @@ class CompanyService extends Service {
      * 
      * @param int $page Number of the page (starting from 0)
      * @param int $size Size of the page - must be between 10 and 100
-     * 
+     *
      * @return CompanyUserList A list of users of the specified company
      */
     public static function getUserList($page = 0, $size = 10) {
@@ -83,7 +79,7 @@ class CompanyService extends Service {
      * Returns a list of users based on the given ids.
      * 
      * @param string $userIds a comma separated list if ids
-     * 
+     *
      * @return CompanyUserList A  list of users of the specified company with the given ids
      */
     public static function getUserByIds($userIds = "") {
@@ -106,15 +102,15 @@ class CompanyService extends Service {
 
     /**
      * Returns a list of failed payments based on date, status and paging filters.
-     * 
+     *
      * NOTE: Date interval must be in the past and can not be more than 6 months long.
-     * 
+     *
      * @param string $start Date start of the interval (String format YYYY-MM-DD)
      * @param string $end Date end of the interval (String format YYYY-MM-DD)
      * @param string $status Status of the failed payment (FAILED, FIXED, FIXED_MANUALLY)
      * @param int $page Number of the page (starting from 0)
      * @param int $size Size of the page - must be between 10 and 100
-     * 
+     *
      * @return FailedPaymentList A paginated list of FailedPayment objects
      */
     public static function getFailedPayments($start = null, $end = null, $status = null, $page = 0, $size = 10) {
@@ -148,7 +144,7 @@ class CompanyService extends Service {
             'startDate' => $start,
             'endDate' => $end
         );
-        
+
         // add status if needed
         if(!is_null($status)){
             $map['failedPaymentStatus'] = $status;
@@ -166,13 +162,13 @@ class CompanyService extends Service {
 
     /**
      * Returns a list of orders of the specified company.
-     * 
+     *
      * @param string $start Date start of the interval (String format YYYY-MM-DD)
      * @param string $end Date end of the interval (String format YYYY-MM-DD)
      * @param bool $testMode Test mode Flag
      * @param int $page Number of the page (starting from 0)
      * @param int $size Size of the page - must be between 10 and 100
-     * 
+     *
      * @return mixed list of orders
      */
     public static function getOrders($start = null, $end = null, $testMode = false , $page = 0, $size = 10) {
@@ -246,7 +242,7 @@ class CompanyService extends Service {
 
         return $result;
     }
-    
+
     /**
      * Executes the prepared request and returns the Response object on success.
      *

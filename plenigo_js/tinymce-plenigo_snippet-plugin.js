@@ -13,11 +13,11 @@ tinymce.PluginManager.add('plenigo_snippet', function (editor, url) {
                     {type: 'combobox', name: 'snippet', label: 'Snippet ID',
                         values: [
                             {text: 'All Snippets', value: 'all'},
-                            {text: 'Personal Data', value: 'plenigo.Snippet.PERSONAL_DATA'},
-                            {text: 'Order Status', value: 'plenigo.Snippet.ORDER'},
-                            {text: 'Subscriptions', value: 'plenigo.Snippet.SUBSCRIPTION'},
-                            {text: 'Payment Methods', value: 'plenigo.Snippet.PAYMENT_METHODS'},
-                            {text: 'Address Information', value: 'plenigo.Snippet.ADDRESS_DATA'}
+                            {text: 'Personal Data',         value: 'plenigo.Snippet.PERSONAL_DATA'},
+                            {text: 'Orders Status',         value: 'plenigo.Snippet.ORDER'},
+                            {text: 'Subscriptions',         value: 'plenigo.Snippet.SUBSCRIPTION'},
+                            {text: 'Payment Methods',       value: 'plenigo.Snippet.PAYMENT_METHODS'},
+                            {text: 'Address Information',   value: 'plenigo.Snippet.ADDRESS_DATA'}
                         ]
                     }
                 ],

@@ -79,17 +79,17 @@ final class ApiURLs
      * This URL is used to retrieve category information.
      */
     const GET_CATEGORY = "/api/v2/category";
-    
+
     /**
      * This URL is used to get all the products
      */
     const LIST_CATEGORIES = "/api/v2/categories/search";
-    
+
     /**
      * This URL is used to check for paywall disabled
      */
     const PAYWALL_STATE = "/api/v2/paywall/state";
-    
+
     /**
      * This URL is used for merchant apps to get access from a customer to a product
      */
@@ -99,7 +99,7 @@ final class ApiURLs
      * This URL is used for merchant apps to get all customer apps
      */
     const GET_APPS_ID = "/api/v2/access/app/{USER_ID}";
-    
+
     /**
      * This URL is used to verify if merchant app has access to certain product
      */
@@ -107,7 +107,7 @@ final class ApiURLs
 
     /**
      * This URL is used to delete a merchant application access from a certain product
-     */   
+     */
     const DELETE_APP_ACCESS = "/api/v2/access/app/{USER_ID}/{APP_ID}";
 
     /**
@@ -119,7 +119,7 @@ final class ApiURLs
      * This URL is used to get, create or delete mobile secret data
      */
     const MOBILE_SECRET_URL = "/api/v2/access/mobileSecret/{USER_ID}";
-    
+
     /**
      * This URL is used to create a new user bound to the company that registers the user.
      */
@@ -134,12 +134,12 @@ final class ApiURLs
      * This URL is used to create a login token for an existing user.
      */
     const USER_MGMT_CREATELOGIN = "/api/v2/externalUser/{USER_ID}/createLoginToken";
-    
+
     /**
      * This URL is used to assign different customer ids to a plenigo customer.
      */
     const USER_MGMT_ACCESS = "/api/v2/import/customerAccess";
-    
+
     /**
      * This URL is used to get the paginated list of company users
      */
@@ -153,7 +153,7 @@ final class ApiURLs
     /**
      * This URL is used to get a list of company failed payments
      */
-    const COMPANY_FAILED_PAYMENTS = "/api/v2/company/users/failed/payments";    
+    const COMPANY_FAILED_PAYMENTS = "/api/v2/company/users/failed/payments";
 
     /**
      * This URL is used to get a list of company orders
@@ -169,7 +169,7 @@ final class ApiURLs
      * This URL is used to search for transactions for the company
      */
     const TX_SEARCH = "/api/v2/transactions/search";
-    
+
     /**
      * Creates a voucher campaign and returns the amount of vouchers
      */

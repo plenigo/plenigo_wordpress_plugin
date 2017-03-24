@@ -16,7 +16,6 @@ namespace plenigo\models;
  */
 class OrderItem
 {
-
     /**
      * Product Id
      * @var string
