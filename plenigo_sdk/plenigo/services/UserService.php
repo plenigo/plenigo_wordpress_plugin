@@ -112,7 +112,9 @@ class UserService extends Service {
      *
      * @param mixed $productId The ID (or array of IDs) of the product to be queried against the user
      * @param string $customerId The customer ID if its not logged in
+     *
      * @return bool TRUE if the user in the cookie has bought the product and the session is not expired, false otherwise
+     *
      * @throws \plenigo\PlenigoException whenever an error happens
      */
     public static function hasUserBought($productId, $customerId = null) {
@@ -160,6 +162,68 @@ class UserService extends Service {
         } else {
             PlenigoManager::notice($clazz, "Product NOT accesible!");
             return false;
+        }
+    }
+
+    /**
+     * Checks if the user can access a product and return detail information about that product. Multiple products can be requested by passing an array
+     * to productId. If multiple products are passed to the productId field all products the user has bought are returned.If there is an error response
+     * from the API this will throw am {@link \plenigo\PlenigoException}, in the case of BAD_REQUEST types, the exception will contain
+     * an array of \plenigo\models\ErrorDetail.
+     *
+     * @param mixed $productId The ID (or array of IDs) of the product to be queried against the user
+     * @param string $customerId The customer ID if its not logged in
+     *
+     * @return array
+     *
+     * @throws \plenigo\PlenigoException whenever an error happens
+     */
+    public static function hasBoughtProductWithProducts($productId, $customerId = null) {
+        $clazz = get_class();
+        PlenigoManager::notice($clazz, "Checking if user bought Product with ID=" . print_r($productId, true));
+
+        $customer = self::getCustomerInfo($customerId);
+        if (is_null($customer)) {
+            $clazz = get_class();
+            PlenigoManager::notice($clazz, self::ERR_MSG_CUSTOMER);
+            return array('accessGranted' => false);
+        }
+        PlenigoManager::notice($clazz, "customer is good=" . print_r($customer, true));
+        $testModeText = (PlenigoManager::get()->isTestMode()) ? 'true' : 'false';
+
+        $params = array(
+            ApiParams::CUSTOMER_ID => $customer->getCustomerId(),
+            ApiParams::PRODUCT_ID => $productId,
+            ApiParams::TEST_MODE => $testModeText
+        );
+        $request = static::getRequest(ApiURLs::USER_PRODUCT_ACCESS, false, $params);
+
+        $userDataRequest = new static($request);
+        try {
+            $response = $userDataRequest->execute();
+        } catch (PlenigoException $exc) {
+            $errorCode = ErrorCode::getTranslation(ApiURLs::USER_PRODUCT_ACCESS, $exc->getCode());
+            if (empty($errorCode) || is_null($errorCode)) {
+                $errorCode = $exc->getCode();
+            }
+
+            // Forbidden means that the user has not bought the product.
+            if ($errorCode == ErrorCode::CANNOT_ACCESS_PRODUCT) {
+                PlenigoManager::notice($clazz, "Product NOT accessible!");
+                return array('accessGranted' => false);
+            } else {
+                $clazz = get_class();
+                PlenigoManager::error($clazz, self::ERR_MSG_USER_BOUGHT, $exc);
+                throw new PlenigoException(self::ERR_MSG_USER_BOUGHT, $exc->getCode(), $exc);
+            }
+        }
+        if (!is_null($response)) {
+
+            PlenigoManager::notice($clazz, "Product is accessible=" . print_r($response, true));
+            return get_object_vars($response);
+        } else {
+            PlenigoManager::notice($clazz, "Product NOT accesible!");
+            return array('accessGranted' => false);
         }
     }
 
@@ -257,13 +321,14 @@ class UserService extends Service {
     }
 
     /**
-     * <p>Retrieves the product and suscriptions list for the current (logged in) 
-     * user, then returns it as an associative array with this sintax</p>
+     * <p>Retrieves the product and subscriptions list for the current (logged in)
+     * user, then returns it as an associative array with this syntax</p>
      * <pre>
      * array (
      *   'singleProducts' => array (
      *     0 => array(
      *        'productId' => 'xxxx',
+     *        'originalProductId' => 'xxxx',
      *        'transactionId' => 'AAAAAAABBBBBBDDDEDDEDEDEDEDEDED'
      *        'title' => 'prod title',
      *        'buyDate' => 'YYYY-MM-DD HH:mm:ss +0100',
@@ -283,6 +348,7 @@ class UserService extends Service {
      *   'subscriptions' => array (
      *     0 => array(
      *        'productId' => 'yyyyyy',
+     *        'originalProductId' => 'yyyyyy',
      *        'title' => 'Subscription title',
      *        'startDate' => 'YYYY-MM-DD HH:mm:ss +0100',
      *        'endDate' => 'YYYY-MM-DD HH:mm:ss +0100',

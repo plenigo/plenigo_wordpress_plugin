@@ -66,6 +66,11 @@ final class ApiURLs
     const LIST_PRODUCTS = "/api/v2/products/search";
 
     /**
+     * This URL is used to get all the products with full details
+     */
+    const LIST_PRODUCTS_FULL_DETAILS = "/api/v2/products/search/full";
+
+    /**
      * This URL is used to get all the products this user has bouight
      */
     const USER_PRODUCTS = "/api/v2/user/{USER_ID}/products";
@@ -131,6 +136,11 @@ final class ApiURLs
     const USER_MGMT_CREATELOGIN = "/api/v2/externalUser/{USER_ID}/createLoginToken";
     
     /**
+     * This URL is used to assign different customer ids to a plenigo customer.
+     */
+    const USER_MGMT_ACCESS = "/api/v2/import/customerAccess";
+    
+    /**
      * This URL is used to get the paginated list of company users
      */
     const COMPANY_USERS = "/api/v2/company/users";
@@ -141,7 +151,38 @@ final class ApiURLs
     const COMPANY_USERS_SELECT = "/api/v2/company/users/select";
 
     /**
+     * This URL is used to get a list of company failed payments
+     */
+    const COMPANY_FAILED_PAYMENTS = "/api/v2/company/users/failed/payments";    
+
+    /**
+     * This URL is used to get a list of company orders
+     */
+    const COMPANY_ORDERS = "/api/v2/orders/search";
+
+    /**
+     * This URL is used to get a list of company subscriptions
+     */
+    const COMPANY_SUBSCRIPTIONS = "/api/v2/subscriptions/search";
+
+    /**
      * This URL is used to search for transactions for the company
      */
     const TX_SEARCH = "/api/v2/transactions/search";
+    
+    /**
+     * Creates a voucher campaign and returns the amount of vouchers
+     */
+    const VOUCHER_CREATE = "/api/v2/voucher/create";
+
+    /**
+     * Execute a voucher checkout for a free product
+     */
+    const CHECKOUT_VOUCHER = "/api/v2/checkout/free/voucher/{VOUCHER_ID}/{USER_ID}";
+
+        /**
+     * Execute a voucher checkout for a free product
+     */
+    const CHECKOUT_PRODUCT = "/api/v2/checkout/free/product/{PROD_ID}/{USER_ID}";
+
 }

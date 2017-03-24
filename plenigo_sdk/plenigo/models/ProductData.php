@@ -38,6 +38,8 @@ class ProductData {
     private $videoPrequelTime = null;
     private $maxParallelAppAccess = null;
     private $customInfo = null;
+    private $validityTimeInDays = null;
+    private $categoryId = null;
 
     /**
      * Product Data constructor, must be filled with the required data.
@@ -257,6 +259,26 @@ class ProductData {
     }
 
     /**
+     * Get validity time of the bought product in days.
+     *
+     * @return string validity time of the bought product in days
+     */
+    public function getValidityTimeInDays()
+    {
+        return $this->validityTimeInDays;
+    }
+
+    /**
+     * Set validity time of the bought product in days.
+     *
+     * @param string $validityTimeInDays validity time of the bought product in days
+     */
+    public function setValidityTimeInDays($validityTimeInDays)
+    {
+        $this->validityTimeInDays = $validityTimeInDays;
+    }
+
+    /**
      * Gets the Cutom Info number
      * 
      * @return int
@@ -273,6 +295,28 @@ class ProductData {
     public function setCustomInfo($customInfo) {
         $this->customInfo = $customInfo;
     }
+
+    /**
+     * Get category id.
+     *
+     * @return string category id
+     */
+    public function getCategoryId()
+    {
+        return $this->categoryId;
+    }
+
+    /**
+     * Set category id.
+     *
+     * @param string $categoryId category id
+     */
+    public function setCategoryId($categoryId)
+    {
+        $this->categoryId = $categoryId;
+    }
+
+
 
     /**
      * Creates a ProductData instance from an array map.
@@ -304,6 +348,15 @@ class ProductData {
 
         if (isset($map['customInfo']) && !is_null($map['customInfo'])) {
             $data->setCustomInfo($map['customInfo']);
+        }
+
+        if (isset($map['validityTimeInDays']) && !is_null($map['validityTimeInDays'])) {
+            $data->setValidityTimeInDays($map['validityTimeInDays']);
+        }
+
+
+        if (isset($map['categoryId']) && !is_null($map['categoryId'])) {
+            $data->setCategoryId($map['categoryId']);
         }
 
         return $data;

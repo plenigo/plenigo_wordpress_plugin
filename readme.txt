@@ -2,8 +2,8 @@
 Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 4.0.0
-Tested up to: 4.6.1
-Stable tag: 1.6.3
+Tested up to: 4.7.3
+Stable tag: 1.6.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -298,6 +298,9 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
+= 1.6.3 - Updated PHP-SDK =
+- Updated to latest PHP-SDK
+
 = 1.6.3 - Fix incorrect snippet calls =
 - Fixed problem with snippets not showing correctly
 

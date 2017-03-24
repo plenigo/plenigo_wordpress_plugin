@@ -25,8 +25,7 @@ use \plenigo\PlenigoException;
  * @author   René Olivo <r.olivo@plenigo.com>
  * @link     https://www.plenigo.com
  */
-class Service
-{
+class Service {
 
     /**
      * The request to be executed.
@@ -39,8 +38,7 @@ class Service
      *
      * @param RestClient $request The request object to be executed.
      */
-    protected function __construct($request)
-    {
+    protected function __construct($request) {
         $this->request = $request;
     }
 
@@ -52,21 +50,20 @@ class Service
      * @param bool $oauth TRUE if the needed request is going to the OAuth API.
      * @param array  $params   Optional params to pass to the request.
      *
-     * @return the request result.
+     * @return \plenigo\internal\utils\RestClient request result.
      */
-    protected static function getRequest($endPoint, $oauth = false, array $params = array())
-    {
-        if($oauth){
+    protected static function getRequest($endPoint, $oauth = false, array $params = array()) {
+        if ($oauth) {
             $clazz = get_class();
             PlenigoManager::notice($clazz, "OAUTH GET REQUEST");
             $url = PlenigoManager::get()->getUrlOAuth() . $endPoint;
-        }else{
+        } else {
             $url = PlenigoManager::get()->getUrl() . $endPoint;
         }
 
         return RestClient::get($url, $params);
     }
-    
+
     /**
      * Returns a response to a DELETE RestClient request to a specific
      * end-point on the plenigo REST API.
@@ -75,15 +72,14 @@ class Service
      * @param bool $oauth TRUE if the needed request is going to the OAuth API.
      * @param array $params Optional params to pass to the request.
      * 
-     * @return the request result
+     * @return \plenigo\internal\utils\RestClient request result
      */
-    protected static function deleteRequest($endPoint, $oauth = false, array $params = array())
-    {
-        if($oauth){
+    protected static function deleteRequest($endPoint, $oauth = false, array $params = array()) {
+        if ($oauth) {
             $clazz = get_class();
             PlenigoManager::notice($clazz, "OAUTH DELETE REQUEST");
             $url = PlenigoManager::get()->getUrlOAuth() . $endPoint;
-        }else{
+        } else {
             $url = PlenigoManager::get()->getUrl() . $endPoint;
         }
 
@@ -98,21 +94,20 @@ class Service
      * @param bool $oauth TRUE if the needed request is going to the OAuth API.
      * @param array  $params   Optional params to pass to the request.
      *
-     * @return the request result.
+     * @return \plenigo\internal\utils\RestClient the request result.
      */
-    protected static function postRequest($endPoint, $oauth = false, array $params = array())
-    {
-        if($oauth){
+    protected static function postRequest($endPoint, $oauth = false, array $params = array()) {
+        if ($oauth) {
             $clazz = get_class();
             PlenigoManager::notice($clazz, "OAUTH POST REQUEST");
             $url = PlenigoManager::get()->getUrlOAuth() . $endPoint;
-        }else{
+        } else {
             $url = PlenigoManager::get()->getUrl() . $endPoint;
         }
 
         return RestClient::post($url, $params);
     }
-    
+
     /**
      * Returns a response to a POST RestClient request to a specific
      * end-point on the plenigo REST API.
@@ -121,15 +116,14 @@ class Service
      * @param bool $oauth TRUE if the needed request is going to the OAuth API.
      * @param array  $params   Optional params to pass to the request.
      *
-     * @return the request result.
+     * @return \plenigo\internal\utils\RestClient request result.
      */
-    protected static function postJSONRequest($endPoint, $oauth = false, array $params = array())
-    {
-        if($oauth){
+    protected static function postJSONRequest($endPoint, $oauth = false, array $params = array()) {
+        if ($oauth) {
             $clazz = get_class();
             PlenigoManager::notice($clazz, "OAUTH JSON POST REQUEST");
             $url = PlenigoManager::get()->getUrlOAuth() . $endPoint;
-        }else{
+        } else {
             $url = PlenigoManager::get()->getUrl() . $endPoint;
         }
 
@@ -143,13 +137,12 @@ class Service
      * @param string $endPoint The REST end-point to access.
      * @param array  $params   Optional params to pass to the request.
      *
-     * @return the request result.
+     * @return \plenigo\internal\utils\RestClient request result.
      */
-    protected static function putJSONRequest($endPoint, array $params = array())
-    {
-            $clazz = get_class();
-            PlenigoManager::notice($clazz, "JSON PUT REQUEST");
-            $url = PlenigoManager::get()->getUrl() . $endPoint;
+    protected static function putJSONRequest($endPoint, array $params = array()) {
+        $clazz = get_class();
+        PlenigoManager::notice($clazz, "JSON PUT REQUEST");
+        $url = PlenigoManager::get()->getUrl() . $endPoint;
 
         return RestClient::putJSON($url, $params);
     }
@@ -160,10 +153,9 @@ class Service
      * @param string $name  The option name.
      * @param mixed  $value The option value.
      *
-     * @return Returns itself for chaining purposes.
+     * @return Service Returns itself for chaining purposes.
      */
-    public function setOption($name, $value)
-    {
+    public function setOption($name, $value) {
         $this->request->setOption($name, $value);
 
         return $this;
@@ -176,8 +168,7 @@ class Service
      *
      * @throws \Exception on request error.
      */
-    protected function getRequestResponse()
-    {
+    protected function getRequestResponse() {
         return $this->request->execute();
     }
 
@@ -189,11 +180,10 @@ class Service
      *
      * @throws \Exception on unexpected response or response with errors.
      */
-    protected function checkForErrors($response)
-    {
+    protected function checkForErrors($response) {
         //Sanitize a string empty response
-        if(is_string($response) && trim($response)===''){
-            $response=json_decode('{}');
+        if (is_string($response) && trim($response) === '') {
+            $response = json_decode('{}');
         }
         if (!is_object($response) && !is_array($response)) {
             throw new \Exception('Broken response. Expecting JSON Object; Got: ' . gettype($response));
@@ -224,13 +214,13 @@ class Service
             throw new \Exception("Request Status Code: " . $statusCode, $statusCode);
         }
     }
-    
+
     /**
      * Executes the fiven RestClient and detects if there is an error, 
      * gets its code and provides a PlenigoException describing it 
      * with the error parameters
      * 
-     * @param RestClient $pRequest The RestClient object to execute for this request
+     * @param \plenigo\internal\utils\RestClient $pRequest The RestClient object to execute for this request
      * @param string $pErrorSource the URL key for the error translation table
      * @param string $pErrorMsg the Error message to show in the Plenigo Exception thrown
      * 
@@ -261,8 +251,7 @@ class Service
      *
      * @return The request's response.
      */
-    public function execute()
-    {
+    public function execute() {
         try {
             $response = $this->getRequestResponse();
             $this->checkForErrors($response);
@@ -278,8 +267,7 @@ class Service
      * 
      * @param string $name the name of the Cookie
      */
-    protected static function getCookieContents($name)
-    {
+    protected static function getCookieContents($name) {
         return filter_input(INPUT_COOKIE, $name);
     }
 
