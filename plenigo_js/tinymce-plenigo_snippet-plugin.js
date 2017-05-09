@@ -17,7 +17,16 @@ tinymce.PluginManager.add('plenigo_snippet', function (editor, url) {
                             {text: 'Orders Status',         value: 'plenigo.Snippet.ORDER'},
                             {text: 'Subscriptions',         value: 'plenigo.Snippet.SUBSCRIPTION'},
                             {text: 'Payment Methods',       value: 'plenigo.Snippet.PAYMENT_METHODS'},
-                            {text: 'Address Information',   value: 'plenigo.Snippet.ADDRESS_DATA'}
+                            {text: 'Address Information',   value: 'plenigo.Snippet.ADDRESS_DATA'},
+                            {text: 'Billing Address Only Information',   value: 'plenigo.Snippet.BILLING_ADDRESS_DATA'},
+                            {text: 'Delivery Address Only Information',   value: 'plenigo.Snippet.DELIVERY_ADDRESS_DATA'},
+                            {text: 'Bank Account Only Information',   value: 'plenigo.Snippet.BANK_ACCOUNT'},
+                            {text: 'Credit Card Only Information',   value: 'plenigo.Snippet.CREDIT_CARD'},
+                            {text: 'Personal Data Settings Only Information',   value: 'plenigo.Snippet.PERSONAL_DATA_SETTINGS'},
+                            {text: 'Personal Data Address Only Information',   value: 'plenigo.Snippet.PERSONAL_DATA_ADDRESS'},
+                            {text: 'Personal Data Protection Only Information',   value: 'plenigo.Snippet.PERSONAL_DATA_PROTECTION'},
+                            {text: 'Personal Data Social Media Only Information',   value: 'plenigo.Snippet.PERSONAL_DATA_SOCIAL_MEDIA'},
+                            {text: 'Personal Data Password Only Information',   value: 'plenigo.Snippet.PERSONAL_DATA_PASSWORD'}
                         ]
                     }
                 ],
