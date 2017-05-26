@@ -244,7 +244,7 @@ instead of checking out a particular product.
 [pl_failed title="{{BUTTON TITLE}}" class="{{CSS CLASS}}"][/pl_failed]
 
 **Subscription renewal button**
-Same as pl_checkout but it will set the "Subcription Renew" flag for
+Same as pl_checkout but it will set the "Subscription Renew" flag for
 this purchase.
 
 [pl_renew prod_id="{{PRODUCT ID}}" title="{{BUTTON TITLE}}"
