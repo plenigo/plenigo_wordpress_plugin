@@ -260,7 +260,7 @@ TO SHOW CONTENT:
 
 [pl_content_show prod_id="<Some plenigo Product ID>"]This content is shown if the 
 Product has been bought. Thank your customer and encourage to 
-buy orhter products[/pl_content_show]
+buy other products[/pl_content_show]
 
 TO HIDE CONTENT:
 
