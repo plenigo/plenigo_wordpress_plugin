@@ -211,7 +211,7 @@ Enable/Disable the WooCommerce functionality of the plenigo plugin
 Order title format to use.
 
 **Product Type**
-Type of the product going to be sold. This is importent for the tax rate that will be selected.
+Type of the product going to be sold. This is important for the tax rate that will be selected.
 
 == Frequently Asked Questions ==
 
@@ -225,7 +225,7 @@ To get help visit [help pages](https://developer.plenigo.com/plugins/wordpress/ 
 Creates a checkout button with optional title and optional css class.
 If the product is bought, the button won't e shown and the contents
 will be shown instead.
-Note: You can use shotcodes and all formating inside the button shortcode
+Note: You can use shortcodes and all formatting inside the button shortcode
 
 [pl_checkout prod_id="{{PRODUCT ID}}" title="{{BUTTON TITLE}}"
 class="{{CSS CLASS}}"]{{DISPLAY TEXT AFTER PURCHASE}}[/pl_checkout]
