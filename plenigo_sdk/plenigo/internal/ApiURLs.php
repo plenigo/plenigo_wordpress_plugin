@@ -14,7 +14,6 @@ namespace plenigo\internal;
  *
  * @category SDK
  * @package  PlenigoInternal
- * @author   René Olivo <r.olivo@plenigo.com>
  * @link     https://www.plenigo.com
  *
  */
@@ -30,6 +29,16 @@ final class ApiURLs
      * OAuth2 plenigo URL.
      */
     const OAUTH_PLENIGO_URL = "https://www.plenigo.com";
+
+    /**
+     * This URL is used to add user access rights.
+     */
+    const PRODUCT_ACCESS_RIGHTS_ADDITION_URL = "/api/v2/access/{USER_ID}/add";
+
+    /**
+     * This URL is used to remove user access rights.
+     */
+    const PRODUCT_ACCESS_RIGHTS_REMOVAL_URL = "/api/v2/access/{USER_ID}/remove";
 
     /**
      * This URL is used to check if an user has access to a product.
@@ -133,7 +142,7 @@ final class ApiURLs
     /**
      * This is the URL used to change email address of an existing user.
      */
-    const USER_MGMT_CHANGEMAIL = "/api/v2/externalUser/{USER_ID}/changeEmail";
+    const USER_MGMT_CHANGEMAIL = "/api/v2/externalUser/{USER_ID}/changeEmail?useExternalCustomerId={USE_EXTERNAL_ID}";
 
     /**
      * This is the URL used to add an external user id to an existing user.
@@ -143,7 +152,7 @@ final class ApiURLs
     /**
      * This URL is used to create a login token for an existing user.
      */
-    const USER_MGMT_CREATELOGIN = "/api/v2/externalUser/{USER_ID}/createLoginToken";
+    const USER_MGMT_CREATELOGIN = "/api/v2/externalUser/{USER_ID}/createLoginToken?useExternalCustomerId={USE_EXTERNAL_ID}";
     
     /**
      * This URL is used to assign different customer ids to a plenigo customer.
