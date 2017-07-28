@@ -380,19 +380,20 @@ class PlenigoLoginManager {
 
 
         $current_url = PlenigoURLManager::get()->getSanitizedURL();
-        $arrTokens = explode(',', self::PLENIGO_URL_EXCEPTIONS);
-        $updNeeded = true;
-        foreach ($arrTokens as $token) {
-            if (stristr($current_url, $token)) {
-                $updNeeded = false;
-                break;
+        if(strpos($current_url, "/wp-content/") === false) {
+            $arrTokens = explode(',', self::PLENIGO_URL_EXCEPTIONS);
+            $updNeeded = true;
+            foreach ($arrTokens as $token) {
+                if (stristr($current_url, $token)) {
+                    $updNeeded = false;
+                    break;
+                }
             }
-        }
-        if ($updNeeded !== FALSE) {
-            $_SESSION['plenigo_throwback_url'] = $current_url;
-        }
+            if ($updNeeded !== FALSE) {
+                $_SESSION['plenigo_throwback_url'] = $current_url;
+            }
 
-        plenigo_log_message("THROWBACK: " . var_export($_SESSION['plenigo_throwback_url'], true), E_USER_NOTICE);
+            plenigo_log_message("THROWBACK: " . var_export($_SESSION['plenigo_throwback_url'], true), E_USER_NOTICE);
+        }
     }
-
 }
