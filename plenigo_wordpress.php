@@ -10,7 +10,7 @@
   Text Domain: plenigo
   License: GPLv2
   WC requires at least: 4.0
-  WC tested up to: 4.7.3
+  WC tested up to: 4.8.0
  */
 /*
   Copyright (C) 2014 plenigo
