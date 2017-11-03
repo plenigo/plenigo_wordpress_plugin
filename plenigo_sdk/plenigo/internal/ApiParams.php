@@ -15,11 +15,6 @@ use plenigo\internal\utils\BasicEnum;
  * be removed in future versions of the SDK or access to such elements could
  * be changed from 'public' to 'protected' or less.
  * </p>
- *
- * @category SDK
- * @package  PlenigoInternal
- * @author Sebastian Dieguez <s.dieguez@plenigo.com>
- * @link     https://www.plenigo.com
  */
 class ApiParams extends BasicEnum {
 
@@ -114,6 +109,11 @@ class ApiParams extends BasicEnum {
     const TEST_MODE = "testMode";
 
     /**
+     * Flag indicating if customer id sent is the external customer id
+     */
+    const USE_EXTERNAL_CUSTOMER_ID = "useExternalCustomerId";
+
+    /**
      * Access token parameter.
      */
     const ACCESS_TOKEN = "token";
@@ -172,4 +172,9 @@ class ApiParams extends BasicEnum {
      * The replacement tag for the Voucher ID
      */
     const URL_VOUCHER_ID_TAG = "{VOUCHER_ID}";
+
+    /**
+     * Flag indicating if customer id sent is the external customer id
+     */
+    const URL_USE_EXTERNAL_ID_TAG = "{USE_EXTERNAL_ID}";
 }

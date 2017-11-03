@@ -6,9 +6,7 @@ require_once __DIR__ . '/CurlRequest.php';
 require_once __DIR__ . '/JWT.php';
 require_once __DIR__ . '/../../PlenigoManager.php';
 
-use \plenigo\internal\utils\CurlRequest;
-use \plenigo\internal\utils\JWT;
-use \plenigo\PlenigoManager;
+use plenigo\PlenigoManager;
 
 /**
  * RestClient
@@ -244,7 +242,7 @@ class RestClient {
      * Carries out the actual request and returns a response result
      * depending on the response's content type.
      *
-     * @return the request response
+     * @return mixed the request response
      *
      * @throws \Exception on request error.
      */

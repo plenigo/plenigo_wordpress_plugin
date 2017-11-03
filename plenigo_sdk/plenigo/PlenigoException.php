@@ -11,11 +11,6 @@ use plenigo\models\ErrorDetail;
  * This represents any exception that can come from
  * the plenigo API or SDK.
  * </p>
- *
- * @category SDK
- * @package  Plenigo
- * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
- * @link     https://www.plenigo.com
  */
 class PlenigoException extends \Exception
 {
@@ -31,7 +26,7 @@ class PlenigoException extends \Exception
      *
      * @param string $message The response message
      * @param int $code The response code
-     * @param type $previous The previous Exception
+     * @param \Exception $previous The previous Exception
      */
     public function __construct($message, $code = 0, $previous = null)
     {

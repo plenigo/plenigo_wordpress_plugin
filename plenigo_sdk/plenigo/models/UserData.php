@@ -4,7 +4,7 @@ namespace plenigo\models;
 
 require_once __DIR__ . '/../internal/models/Address.php';
 
-use \plenigo\internal\models\Address;
+use plenigo\internal\models\Address;
 
 /**
  * UserData
@@ -22,68 +22,81 @@ use \plenigo\internal\models\Address;
 class UserData {
 
     /**
-     * The user id.
+     * @var string is The user id.
      */
     private $id;
 
     /**
-     * The user's email.
+     * @var string email The user's email.
      */
     private $email;
 
     /**
-     * The user's name.
+     * @var string name The user's name.
      */
     private $name;
 
     /**
-     * The username/nickname.
+     * @var string username The username/nickname.
      */
     private $username;
 
     /**
-     * The user's gender.
+     * @var string gender The user's gender.
      */
     private $gender;
 
     /**
-     * The user's last name.
+     * @var string lastname
      */
     private $lastName;
 
     /**
-     * The user's first name.
+     * @var string firstname
      */
     private $firstName;
 
     /**
-     * The user's address.
-     *
-     * {@link \plenigo\internal\models\Address }
+     * @var Address address
      */
     private $address;
 
     /**
-     * The external user's ID.
+     * @var string externalUserId
      */
     private $externalUserId;
 
     /**
-     * The default constructor with all required parameters.
-     *
-     * @param string  $id             The user's id.
-     * @param string  $email          The user's email.
-     * @param string  $name           The user's name.
-     * @param string  $username       The username/nickname.
-     * @param string  $gender         The user's gender.
-     * @param string  $lastName       The user's last name.
-     * @param string  $firstName      The user's first name.
-     * @param Address $address        The user's address {@link \plenigo\internal\models\Address}
-     * @param string  $externalUserId The external user's ID.
-     *
-     * @return UserData instance
+     * @var string birthday
      */
-    public function __construct($id, $email, $name, $username, $gender, $lastName, $firstName, Address $address, $externalUserId) {
+    private $birthday;
+
+    /**
+     * @var string phoneNumber
+     */
+    private $phoneNumber;
+
+    /**
+     * @var string mobileNumber
+     */
+    private $mobileNumber;
+
+    /**
+     * The default constructor with all required parameters.
+     * @param string $id
+     * @param string $email
+     * @param string $name
+     * @param string $username
+     * @param string $gender
+     * @param string $lastName
+     * @param string $firstName
+     * @param Address $address
+     * @param string $externalUserId
+     * @param string $birthday
+     * @param string $phoneNumber
+     * @param string $mobileNumber
+     */
+    public function __construct($id, $email, $name, $username, $gender, $lastName, $firstName, Address $address, $externalUserId, $birthday, $phoneNumber, $mobileNumber) {
         $this->id = $id;
         $this->email = $email;
         $this->name = $name;
@@ -93,12 +106,15 @@ class UserData {
         $this->firstName = $firstName;
         $this->address = $address;
         $this->externalUserId = $externalUserId;
+        $this->birthday = $birthday;
+        $this->phoneNumber = $phoneNumber;
+        $this->mobileNumber = $mobileNumber;
     }
 
     /**
      * Returns the user's id.
      *
-     * @return user's id.
+     * @return string user's id.
      */
     public function getId() {
         return $this->id;
@@ -107,7 +123,7 @@ class UserData {
     /**
      * Returns the user's email.
      *
-     * @return user's email.
+     * @return string user's email.
      */
     public function getEmail() {
         return $this->email;
@@ -116,7 +132,7 @@ class UserData {
     /**
      * Returns the user's name.
      *
-     * @return user's name.
+     * @return string user's name.
      */
     public function getName() {
         return $this->name;
@@ -125,7 +141,7 @@ class UserData {
     /**
      * Returns the username/nickname.
      *
-     * @return username/nickname.
+     * @return string username/nickname.
      */
     public function getUsername() {
         return $this->username;
@@ -134,7 +150,7 @@ class UserData {
     /**
      * Returns the user's gender.
      *
-     * @return user's gender.
+     * @return string user's gender.
      */
     public function getGender() {
         return $this->gender;
@@ -143,7 +159,7 @@ class UserData {
     /**
      * Returns the user's last name.
      *
-     * @return user's last name. 
+     * @return string user's last name.
      */
     public function getLastName() {
         return $this->lastName;
@@ -152,7 +168,7 @@ class UserData {
     /**
      * Returns the user's first name.
      *
-     * @return user's first name.
+     * @return string user's first name.
      */
     public function getFirstName() {
         return $this->firstName;
@@ -161,7 +177,7 @@ class UserData {
     /**
      * Returns the user's addres.
      *
-     * @return user's address {@link \plenigo\internal\Address}.
+     * @return Address user's address {@link \plenigo\internal\Address}.
      */
     public function getAddress() {
         return $this->address;
@@ -170,16 +186,65 @@ class UserData {
     /**
      * Returns the external user's ID.
      *
-     * @return external user's ID.
+     * @return string user's ID.
      */
     public function getExternalUserId() {
         return $this->externalUserId;
     }
 
     /**
+     * @return string the user's birthday
+     */
+    public function getBirthday()
+    {
+        return $this->birthday;
+    }
+
+    /**
+     * @param string $birthday
+     */
+    public function setBirthday($birthday)
+    {
+        $this->birthday = $birthday;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
+     * @param string $phoneNumber
+     */
+    public function setPhoneNumber($phoneNumber)
+    {
+        $this->phoneNumber = $phoneNumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMobileNumber()
+    {
+        return $this->mobileNumber;
+    }
+
+    /**
+     * @param string $mobileNumber
+     */
+    public function setMobileNumber($mobileNumber)
+    {
+        $this->mobileNumber = $mobileNumber;
+    }
+
+
+    /**
      * Generates a map with the UserData properties.
      *
-     * @return UserData map.
+     * @return array UserData map.
      */
     public function getMap() {
         $map = array(
@@ -191,6 +256,9 @@ class UserData {
             'lastName' => $this->getLastName(),
             'firstName' => $this->getFirstName(),
             'externalUserId' => $this->getExternalUserId(),
+            'birthday' => $this->getBirthday(),
+            'phoneNumber' => $this->getPhoneNumber(),
+            'mobileNumber' => $this->getMobileNumber(),
         );
 
         $addressMap = $this->getAddress()->getMap();
@@ -208,7 +276,7 @@ class UserData {
      *
      * @return UserData UserData instance.
      */
-    public static function createFromMap(array $map) {
+    public static function  createFromMap(array $map) {
         $address = Address::createFromMap($map);
 
         $name = isset($map['name']) ? $map['name'] : null;
@@ -221,8 +289,11 @@ class UserData {
         $currUserName = isset($map['username']) ? $map['username'] : null;
         $currGender = isset($map['gender']) ? $map['gender'] : null;
         $externalUserId  = isset($map['externalUserId']) ? $map['externalUserId'] : null;
+        $birthday  = isset($map['birthday']) ? $map['birthday'] : null;
+        $phoneNumber  = isset($map['phoneNumber']) ? $map['phoneNumber'] : null;
+        $mobileNumber  = isset($map['mobileNumber']) ? $map['mobileNumber'] : null;
 
-        return new UserData($userId, $currEmail, $currName, $currUserName, $currGender, $lastName, $currFirstName, $address, $externalUserId);
+        return new UserData($userId, $currEmail, $currName, $currUserName, $currGender, $lastName, $currFirstName, $address, $externalUserId, $birthday, $phoneNumber, $mobileNumber);
     }
 
 }

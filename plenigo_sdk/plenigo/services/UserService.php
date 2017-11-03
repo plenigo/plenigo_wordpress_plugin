@@ -15,11 +15,13 @@ require_once __DIR__ . '/../internal/ApiResults.php';
 require_once __DIR__ . '/../internal/ApiParams.php';
 require_once __DIR__ . '/../models/ErrorCode.php';
 
+use PHPUnit\Runner\Exception;
 use plenigo\internal\ApiParams;
 use plenigo\internal\ApiResults;
 use plenigo\internal\ApiURLs;
 use plenigo\internal\models\Customer;
 use plenigo\internal\services\Service;
+use plenigo\internal\utils\CurlRequest;
 use plenigo\internal\utils\EncryptionUtils;
 use plenigo\internal\utils\SdkUtils;
 use plenigo\models\ErrorCode;
@@ -49,6 +51,7 @@ class UserService extends Service
     const ERR_MSG_USER_BOUGHT = "Error while determining if the user bought an item!";
     const ERR_MSG_USER_LIST = "Error while retrieving bought product listing!";
     const ERR_MSG_PAYWALL = "Error while determining if the paywall is enabled!";
+    const ERR_USER_LOGIN = "Error while verifying user";
     const INF_MSG_ACCESS = "User tried to access an item!";
 
     /**
@@ -89,11 +92,59 @@ class UserService extends Service
         return $result;
     }
 
+
+    /**
+     * Verify the combination of email and password
+     * and returns the user object if successfull.
+     * @see https://plenigo.github.io/sdks/php#verify-users-login
+     *
+     * @param string $email the user's email
+     * @param string $password the users password
+     * @param string $error (optional) error message
+     * @return array|boolean user data or boolean false
+     */
+    public static function verifyLogin($email, $password, &$error = '') {
+
+        $clazz = get_class();
+        PlenigoManager::notice($clazz, "Verifying the user's login");
+
+        $testModeText = (PlenigoManager::get()->isTestMode()) ? 'true' : 'false';
+        $params = array(
+            'email' => $email,
+            'password' => $password,
+            ApiParams::TEST_MODE => $testModeText,
+        );
+
+        $request = static::postJSONRequest(ApiURLs::USER_LOGIN, false, $params);
+
+        $LoginRequest = new static($request);
+
+        try {
+            $result = parent::executeRequest($LoginRequest, ApiURLs::USER_LOGIN, self::ERR_USER_LOGIN);
+            return $result;
+        }
+        // we only catch one specific Exception
+        catch (PlenigoException $exception) {
+            $result = CurlRequest::getLastResult();
+
+            // something else is broken
+            if (!is_array($result) || !key_exists('error', $result) || !$result['error']) {
+                // throwing it outside
+                throw $exception;
+            }
+
+            // our errorMsg from API
+            $error = $result['error'];
+        }
+
+        return false;
+    }
+
     /**
      * Executes the prepared request and returns
      * the Response object on success.
      *
-     * @return The request's response.
+     * @return mixed The request's response.
      *
      * @throws \plenigo\PlenigoException on request error.
      */
@@ -115,12 +166,13 @@ class UserService extends Service
      *
      * @param mixed $productId The ID (or array of IDs) of the product to be queried against the user
      * @param string $customerId The customer ID if its not logged in
+     * @param boolean $useExternalCustomerId Flag indicating if customer id sent is the external customer id
      *
      * @return bool TRUE if the user in the cookie has bought the product and the session is not expired, false otherwise
      *
      * @throws \plenigo\PlenigoException whenever an error happens
      */
-    public static function hasUserBought($productId, $customerId = null)
+    public static function hasUserBought($productId, $customerId = null, $useExternalCustomerId = false)
     {
         $clazz = get_class();
         PlenigoManager::notice($clazz, "Checking if user bought Product with ID=" . print_r($productId, true));
@@ -137,7 +189,8 @@ class UserService extends Service
         $params = array(
             ApiParams::CUSTOMER_ID => $customer->getCustomerId(),
             ApiParams::PRODUCT_ID => $productId,
-            ApiParams::TEST_MODE => $testModeText
+            ApiParams::TEST_MODE => $testModeText,
+            ApiParams::USE_EXTERNAL_CUSTOMER_ID => ($useExternalCustomerId ? 'true' : 'false')
         );
         $request = static::getRequest(ApiURLs::USER_PRODUCT_ACCESS, false, $params);
 
@@ -177,12 +230,13 @@ class UserService extends Service
      *
      * @param mixed $productId The ID (or array of IDs) of the product to be queried against the user
      * @param string $customerId The customer ID if its not logged in
+     * @param boolean $useExternalCustomerId Flag indicating if customer id sent is the external customer id
      *
      * @return array
      *
      * @throws \plenigo\PlenigoException whenever an error happens
      */
-    public static function hasBoughtProductWithProducts($productId, $customerId = null)
+    public static function hasBoughtProductWithProducts($productId, $customerId = null, $useExternalCustomerId = false)
     {
         $clazz = get_class();
         PlenigoManager::notice($clazz, "Checking if user bought Product with ID=" . print_r($productId, true));
@@ -199,7 +253,8 @@ class UserService extends Service
         $params = array(
             ApiParams::CUSTOMER_ID => $customer->getCustomerId(),
             ApiParams::PRODUCT_ID => $productId,
-            ApiParams::TEST_MODE => $testModeText
+            ApiParams::TEST_MODE => $testModeText,
+            ApiParams::USE_EXTERNAL_CUSTOMER_ID => ($useExternalCustomerId ? 'true' : 'false')
         );
         $request = static::getRequest(ApiURLs::USER_PRODUCT_ACCESS, false, $params);
 
@@ -248,16 +303,17 @@ class UserService extends Service
         } catch (PlenigoException $exc) {
             $clazz = get_class();
             PlenigoManager::error($clazz, self::ERR_MSG_PAYWALL, $exc);
-            // Default state for the paywall is ENABLED
-            return true;
+
+            throw new PlenigoException(self::ERR_MSG_PAYWALL);
         }
+
         $resArray = get_object_vars($response);
 
-        if (isset($resArray['enabled']) && $resArray['enabled'] === 'false') {
-            return false;
-        } else {
-            return true;
+        if (isset($resArray['enabled'])) {
+            return !!$resArray['enabled'];
         }
+
+        throw new PlenigoException(self::ERR_MSG_PAYWALL);
     }
 
     /**
@@ -279,7 +335,7 @@ class UserService extends Service
     /**
      * Retrieves the user info from the cookie.
      * @param string $pCustId The customer ID if its not logged in
-     * @return The Customer Information from the cookie
+     * @return Customer The Customer Information from the cookie
      * @throws \plenigo\PlenigoException whenever an error happens
      */
     public static function getCustomerInfo($pCustId = null)
@@ -372,11 +428,12 @@ class UserService extends Service
      *   ),
      * )</pre>
      *
-     * @param string $pCustId The customer ID if its not logged in
+     * @param string $pCustId (optional) The customer ID if its not logged in
+     * @param boolean $useExternalCustomerId (optional) Flag indicating if customer id sent is the external customer id
      * @return array The associative array containing the bought products/subscriptions or an empty array
      * @throws PlenigoException If the compay ID and/or the Secret key is rejected
      */
-    public static function getProductsBought($pCustId = null)
+    public static function getProductsBought($pCustId = null, $useExternalCustomerId = false)
     {
         $res = array();
         $customer = self::getCustomerInfo($pCustId);
@@ -389,7 +446,9 @@ class UserService extends Service
         $testModeText = (PlenigoManager::get()->isTestMode()) ? 'true' : 'false';
 
         $params = array(
-            ApiParams::TEST_MODE => $testModeText
+            ApiParams::TEST_MODE => $testModeText,
+            ApiParams::USE_EXTERNAL_CUSTOMER_ID => ($useExternalCustomerId ? 'true' : 'false')
+
         );
         $url = str_ireplace(ApiParams::URL_USER_ID_TAG, $customer->getCustomerId(), ApiURLs::USER_PRODUCTS);
         $request = static::getRequest($url, false, $params);

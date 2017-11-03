@@ -8,11 +8,10 @@ require_once __DIR__ . '/../internal/utils/EncryptionUtils.php';
 require_once __DIR__ . '/../internal/server-interface/payment/Checkout.php';
 require_once __DIR__ . '/../internal/exceptions/ProductException.php';
 
-use \plenigo\PlenigoManager;
-use \plenigo\internal\models\Product;
-use \plenigo\internal\utils\EncryptionUtils;
-use \plenigo\internal\serverInterface\payment\Checkout;
-use \plenigo\internal\exceptions\ProductException;
+use plenigo\internal\models\Product;
+use plenigo\internal\serverInterface\payment\Checkout;
+use plenigo\internal\utils\EncryptionUtils;
+use plenigo\PlenigoManager;
 
 /**
  * CheckoutSnippetBuilder
@@ -55,11 +54,12 @@ class CheckoutSnippetBuilder {
      * @param string $sourceUrl URL of the page that lead to that checkout
      * @param string $targetUrl URL of the page the process should redirect to after successful payment
      * @param string $affiliateId affiliate id to associate with this checkout
+     * @param string $elementId id of the element the checkout should be inserted into, if this parameter is passed the checkout will be embedded
      * 
      * @return string A Javascript snippet that is compliant with plenigo's Javascript SDK.
      * @throws CryptographyException When an error occurs during data encoding
      */
-    public function build($settings = array(), $loginToken = null, $showRegisterFirst = false, $sourceUrl = null, $targetUrl = null, $affiliateId = null) {
+    public function build($settings = array(), $loginToken = null, $showRegisterFirst = false, $sourceUrl = null, $targetUrl = null, $affiliateId = null, $elementId = null) {
         $clazz = get_class();
         PlenigoManager::get()->notice($clazz, "Building CHECKOUT snippet:");
         //Add testMode SDK check
@@ -97,7 +97,7 @@ class CheckoutSnippetBuilder {
                 $strSourceURL = ", null";
             }
         }
-        $strAffiliate = "";
+        $strAffiliate = null;
         if (!is_null($affiliateId)) {
             PlenigoManager::get()->notice($clazz, "Affiliate ID:" . $affiliateId);
             $strAffiliate = ", '" . $affiliateId . "'";
@@ -108,8 +108,22 @@ class CheckoutSnippetBuilder {
                 $strTargetURL = ", null";
             }
         }
+        $strElementId = "";
+        if (!is_null($elementId)) {
+            PlenigoManager::get()->notice($clazz, "Element ID:" . $elementId);
+            $strElementId = ", '" . $elementId . "'";
+            if (is_null($sourceUrl)) {
+                $strSourceURL = ", null";
+            }
+            if (is_null($targetUrl)) {
+                $strTargetURL = ", null";
+            }
+            if (is_null($strAffiliate)) {
+                $strAffiliate = ", null";
+            }
+        }
 
-        $strFunctionFormula = $strFunction . "('%s'" . $strFirstParam . $strSourceURL . $strTargetURL . $strAffiliate . ");";
+        $strFunctionFormula = $strFunction . "('%s'" . $strFirstParam . $strSourceURL . $strTargetURL . $strAffiliate . $strElementId . ");";
         return sprintf($strFunctionFormula, $encodedData);
     }
 

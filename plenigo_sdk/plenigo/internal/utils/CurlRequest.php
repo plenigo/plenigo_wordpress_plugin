@@ -4,9 +4,10 @@ namespace plenigo\internal\utils;
 
 require_once __DIR__ . '/CurlRequestInterface.php';
 require_once __DIR__ . '/../../PlenigoManager.php';
+require_once __DIR__ . '/../exceptions/ConfigException.php';
 
-use \plenigo\internal\utils\CurlRequestInterface;
-use \plenigo\PlenigoManager;
+use plenigo\internal\exceptions\ConfigException;
+use plenigo\PlenigoManager;
 
 /**
  * CurlRequest
@@ -33,6 +34,7 @@ final class CurlRequest {
      */
     private $curl;
     private $optCache = array();
+    private static $lastResult = '';
 
     /**
      * Initializes the cURL request at the given URL.
@@ -45,6 +47,11 @@ final class CurlRequest {
      */
     public function __construct($url = null) {
         $this->optCache = array();
+
+        if (!function_exists('curl_init')) {
+            throw new ConfigException("Failed to init curl! Please install php-curl first");
+        }
+
         $this->curl = curl_init($url);
     }
 
@@ -52,7 +59,7 @@ final class CurlRequest {
      * Adds an option to the cURL request.
      *
      * @param string $name  The option name.
-     * @param any    $value The option value.
+     * @param string any    $value The option value.
      *
      * @return void
      */
@@ -77,7 +84,7 @@ final class CurlRequest {
     /**
      * Executes the cURL request.
      *
-     * @return void
+     * @return mixed
      *
      * @throws \Exception on request error.
      */
@@ -94,6 +101,8 @@ final class CurlRequest {
         if ($result === false) {
             throw new \Exception(curl_error($this->curl), curl_errno($this->curl));
         }
+
+        self::$lastResult = $result;
 
         if (PlenigoManager::isDebug()) {
             rewind($verbose);
@@ -119,7 +128,7 @@ final class CurlRequest {
         $statusCode = $this->getInfo(CURLINFO_HTTP_CODE);
         if (!empty($statusCode)) {
             if ($statusCode < 200 || $statusCode >= 300) {
-                throw new \Exception($statusCode . " HTTP Error detected", $statusCode);
+                throw new \Exception($statusCode . " HTTP Error detected with message: {$result}", $statusCode);
             }
         }
         $this->optCache = array();
@@ -131,7 +140,7 @@ final class CurlRequest {
      *
      * @param string $name The name of the information to retrieve.
      *
-     * @return The information requested.
+     * @return string The information requested.
      */
     public function getInfo($name) {
         return curl_getinfo($this->curl, $name);
@@ -144,6 +153,15 @@ final class CurlRequest {
      */
     public function close() {
         curl_close($this->curl);
+    }
+
+    /**
+     * Get the result from the very last request
+     * @return mixed|string last request as object or json
+     */
+    public static function getLastResult() {
+        $json = json_decode(self::$lastResult, true);
+        return (json_last_error() === JSON_ERROR_NONE ? $json : self::$lastResult);
     }
 
 }

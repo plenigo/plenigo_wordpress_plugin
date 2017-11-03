@@ -7,10 +7,10 @@ require_once __DIR__ . '/../../PlenigoException.php';
 require_once __DIR__ . '/../../internal/utils/RestClient.php';
 require_once __DIR__ . '/../../models/ErrorCode.php';
 
-use \plenigo\PlenigoManager;
-use \plenigo\internal\utils\RestClient;
-use \plenigo\models\ErrorCode;
-use \plenigo\PlenigoException;
+use plenigo\internal\utils\RestClient;
+use plenigo\models\ErrorCode;
+use plenigo\PlenigoException;
+use plenigo\PlenigoManager;
 
 /**
  * Service
@@ -36,7 +36,7 @@ class Service {
      * The default Service constructor. Accepts a
      * request object to be executed.
      *
-     * @param RestClient $request The request object to be executed.
+     * @param \plenigo\internal\utils\RestClient $request The request object to be executed.
      */
     protected function __construct($request) {
         $this->request = $request;
@@ -164,7 +164,7 @@ class Service {
     /**
      * Executes the request and returns the response.
      *
-     * @return The request's response.
+     * @return mixed The request's response.
      *
      * @throws \Exception on request error.
      */
@@ -211,16 +211,19 @@ class Service {
 
         // All 200 codes are good answers
         if ($statusCode < 200 || $statusCode >= 300) {
-            throw new \Exception("Request Status Code: " . $statusCode, $statusCode);
+            $exception = new PlenigoException("Request Status Code: {$statusCode}, {$response->error}", $statusCode);
+            $exception->addErrorDetail($statusCode, $response->error);
+            throw $exception;
         }
     }
+
 
     /**
      * Executes the fiven RestClient and detects if there is an error, 
      * gets its code and provides a PlenigoException describing it 
      * with the error parameters
      * 
-     * @param \plenigo\internal\utils\RestClient $pRequest The RestClient object to execute for this request
+     * @param \plenigo\internal\services\Service $pRequest The RestClient object to execute for this request
      * @param string $pErrorSource the URL key for the error translation table
      * @param string $pErrorMsg the Error message to show in the Plenigo Exception thrown
      * 
@@ -259,7 +262,7 @@ class Service {
             throw new \Exception('Error checking the response', $exc->getCode(), $exc);
         }
 
-        return $response;
+        return  $response;
     }
 
     /**
