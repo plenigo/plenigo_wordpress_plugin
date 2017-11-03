@@ -298,6 +298,9 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
+= 1.7.1 - Improved stability =
+- Added stability improvements
+
 = 1.7.0 - Added new snippet types =
 - Updated SDK
 - Added additional snippet types to create more customized profile pages
