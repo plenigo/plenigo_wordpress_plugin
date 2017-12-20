@@ -39,9 +39,15 @@ define('PLENIGO_JSSDK_URL', "https://static.plenigo.com");
 // Plenigo PHP SDK
 require_once dirname(__FILE__) . '/plenigo_sdk/plenigo/Plenigo.php';
 require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoSDKManager.php';
+require_once dirname(__FILE__) . '/plenigo_sdk/plenigo/models/Loggable.php';
+
+use plenigo\models\Loggable;
+global $jal_db_version;
+$jal_db_version = '1.0';
+register_activation_hook(__FILE__, 'jal_install');
 
 // Internationalization and upgrade
-add_action('plugins_loaded', function() {
+add_action('plugins_loaded', function () {
     load_plugin_textdomain('plenigo', FALSE, basename(dirname(__FILE__)) . '/plenigo_i18n/');
     $upgraded = plenigo_plugin_upgrade();
     if ($upgraded) {
@@ -49,6 +55,32 @@ add_action('plugins_loaded', function() {
     }
     //Initializing SDK
     $sdk = \plenigo_plugin\PlenigoSDKManager::get();
+
+    global $wpdb;
+    $tableName = $wpdb->prefix . 'plenigo_log';
+
+    $loggable = new class($wpdb, $tableName) implements Loggable {
+        private $wpdb;
+        private $tableName;
+
+        public function __construct($wpdb, $tableName)
+        {
+            $this->wpdb = $wpdb;
+            $this->tableName = $tableName;
+        }
+
+
+        public function logData($msg)
+        {
+
+            $this->wpdb->insert($this->tableName,
+                array(
+                    'time' => current_time('mysql'),
+                    'log' => $msg
+                ));
+        }
+    };
+    $sdk->getPlenigoSDK()->setLoggable($loggable);
 });
 
 //setup//
@@ -93,15 +125,15 @@ if ($plenigoOptions['debug_mode'] > 0) {
         @ini_set('display_errors', 0);
     }
     error_reporting(E_ALL | E_STRICT);
-}else{
+} else {
     define('PLENIGO_DEBUG', false);
 }
 
 //LoginWidget
-if (isset($plenigoOptions['use_login']) && ($plenigoOptions['use_login'] == 1 )) {
+if (isset($plenigoOptions['use_login']) && ($plenigoOptions['use_login'] == 1)) {
     require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoLoginWidget.php';
     require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoLoginManager.php';
-    add_action('widgets_init', function() {
+    add_action('widgets_init', function () {
         register_widget('plenigo_plugin\PlenigoLoginWidget');
     });
 
@@ -113,7 +145,7 @@ if (isset($plenigoOptions['use_login']) && ($plenigoOptions['use_login'] == 1 ))
  * */
 if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
 //WooCommerce
-    if (isset($plenigoOptions['use_woo']) && ($plenigoOptions['use_woo'] == 1 )) {
+    if (isset($plenigoOptions['use_woo']) && ($plenigoOptions['use_woo'] == 1)) {
         require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoWooCManager.php';
 
         $wooCommerceManager = new \plenigo_plugin\PlenigoWooCManager();
@@ -121,8 +153,8 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 }
 
 /**
- * Upgrades settings from older versions to current
- * 
+ * Upgrades settings from older versions to current.
+ *
  * @return boolean true if it was upgraded
  */
 function plenigo_plugin_upgrade() {
@@ -164,8 +196,8 @@ function plenigo_plugin_upgrade() {
 }
 
 /**
- * Centralized  method for showing error messages
- * 
+ * Centralized  method for showing error messages.
+ *
  * @param string $message
  * @param string $error_type
  */
@@ -175,4 +207,28 @@ function plenigo_log_message($message, $error_type = E_USER_NOTICE) {
     }
 }
 
+/**
+ * Install function for db table creation.
+ */
+function jal_install() {
+    global $wpdb;
+    global $jal_db_version;
+
+    $table_name = $wpdb->prefix . 'plenigo_log';
+
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		creation_date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		log text NOT NULL,
+		PRIMARY KEY  (id),
+		INDEX plenigo_log_date_idx(creation_date)
+	) $charset_collate;";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+
+    add_option('jal_db_version', $jal_db_version);
+}
 ?>

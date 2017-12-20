@@ -60,10 +60,13 @@ require_once __DIR__ . '/settings/SettingDebugMode.php';
 require_once __DIR__ . '/settings/SettingWelcomeURL.php';
 require_once __DIR__ . '/settings/SettingProfileURL.php';
 require_once __DIR__ . '/settings/SettingUseRegister.php';
+require_once __DIR__ . '/settings/LogTable.php';
+
+use plenigo_plugin\settings\LogTable;
 
 /**
  * PlenigoSettingsPage
- * 
+ *
  * <b>
  * This class holds the functions needed to configure the plenigo plugin settings page(s).
  * </b>
@@ -76,7 +79,7 @@ require_once __DIR__ . '/settings/SettingUseRegister.php';
 class PlenigoSettingsPage {
 
     /**
-     * Holds the values to be used in the fields callbacks
+     * Holds the values to be used in the fields callbacks.
      */
     private $options;
 
@@ -96,6 +99,9 @@ class PlenigoSettingsPage {
             add_action('admin_init', array($this, 'page_init'));
             add_action('admin_enqueue_scripts', array($this, 'add_scripts'));
             add_action('load-toplevel_page_' . self::PLENIGO_SETTINGS_PAGE, array($this, 'add_help_tab'));
+            add_action('wp_ajax__ajax_fetch_custom_list', array($this, '_ajax_fetch_custom_list_callback'));
+            add_action('wp_ajax__ajax_send_mail', array($this, '_ajax_send_mail_callback'));
+            add_action('admin_footer', array($this, 'ajax_script'));
         }
         // Set class property
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME, array());
@@ -148,7 +154,7 @@ class PlenigoSettingsPage {
     }
 
     /**
-     * Add options page
+     * Add options page.
      */
     public function add_plugin_page() {
         // This page will be under "Settings"
@@ -157,7 +163,7 @@ class PlenigoSettingsPage {
     }
 
     /**
-     * Add Javascript imports
+     * Add Javascript imports.
      */
     public function add_scripts() {
         // Javascript
@@ -176,42 +182,42 @@ class PlenigoSettingsPage {
     }
 
     public function add_help_tab() {
-        plenigo_log_message("CREATIGN HELP TAB");
+        plenigo_log_message("CREATING HELP TAB");
         $screen = get_current_screen();
         $screen->add_help_tab(array(
             'id' => 'plenigo_help_tab',
             'title' => __('Plenigo Help', self::PLENIGO_SETTINGS_GROUP),
             'content' => '<p>In order to configure the plenigo Paywall, '
-            . 'first got to the plenigo Website and register as a business. '
-            . '</p>'
-            . '<p>Obtain your <b>Company ID</b> and <b>Private Key</b>, we are almost there...'
-            . '</p>'
-            . '<p>Ok, last step, <a target="_blank" href="' . PLENIGO_SVC_URL
-            . '/company/product/create">create one or more managed product</a> and copy the product id'
-            . ', type the TAG, paste the product ID into the text field below and click ADD to append it to the tag list.'
-            . '</p>'
-            ,
+                . 'first got to the plenigo Website and register as a business. '
+                . '</p>'
+                . '<p>Obtain your <b>Company ID</b> and <b>Private Key</b>, we are almost there...'
+                . '</p>'
+                . '<p>Ok, last step, <a target="_blank" href="' . PLENIGO_SVC_URL
+                . '/company/product/create">create one or more managed product</a> and copy the product id'
+                . ', type the TAG, paste the product ID into the text field below and click ADD to append it to the tag list.'
+                . '</p>'
+        ,
         ));
         $screen->add_help_tab(array(
             'id' => 'plenigo_help_login',
             'title' => __('plenigo OAuth Help', self::PLENIGO_SETTINGS_GROUP),
             'content' => '<p>' . __('In order to configure plenigo OAuth Login: ', self::PLENIGO_SETTINGS_GROUP)
-            . __('1 - Add Login redirect URL to plenigo (Usually: <b>{YOUR BLOG URL}/wp-login.php</b>) ', self::PLENIGO_SETTINGS_GROUP)
-            . ' <a target="_blank" href="' . PLENIGO_SVC_URL . '/company/account/urls/show">' . __('clicking this link',
-                self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
-            . __('2 - Fill the same URL in the <b>OAuth redirect URL</b> below', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
-            . __('3 - (Optional) Fill the URL in the <b>URL After Login</b> for login redirection', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
-            . __('4 - Enable the plenigo Login clicking <b>Use plenigo Authentication Provider</b> ', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
-            . __('5 - Put the plenigo Login Widget in a widget area of the site ', self::PLENIGO_SETTINGS_GROUP)
-            . ' <a target="_blank" href="' . admin_url('/widgets.php') . '">' . __('clicking this link', self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
-            . __('6 - Enjoy logging in with plenigo! ', self::PLENIGO_SETTINGS_GROUP)
-            . '</p>'
-            ,
+                . __('1 - Add Login redirect URL to plenigo (Usually: <b>{YOUR BLOG URL}/wp-login.php</b>) ', self::PLENIGO_SETTINGS_GROUP)
+                . ' <a target="_blank" href="' . PLENIGO_SVC_URL . '/company/account/urls/show">' . __('clicking this link',
+                    self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
+                . __('2 - Fill the same URL in the <b>OAuth redirect URL</b> below', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
+                . __('3 - (Optional) Fill the URL in the <b>URL After Login</b> for login redirection', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
+                . __('4 - Enable the plenigo Login clicking <b>Use plenigo Authentication Provider</b> ', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
+                . __('5 - Put the plenigo Login Widget in a widget area of the site ', self::PLENIGO_SETTINGS_GROUP)
+                . ' <a target="_blank" href="' . admin_url('/widgets.php') . '">' . __('clicking this link', self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
+                . __('6 - Enjoy logging in with plenigo! ', self::PLENIGO_SETTINGS_GROUP)
+                . '</p>'
+        ,
         ));
     }
 
     /**
-     * Options page callback
+     * Options page callback.
      */
     public function create_admin_page() {
         echo '<div class="wrap">';
@@ -221,40 +227,44 @@ class PlenigoSettingsPage {
 
         //Loading
         echo '<div class="well" id="pl_load_settings">'
-        . '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> '
-        . __('Loading...', self::PLENIGO_SETTINGS_GROUP) . '</div>';
+            . '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> '
+            . __('Loading...', self::PLENIGO_SETTINGS_GROUP) . '</div>';
 
         //Hide Section titles
         echo '<div role="tabpanel" id="plenigo_tab_panel" style="display:none;">';
         echo '<ul class="nav nav-tabs" role="tablist">';
 
         echo '<li role="presentation" class="active"><a href="#plenigo_general" '
-        . 'aria-controls="plenigo_general" role="tab" data-toggle="tab">'
-        . __('General', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
+            . 'aria-controls="plenigo_general" role="tab" data-toggle="tab">'
+            . __('General', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
 
         echo '<li role="presentation" class="active"><a href="#plenigo_login_section" '
-        . 'aria-controls="plenigo_login_section" role="tab" data-toggle="tab">'
-        . __('OAuth Login', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
+            . 'aria-controls="plenigo_login_section" role="tab" data-toggle="tab">'
+            . __('OAuth Login', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
 
         echo '<li role="presentation" class="active"><a href="#plenigo_content_section" '
-        . 'aria-controls="plenigo_content_section" role="tab" data-toggle="tab">'
-        . __('Premium Content', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
+            . 'aria-controls="plenigo_content_section" role="tab" data-toggle="tab">'
+            . __('Premium Content', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
 
         echo '<li role="presentation" class="active"><a href="#plenigo_metered_section" '
-        . 'aria-controls="plenigo_metered_section" role="tab" data-toggle="tab">'
-        . __('Metered Views', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
+            . 'aria-controls="plenigo_metered_section" role="tab" data-toggle="tab">'
+            . __('Metered Views', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
 
         echo '<li role="presentation" class="active"><a href="#plenigo_curtain_section" '
-        . 'aria-controls="plenigo_curtain_section" role="tab" data-toggle="tab">'
-        . __('Curtain Customization', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
+            . 'aria-controls="plenigo_curtain_section" role="tab" data-toggle="tab">'
+            . __('Curtain Customization', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
 
         echo '<li role="presentation" class="active"><a href="#plenigo_woo_section" '
-        . 'aria-controls="plenigo_woo_section" role="tab" data-toggle="tab">'
-        . __('WooCommerce', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
+            . 'aria-controls="plenigo_woo_section" role="tab" data-toggle="tab">'
+            . __('WooCommerce', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
 
         echo '<li role="presentation" class="active"><a href="#plenigo_advanced_section" '
-        . 'aria-controls="plenigo_advanced_section" role="tab" data-toggle="tab">'
-        . __('Advanced', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
+            . 'aria-controls="plenigo_advanced_section" role="tab" data-toggle="tab">'
+            . __('Advanced', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
+
+        echo '<li role="presentation" class="active"><a href="#plenigo_error_logs_section" '
+            . 'aria-controls="plenigo_error_logs_section" role="tab" data-toggle="tab">'
+            . __('Error Logs', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
 
         echo '</ul>';
 
@@ -264,12 +274,10 @@ class PlenigoSettingsPage {
         do_settings_sections(self::PLENIGO_SETTINGS_PAGE);
         echo '</div>&nbsp;<div style="padding-left:1.4em;">';
         submit_button();
-        echo '</div></form>';
-        echo "</div></div>\n";
-        echo "<script>jQuery( document ).ready(function() {\n"
-        . "jQuery(\"#pl_load_settings\").hide();\n"
-        . "jQuery(\"#plenigo_tab_panel\").show().tabs();\n"
-        . '});</script>';
+        ?>
+        </div></form>
+        </div></div>
+        <?php
     }
 
     /**
@@ -332,6 +340,13 @@ class PlenigoSettingsPage {
         );
 
         add_settings_section(
+            'plenigo_error_logs_section', // ID
+            "", // Title
+            array($this, 'print_section_error_logs'), // Callback
+            self::PLENIGO_SETTINGS_PAGE // Page
+        );
+
+        add_settings_section(
             'plenigo_footer_section', // ID
             "", // Title
             array($this, 'print_section_footer'), // Callback
@@ -350,7 +365,7 @@ class PlenigoSettingsPage {
     }
 
     /**
-     * Sanitize each setting field as needed
+     * Sanitize each setting field as needed.
      *
      * @param array $input Contains all settings fields as array keys
      */
@@ -377,7 +392,7 @@ class PlenigoSettingsPage {
     }
 
     /**
-     * Print the Section text
+     * Print the Section text.
      */
     public function print_section_general() {
         print '<div role="tabpanel" class="tab-pane active" id="plenigo_general">'
@@ -389,7 +404,7 @@ class PlenigoSettingsPage {
     }
 
     /**
-     * Print the Section text
+     * Print the Section text.
      */
     public function print_section_login() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_login_section">'
@@ -400,7 +415,7 @@ class PlenigoSettingsPage {
     }
 
     /**
-     * Print the Section text
+     * Print the Section text.
      */
     public function print_section_content() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_content_section">'
@@ -411,7 +426,7 @@ class PlenigoSettingsPage {
     }
 
     /**
-     * Print the Section text
+     * Print the Section text.
      */
     public function print_section_metered() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_metered_section">'
@@ -422,7 +437,7 @@ class PlenigoSettingsPage {
     }
 
     /**
-     * Print the Section text
+     * Print the Section text.
      */
     public function print_section_curtain() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_curtain_section">'
@@ -432,7 +447,7 @@ class PlenigoSettingsPage {
     }
 
     /**
-     * Print the Section text
+     * Print the Section text.
      */
     public function print_section_woo() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_woo_section">'
@@ -444,26 +459,47 @@ class PlenigoSettingsPage {
     }
 
     /**
-     * Print the Section text
+     * Print the Section text.
      */
     public function print_section_advanced() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_advanced_section">'
             . '<h3>' . __('Advanced settings', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
             . '<h2 style="color:red;">HANDS OFF!!</h2>'
             . 'Please make sure you understand what it means to enable these settings because it can be dangerous to expose '
-                . 'this information to the user, or the plugin could compromise the site\'s look & feel.';
+            . 'this information to the user, or the plugin could compromise the site\'s look & feel.';
     }
 
     /**
-     * Print the Section text
+     * Print the Section text.
+     */
+    public function print_section_error_logs() {
+        $logListTable = new LogTable();
+        print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_error_logs_section">'
+            . '<h3>' . __('Error Logs', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
+            . '<p>This is where the error logs are, '
+            . 'with this information we can give you better support for any issues you have with this plugin.</p>';
+        $logListTable->prepare_items();
+        $logListTable->display();
+        ?>
+        <div id="alert-area">
+
+        </div>
+        <p class="submit">
+            <button type="button" id="mailLogBtn" class="button button-primary" name="mailLogButton">Send Mail Log</button>
+        </p>
+        <?php
+    }
+
+    /**
+     * Print the Section text.
      */
     public function print_section_footer() {
         print '</div>';
     }
 
     /**
-     * Validate plenigo options and create an error accordingly
-     * 
+     * Validate plenigo options and create an error accordingly.
+     *
      * @param array $inputOptions the options sanitized as it comes from the settings page
      */
     private function plenigo_settings_validation($inputOptions) {
@@ -498,4 +534,211 @@ class PlenigoSettingsPage {
         update_option(self::PLENIGO_SETTINGS_NAME, $this->options);
     }
 
+    /**
+     * Callback function for 'wp_ajax__ajax_fetch_custom_list' action hook.
+     *
+     * Loads the Custom List Table Class and calls ajax_response method
+     */
+    public function _ajax_fetch_custom_list_callback() {
+        $wp_list_table = new LogTable();
+        $wp_list_table->ajaxResponse();
+    }
+
+    /**
+     * Callback function for 'wp_ajax__ajax_fetch_custom_list' action hook.
+     *
+     * Loads the Custom List Table Class and calls ajax_response method
+     */
+    public function _ajax_send_mail_callback() {
+        $plenigoSdk = PlenigoSDKManager::get()->getPlenigoSDK();
+        $to = 'support@plenigo.com';
+        $subject = "Error log file from company {$plenigoSdk->getCompanyId()}";
+        $message = 'This is a log of the errors.';
+        $logTable = LogTable::makeNewForLogMail();
+        $tmpfname = tempnam(sys_get_temp_dir(), 'PLENIGO_LOG');
+        $logData = $logTable->toString();
+        $logFileName = "$tmpfname.log";
+        file_put_contents($logFileName, $logData);
+        wp_mail($to, $subject, $message, array(), array($logFileName));
+        $response = array(result => 'success', message => 'email was sent');
+        die(json_encode($response));
+    }
+
+    /**
+     * Centralized custom ajax scripts.
+     */
+    public function ajax_script() {
+        ?>
+        <script type="text/javascript">
+            (function ($) {
+
+                list = {
+
+                    /**
+                     * Register our triggers
+                     *
+                     * We want to capture clicks on specific links, but also value change in
+                     * the pagination input field. The links contain all the information we
+                     * need concerning the wanted page number or ordering, so we'll just
+                     * parse the URL to extract these variables.
+                     *
+                     * The page number input is trickier: it has no URL so we have to find a
+                     * way around. We'll use the hidden inputs added in TT_Example_List_Table::display()
+                     * to recover the ordering variables, and the default paged input added
+                     * automatically by WordPress.
+                     */
+                    init: function () {
+
+                        // This will have its utility when dealing with the page number input
+                        var timer;
+                        var delay = 500;
+
+                        // Pagination links, sortable link
+                        $('.tablenav-pages a, .manage-column.sortable a, .manage-column.sorted a').on('click', function (e) {
+                            // We don't want to actually follow these links
+                            e.preventDefault();
+                            // Simple way: use the URL to extract our needed variables
+                            var query = this.search.substring(1);
+
+                            var data = {
+                                paged: list.__query(query, 'paged') || '1',
+                                order: list.__query(query, 'order') || 'asc',
+                                orderby: list.__query(query, 'orderby') || 'title'
+                            };
+                            list.update(data);
+                        });
+
+                        // Page number input
+                        $('input[name=paged]').on('keyup', function (e) {
+
+                            // If user hit enter, we don't want to submit the form
+                            // We don't preventDefault() for all keys because it would
+                            // also prevent to get the page number!
+                            if (13 == e.which)
+                                e.preventDefault();
+
+                            // This time we fetch the variables in inputs
+                            var data = {
+                                paged: parseInt($('input[name=paged]').val()) || '1',
+                                order: $('input[name=order]').val() || 'asc',
+                                orderby: $('input[name=orderby]').val() || 'title'
+                            };
+
+                            // Now the timer comes to use: we wait half a second after
+                            // the user stopped typing to actually send the call. If
+                            // we don't, the keyup event will trigger instantly and
+                            // thus may cause duplicate calls before sending the intended
+                            // value
+                            window.clearTimeout(timer);
+                            timer = window.setTimeout(function () {
+                                list.update(data);
+                            }, delay);
+                        });
+                    },
+
+                    /** AJAX call
+                     *
+                     * Send the call and replace table parts with updated version!
+                     *
+                     * @param    object    data The data to pass through AJAX
+                     */
+                    update: function (data) {
+                        $.ajax({
+                            // /wp-admin/admin-ajax.php
+                            url: ajaxurl,
+                            // Add action and nonce to our collected data
+                            data: $.extend(
+                                {
+//                                    _ajax_custom_list_nonce: $('#_ajax_custom_list_nonce').val(),
+                                    action: '_ajax_fetch_custom_list',
+                                },
+                                data
+                            ),
+                            // Handle the successful result
+                            success: function (response) {
+
+                                // WP_List_Table::ajax_response() returns json
+                                var response = $.parseJSON(response);
+
+                                // Add the requested rows
+                                if (response.rows.length)
+                                    $('#the-list').html(response.rows);
+                                // Update column headers for sorting
+                                if (response.column_headers.length)
+                                    $('thead tr, tfoot tr').html(response.column_headers);
+                                // Update pagination for navigation
+                                if (response.pagination.bottom.length)
+                                    $('.tablenav.top .tablenav-pages').html($(response.pagination.top).html());
+                                if (response.pagination.top.length)
+                                    $('.tablenav.bottom .tablenav-pages').html($(response.pagination.bottom).html());
+
+                                // Init back our event handlers
+                                list.init();
+                            }
+                        });
+                    },
+
+                    /**
+                     * Filter the URL Query to extract variables
+                     *
+                     * @see http://css-tricks.com/snippets/javascript/get-url-variables/
+                     *
+                     * @param    string    query The URL query part containing the variables
+                     * @param    string    variable Name of the variable we want to get
+                     *
+                     * @return   string|boolean The variable value if available, false else.
+                     */
+                    __query: function (query, variable) {
+
+                        var vars = query.split("&");
+                        for (var i = 0; i < vars.length; i++) {
+                            var pair = vars[i].split("=");
+                            if (pair[0] == variable)
+                                return pair[1];
+                        }
+                        return false;
+                    },
+                }
+                list.init();
+                $("#mailLogBtn").click(function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        // /wp-admin/admin-ajax.php
+                        url: ajaxurl,
+                        // Add action and nonce to our collected data
+                        data: {
+                            action: '_ajax_send_mail'
+                        },
+                        // Handle the successful result
+                        success: function (response) {
+                            var returnedData = JSON.parse(response);
+                            if (returnedData.result === "success") {
+                                jQuery("#alert-area").after('<div class="update-nag">The email was sent successfully.</div>');
+                                setTimeout(function () {
+                                    $('.update-nag').remove();
+                                }, 3000);
+                            }
+                        }
+                    });
+                });
+
+                jQuery(document).ready(function () {
+                    jQuery("#pl_load_settings").hide();
+                    jQuery("#plenigo_tab_panel").show().tabs();
+                    jQuery("#plenigo_tab_panel").tabs({
+                        activate: function (event, ui) {
+                            var active = jQuery('#plenigo_tab_panel').tabs('option', 'active');
+                            var activeTab = jQuery("#plenigo_tab_panel ul>li a").eq(active).attr("href");
+                            if (activeTab === '#plenigo_error_logs_section') {
+                                jQuery('#submit').hide();
+                            } else {
+                                jQuery('#submit').show();
+                            }
+                        }
+                    });
+                });
+            })(jQuery);
+        </script>
+        <?php
+    }
 }
