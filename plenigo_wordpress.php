@@ -42,6 +42,7 @@ require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoSDKManager.php';
 require_once dirname(__FILE__) . '/plenigo_sdk/plenigo/models/Loggable.php';
 
 use plenigo\models\Loggable;
+
 global $jal_db_version;
 $jal_db_version = '1.0';
 register_activation_hook(__FILE__, 'jal_install');
@@ -63,16 +64,12 @@ add_action('plugins_loaded', function () {
         private $wpdb;
         private $tableName;
 
-        public function __construct($wpdb, $tableName)
-        {
+        public function __construct($wpdb, $tableName) {
             $this->wpdb = $wpdb;
             $this->tableName = $tableName;
         }
 
-
-        public function logData($msg)
-        {
-
+        public function logData($msg) {
             $this->wpdb->insert($this->tableName,
                 array(
                     'time' => current_time('mysql'),
@@ -231,4 +228,5 @@ function jal_install() {
 
     add_option('jal_db_version', $jal_db_version);
 }
+
 ?>

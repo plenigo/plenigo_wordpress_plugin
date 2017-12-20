@@ -9,8 +9,7 @@ require_once __DIR__ . '/WP_List_Table.php';
  *
  * @package plenigo_plugin\settings
  */
-class LogTable extends WP_List_Table
-{
+class LogTable extends WP_List_Table {
     /**
      * This decides how many records per page to show.
      */
@@ -20,8 +19,7 @@ class LogTable extends WP_List_Table
     /**
      * Set up a constructor that references the parent constructor. We use the parent reference to set some default configs.
      */
-    function __construct()
-    {
+    function __construct() {
         //Set parent defaults
         parent::__construct(
             array(
@@ -33,7 +31,6 @@ class LogTable extends WP_List_Table
                 'ajax' => true
             )
         );
-
     }
 
     /**
@@ -41,8 +38,7 @@ class LogTable extends WP_List_Table
      *
      * @return LogTable
      */
-    public static function makeNewForLogMail()
-    {
+    public static function makeNewForLogMail() {
         $obj = new LogTable();
         $obj->perPage = 50;
         return $obj;
@@ -56,10 +52,8 @@ class LogTable extends WP_List_Table
      *
      * @return mixed can return the column or the complete row in case the value is not there
      */
-    function column_default($item, $column_name)
-    {
+    function column_default($item, $column_name) {
         switch ($column_name) {
-
             case 'date':
             case 'log':
                 return $item[$column_name];
@@ -73,8 +67,7 @@ class LogTable extends WP_List_Table
      *
      * @return array of column names
      */
-    function get_columns()
-    {
+    function get_columns() {
         return $columns = array('date' => 'Date', 'log' => 'Log');
     }
 
@@ -92,9 +85,7 @@ class LogTable extends WP_List_Table
      * @uses $this->get_pagenum()
      * @uses $this->set_pagination_args()
      */
-    function prepare_items()
-    {
-
+    function prepare_items() {
         global $wpdb;
         $columns = $this->get_columns();
         $hidden = array();
@@ -142,8 +133,7 @@ class LogTable extends WP_List_Table
      *
      * @param string $which
      */
-    protected function display_tablenav($which)
-    {
+    protected function display_tablenav($which) {
         //we need to override this method in order to avoid wpnonce token errors
         ?>
         <div class="tablenav <?php echo esc_attr($which); ?>">
@@ -152,12 +142,11 @@ class LogTable extends WP_List_Table
                 <div class="alignleft actions bulkactions">
                     <?php $this->bulk_actions($which); ?>
                 </div>
-                <?php
-            endif;
-            $this->extra_tablenav($which);
-            $this->pagination($which);
+            <?php
+                endif;
+                $this->extra_tablenav($which);
+                $this->pagination($which);
             ?>
-
             <br class="clear"/>
         </div>
         <?php
@@ -167,8 +156,7 @@ class LogTable extends WP_List_Table
      * Handle an incoming ajax request (called from admin-ajax.php).
      *
      */
-    function ajaxResponse()
-    {
+    function ajaxResponse() {
         $this->prepare_items();
 
         extract($this->_args);
@@ -215,8 +203,7 @@ class LogTable extends WP_List_Table
      *
      * @return string
      */
-    public function toString()
-    {
+    public function toString() {
         $this->prepare_items();
         $logData = '';
         foreach ($this->items as $log) {
