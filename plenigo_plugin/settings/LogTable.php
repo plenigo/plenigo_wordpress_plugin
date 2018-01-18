@@ -117,13 +117,9 @@ class LogTable extends WP_List_Table {
          */
         $this->set_pagination_args(
             array(
-                //WE have to calculate the total number of items
                 'total_items' => $total_items,
-                //WE have to determine how many items to show on a page
                 'per_page' => $this->perPage,
-                //WE have to calculate the total number of pages
                 'total_pages' => ceil($total_items / $this->perPage),
-                // Set ordering values if needed (useful for AJAX)
             )
         );
     }
@@ -137,7 +133,6 @@ class LogTable extends WP_List_Table {
         //we need to override this method in order to avoid wpnonce token errors
         ?>
         <div class="tablenav <?php echo esc_attr($which); ?>">
-
             <?php if ($this->has_items()) : ?>
                 <div class="alignleft actions bulkactions">
                     <?php $this->bulk_actions($which); ?>
