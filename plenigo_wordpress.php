@@ -39,9 +39,9 @@ define('PLENIGO_JSSDK_URL', "https://static.plenigo.com");
 // Plenigo PHP SDK
 require_once dirname(__FILE__) . '/plenigo_sdk/plenigo/Plenigo.php';
 require_once dirname(__FILE__) . '/plenigo_plugin/PlenigoSDKManager.php';
-require_once dirname(__FILE__) . '/plenigo_sdk/plenigo/models/Loggable.php';
+require_once dirname(__FILE__) . '/plenigo_plugin/models/WordpressLogging.php';
 
-use plenigo\models\Loggable;
+use plenigo_plugin\models\WordpressLogging;
 
 global $jal_db_version;
 $jal_db_version = '1.0';
@@ -60,23 +60,7 @@ add_action('plugins_loaded', function () {
     global $wpdb;
     $tableName = $wpdb->prefix . 'plenigo_log';
 
-    $loggable = new class($wpdb, $tableName) implements Loggable {
-        private $wpdb;
-        private $tableName;
-
-        public function __construct($wpdb, $tableName) {
-            $this->wpdb = $wpdb;
-            $this->tableName = $tableName;
-        }
-
-        public function logData($msg) {
-            $this->wpdb->insert($this->tableName,
-                array(
-                    'time' => current_time('mysql'),
-                    'log' => $msg
-                ));
-        }
-    };
+    $loggable = new WordpressLogging($wpdb, $tableName);
     $sdk->getPlenigoSDK()->setLoggable($loggable);
 });
 
