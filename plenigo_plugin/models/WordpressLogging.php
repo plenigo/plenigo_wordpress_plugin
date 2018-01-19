@@ -20,24 +20,38 @@
 
 namespace plenigo_plugin\models;
 
+use plenigo\models\Loggable;
+
+
 /**
- *
+ * Wordpress logging class.
  *
  * @category WordPressPlugin
  * @package  plenigoPluginModels
+ * @author   Ricardo Torres <rtorres@plenigo.com>
+ * @link     https://plenigo.com
  */
-
-use \plenigo\models\Loggable;
-
 class WordpressLogging implements Loggable {
 	private $wpdb;
 	private $tableName;
 
+	/**
+	 * WordpressLogging constructor.
+	 *
+	 * @param $wpdb wordpress database object
+	 * @param $tableName table name
+	 */
 	public function __construct( $wpdb, $tableName ) {
 		$this->wpdb      = $wpdb;
 		$this->tableName = $tableName;
 	}
 
+	/**
+	 * Log the message to the database.
+	 *
+	 * @param \plenigo\models\data $msg message to send
+	 *
+	 */
 	public function logData( $msg ) {
 		$this->wpdb->insert( $this->tableName,
 			array(
