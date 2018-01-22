@@ -176,7 +176,7 @@ class PlenigoSettingsPage {
     }
 
     public function add_help_tab() {
-        plenigo_log_message("CREATIGN HELP TAB");
+        plenigo_log_message("CREATING HELP TAB");
         $screen = get_current_screen();
         $screen->add_help_tab(array(
             'id' => 'plenigo_help_tab',
