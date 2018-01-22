@@ -755,8 +755,6 @@ class PlenigoShortcodeManager {
 	 * @return bool indicating if the page is the home page or not
 	 */
 	private function isHomePage() {
-		wp_reset_query();
-
 		return is_home() || is_front_page();
 	}
 }
