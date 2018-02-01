@@ -158,9 +158,12 @@ class PlenigoShortcodeManager {
             'register' => "0",
             'source' => "",
             'target' => "",
-            'affiliate' => ""
+            'affiliate' => "",
+            'price' => ""
                 ), $atts);
 
+	    error_log("Attributes sent" . print_r($atts, true));
+	    error_log("Attributes filled" . print_r($a, true));
         $btnTitle = $a['title'];
         $cssClass = $a['class'];
         $prodId = $a['prod_id'];
@@ -168,6 +171,7 @@ class PlenigoShortcodeManager {
         $sourceURL = $a['source'];
         $targetURL = $a['target'];
         $affiliate = $a['affiliate'];
+	    $price = $a['price'];
         $isIgnoringTag = ($tag == 'pl_checkout_button' || $tag == 'pl_renew');
 
         //evaluate the condition
@@ -221,7 +225,12 @@ class PlenigoShortcodeManager {
                 if ($tag === 'pl_failed') {
                     $product = \plenigo\models\ProductBase::buildFailedPaymentProduct();
                 } else {
-                    $product = new \plenigo\models\ProductBase($prodId);
+                	if(!empty($price)) {
+		                $product = new \plenigo\models\ProductBase($prodId, null, $price, null);
+		                $product->setCustomAmount(true);
+	                } else {
+                        $product = new \plenigo\models\ProductBase($prodId);
+	                }
                 }
 
                 if ($tag === 'pl_renew') {
