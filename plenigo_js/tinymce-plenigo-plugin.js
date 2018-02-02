@@ -1,7 +1,9 @@
 tinymce.PluginManager.requireLangPack('plenigo', 'en_US,es_ES');
+
 function isInvalidNumber(number) {
     return number !== '' && (isNaN(parseFloat(number)) && !isFinite(number));
 }
+
 tinymce.PluginManager.add('plenigo', function (editor, url) {
     // Add a button that opens a setup window and configures the checkout button
     editor.addButton('plenigo', {
@@ -10,7 +12,7 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
         icon: 'pl-checkout',
         onclick: function () {
             var quantityValues = [];
-            for(var i = 1; i <= 50; i++) {
+            for (var i = 1; i <= 50; i++) {
                 var index = i + '';
                 quantityValues.push({text: index, value: index});
             }
@@ -23,7 +25,8 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                     {type: 'listbox', name: 'quantity', label: 'Quantity', values: quantityValues, value: '1'},
                     {type: 'textbox', name: 'title', label: 'Button Title'},
                     {type: 'textbox', name: 'cssClass', label: 'Button CSS class'},
-                    {type: 'combobox', name: 'register', label: 'Show Register form',
+                    {
+                        type: 'combobox', name: 'register', label: 'Show Register form',
                         values: [
                             {text: 'Yes', value: '1'},
                             {text: 'No', value: '0'}
@@ -50,10 +53,10 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                     if (e.data.prodId.trim() === '' || e.data.prodId.length < 5) {
                         editor.windowManager.alert('Invalid Product ID!');
                         isInvalid = true;
-                    }else if (isInvalidNumber(price)) {
+                    } else if (isInvalidNumber(price)) {
                         editor.windowManager.alert('Invalid Price!');
                         isInvalid = true;
-                    } else if(isInvalidNumber(quantity)) {
+                    } else if (isInvalidNumber(quantity)) {
                         editor.windowManager.alert('Invalid Quantity!');
                         isInvalid = true;
                     } else {
@@ -80,17 +83,17 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                             price_text = ' price="' + (price * quantity) + '" ';
                         }
                         return_text = '[pl_checkout '
-                                + prod_text
-                                + title_text
-                                + class_text
-                                + register_text
-                                + source_text
-                                + target_text
-                                + affiliate_text
-                                + price_text
-                                + ' ]'
-                                + selected_text
-                                + '[/pl_checkout]';
+                            + prod_text
+                            + title_text
+                            + class_text
+                            + register_text
+                            + source_text
+                            + target_text
+                            + affiliate_text
+                            + price_text
+                            + ' ]'
+                            + selected_text
+                            + '[/pl_checkout]';
                         editor.execCommand('mceInsertContent', false, return_text);
                     }
                     if (isInvalid) {
