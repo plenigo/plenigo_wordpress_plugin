@@ -3,6 +3,7 @@
 namespace plenigo_plugin;
 
 use plenigo\models\UserData;
+use plenigo\PlenigoManager;
 use plenigo\services\AppManagementService;
 use plenigo\services\UserService;
 
@@ -64,7 +65,6 @@ class PlenigoShortcodeManager {
 	 * @var array
 	 */
 	private $tokenList = array();
-	private $delTokenList = array();
 
 	/**
 	 * Default constructor, called from the main php file
@@ -95,6 +95,9 @@ class PlenigoShortcodeManager {
 
 		// Mobile Token Scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'add_mtoken_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'add_checkout_quantity_scripts' ) );
+		add_action( 'wp_ajax_nopriv__ajax_fetch_checkout_snippet', array( $this, '_ajax_fetch_checkout_snippet_callback' ) );
+		add_action( 'wp_ajax__ajax_fetch_checkout_snippet', array( $this, '_ajax_fetch_checkout_snippet_callback' ) );
 	}
 
 	/**
@@ -154,141 +157,28 @@ class PlenigoShortcodeManager {
 	 * @return string the contents of the shortcode or a button to pay for it
 	 */
 	public function plenigo_handle_shortcode( $atts, $content = null, $tag = null ) {
-		$a = shortcode_atts( array(
-			'title'     => "",
-			'prod_id'   => "",
-			'class'     => "",
-			'register'  => "0",
-			'source'    => "",
-			'target'    => "",
-			'affiliate' => "",
-			'price'     => ""
+		$a                 = shortcode_atts( array(
+			'title'                => "",
+			'prod_id'              => "",
+			'class'                => "",
+			'register'             => "0",
+			'source'               => "",
+			'target'               => "",
+			'affiliate'            => "",
+			'price'                => "",
+			'quantity_title'       => "Quantity",
+			'quantity_class'       => "",
+			'quantity_label_class' => "",
+			'max_quantity'         => 1
 		), $atts );
+		$a['withQuantity'] = true;
 
-		error_log( "Attributes sent" . print_r( $atts, true ) );
-		error_log( "Attributes filled" . print_r( $a, true ) );
-		$btnTitle      = $a['title'];
-		$cssClass      = $a['class'];
-		$prodId        = $a['prod_id'];
-		$regCheck      = $a['register'];
-		$sourceURL     = $a['source'];
-		$targetURL     = $a['target'];
-		$affiliate     = $a['affiliate'];
-		$price         = $a['price'];
-		$isIgnoringTag = ( $tag == 'pl_checkout_button' || $tag == 'pl_renew' );
-
-		//evaluate the condition
-		$renderButton = true;
-		if ( $isIgnoringTag ) {
-			plenigo_log_message( "Got ignoring shortcode, rendering button", E_USER_NOTICE );
-			$renderButton = true;
-		} else {
-			plenigo_log_message( "Shortcode not ignoring, checking if bought", E_USER_NOTICE );
-			$isBought = ( $prodId !== "" && PlenigoSDKManager::get()->plenigo_bought( $prodId ) );
-			if ( $isBought ) {
-				plenigo_log_message( "Product bought: " . $prodId, E_USER_NOTICE );
-				$renderButton = false;
-			} else {
-				plenigo_log_message( "Product NOT bought: " . $prodId, E_USER_NOTICE );
-				$renderButton = true;
-			}
-		}
-
-		if ( $renderButton ) { //Do the plenigo checkout button
-			if ( ! isset( $this->options['test_mode'] ) || ( $this->options['test_mode'] == 1 ) ) {
-				$testMode = 'true';
-			} else {
-				$testMode = 'false';
-			}
-			if ( ! isset( $this->options['use_login'] ) || ( $this->options['use_login'] == 0 ) ) {
-				$useOauthLogin = false;
-			} else {
-				$useOauthLogin = true;
-			}
-			if ( $regCheck == "1" ) {
-				$useRegister = true;
-			} else {
-				$useRegister = false;
-			}
-			$btnOnClick = "alert('The button was not configured correctly')";
-
-			// If failed payment tag, the product ID doesnt make sense
-			// and we should not make a search for the title based in this fake ID
-			if ( $tag === 'pl_failed' ) {
-				$btnTitle = ( $btnTitle === "" ) ? __( 'Failed Payments', self::PLENIGO_SETTINGS_GROUP ) : $btnTitle;
-				$prodId   = "FAKE_PROD_ID";
-			}
-
-			if ( $prodId !== "" ) {
-				if ( $btnTitle === "" ) {
-					$btnTitle = $this->getButtonTitle( $prodId );
-				}
-
-				// creating a plenigo-managed product
-				if ( $tag === 'pl_failed' ) {
-					$product = \plenigo\models\ProductBase::buildFailedPaymentProduct();
-				} else {
-					if ( ! empty( $price ) ) {
-						$product = new \plenigo\models\ProductBase( $prodId, null, $price, null );
-						$product->setCustomAmount( true );
-					} else {
-						$product = new \plenigo\models\ProductBase( $prodId );
-					}
-				}
-
-				if ( $tag === 'pl_renew' ) {
-					$product->setSubscriptionRenewal( true );
-				}
-
-				// getting the CSRF Token
-				$csrfToken = PlenigoSDKManager::get()->get_csrf_token();
-				try {
-
-					// creating the checkout snippet for this product
-					$checkoutBuilder = new \plenigo\builders\CheckoutSnippetBuilder( $product );
-
-					$coSettings = array( 'csrfToken' => $csrfToken, 'testMode' => $testMode );
-					if ( $useOauthLogin ) {
-						// this url must be registered in plenigo
-						$coSettings['oauth2RedirectUrl'] = $this->options['redirect_url'];
-						plenigo_log_message( "url: " . $coSettings['oauth2RedirectUrl'] );
-					}
-
-					if ( trim( $sourceURL ) == "" ) {
-						$sourceURL = null;
-					}
-					if ( trim( $targetURL ) == "" ) {
-						$targetURL = null;
-					}
-					if ( trim( $affiliate ) == "" ) {
-						$affiliate = null;
-					}
-
-					// checkout snippet
-					$btnOnClick = $checkoutBuilder->build( $coSettings, null, $useRegister, $sourceURL, $targetURL, $affiliate );
-				} catch ( \Exception $exc ) {
-					plenigo_log_message( $exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING );
-					error_log( $exc->getMessage() . ': ' . $exc->getTraceAsString() );
-				}
-			}
-
-			return '<input type="button" id="submit" '
-			       . ' class="button button-primary ' . $cssClass . '" '
-			       . ' value="' . $btnTitle . '" '
-			       . ' onclick="' . $btnOnClick . '" />';
-		} else { //Return the content untouched
-			return do_shortcode( $content );
-		}
+		return $this->getCheckoutSnippet( $a, $content, $tag );
 	}
 
 	public function plenigo_handle_content_shortcode( $atts, $content = null, $tag = null ) {
-		$a = shortcode_atts( array(
-			'prod_id' => "",
-			'class'   => "",
-		), $atts );
-
-		$cssClass     = $a['class'];
-		$prodId       = $a['prod_id'];
+		$cssClass     = $atts['class'];
+		$prodId       = $atts['prod_id'];
 		$showContent  = false;
 		$returnString = "";
 		if ( is_null( $content ) || $content === false || ! is_string( $content ) ) {
@@ -447,6 +337,12 @@ class PlenigoShortcodeManager {
 		plenigo_log_message( "Plenigo Mobile Token Admin: REGISTER SCRIPT" );
 		wp_register_script( 'plenigo-mtoken-js', plugins_url( 'plenigo_js/pl_mtoken.js', dirname( __FILE__ ) ), array( 'jquery' ), '5', true );
 		wp_enqueue_script( 'plenigo-mtoken-js' );
+	}
+
+	public function add_checkout_quantity_scripts() {
+		wp_register_script( 'plenigo-checkout-quantity-js', plugins_url( 'plenigo_js/pl_checkout_quantity.js', dirname( __FILE__ ) ), array( 'jquery' ), '5', true );
+		wp_enqueue_script( 'plenigo-checkout-quantity-js' );
+		wp_localize_script( 'plenigo-checkout-quantity-js', 'ajax_object', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 	}
 
 	public function render_mobile_admin( UserData $user, $className ) {
@@ -746,6 +642,215 @@ class PlenigoShortcodeManager {
 
 	private function elipsize( $strText ) {
 		return strlen( $strText ) > 50 ? substr( $strText, 0, 47 ) . "..." : $strText;
+	}
+
+	/**
+	 * @param $atts
+	 * @param $content
+	 * @param $tag
+	 *
+	 * @return string
+	 * @throws \plenigo\builders\CryptographyException
+	 */
+	public function getCheckoutSnippet( $atts, $content, $tag ) {
+		$btnTitle              = $atts['title'];
+		$cssClass              = $atts['class'];
+		$isIgnoringTag         = ( $tag == 'pl_checkout_button' || $tag == 'pl_renew' );
+		$prodId                = $atts['prod_id'];
+		$price                 = $atts['price'];
+		$atts['tag']           = $tag;
+		$quantityCssClass      = $atts['quantity_class'];
+		$quantityLabelCssClass = $atts['quantity_label_class'];
+		$quantityTitle         = $atts['quantity_title'];
+		$maxQuantity           = $atts['max_quantity'];
+
+		//evaluate the condition
+		$renderButton = null;
+		if ( $isIgnoringTag ) {
+			plenigo_log_message( "Got ignoring shortcode, rendering button", E_USER_NOTICE );
+			$renderButton = true;
+		} else {
+			plenigo_log_message( "Shortcode not ignoring, checking if bought", E_USER_NOTICE );
+			$isBought = ( $prodId !== "" && PlenigoSDKManager::get()->plenigo_bought( $prodId ) );
+			if ( $isBought ) {
+				plenigo_log_message( "Product bought: " . $prodId, E_USER_NOTICE );
+				$renderButton = false;
+			} else {
+				plenigo_log_message( "Product NOT bought: " . $prodId, E_USER_NOTICE );
+				$renderButton = true;
+			}
+		}
+
+		if ( $renderButton ) { //Do the plenigo checkout button
+			// If failed payment tag, the product ID doesnt make sense
+			// and we should not make atts search for the title based in this fake ID
+			if ( $tag === 'pl_failed' ) {
+				$btnTitle = ( $btnTitle === "" ) ? __( 'Failed Payments', self::PLENIGO_SETTINGS_GROUP ) : $btnTitle;
+				$prodId   = "FAKE_PROD_ID";
+			}
+
+			if ( $prodId !== "" && $btnTitle === "" ) {
+				$btnTitle = $this->getButtonTitle( $prodId );
+			}
+			$checkoutSnippet = $this->buildCheckoutSnippet( $atts, $tag, $prodId );
+			$quantityHtml = '';
+			if ( ! isset( $atts['withQuantity'] ) || $atts['withQuantity'] === true ) {
+				if ( is_numeric( $maxQuantity ) && $maxQuantity > 1 ) {
+					$quantityOptions = '';
+					for ( $i = 1; $i <= $maxQuantity; $i ++ ) {
+						$quantityOptions .= "<option value='$i'>$i</option>";
+					}
+					$quantityHtml = "<label for='plenigo-quantity' class='$quantityLabelCssClass'>$quantityTitle </label>" .
+					                "<select name='plenigo-quantity' id='plenigo-quantity' class='$quantityLabelCssClass'>$quantityOptions</select>";
+				}
+			}
+
+			return $quantityHtml . '<input type="button" id="submit" '
+			       . ' class="button button-primary ' . $cssClass . '" '
+			       . ' value="' . $btnTitle . '" '
+			       . ' onclick="' . $checkoutSnippet . '" data-product-data=\'' . base64_encode( json_encode( $atts ) ) . '\''
+			       . ' data-verification-hash="' . $this->buildProductHash( $prodId, $price, $maxQuantity ) . '" />';
+		} else { //Return the content untouched
+			return do_shortcode( $content );
+		}
+	}
+
+	/**
+	 * @param $atts
+	 * @param $tag
+	 * @param $btnTitle
+	 *
+	 * @return array
+	 * @throws \plenigo\builders\CryptographyException
+	 */
+	public function buildCheckoutSnippet( $atts, $tag, $prodId ) {
+		$regCheck  = $atts['register'];
+		$sourceURL = $atts['source'];
+		$targetURL = $atts['target'];
+		$affiliate = $atts['affiliate'];
+		$price     = $atts['price'];
+		$quantity  = $atts['quantity'];
+
+		if ( ! isset( $this->options['test_mode'] ) || ( $this->options['test_mode'] == 1 ) ) {
+			$testMode = 'true';
+		} else {
+			$testMode = 'false';
+		}
+		if ( ! isset( $this->options['use_login'] ) || ( $this->options['use_login'] == 0 ) ) {
+			$useOauthLogin = false;
+		} else {
+			$useOauthLogin = true;
+		}
+		if ( $regCheck == "1" ) {
+			$useRegister = true;
+		} else {
+			$useRegister = false;
+		}
+		$checkoutSnippet = "alert('The button was not configured correctly')";
+
+		if ( $prodId !== "" ) {
+			// creating atts plenigo-managed product
+			if ( $tag === 'pl_failed' ) {
+				$product = \plenigo\models\ProductBase::buildFailedPaymentProduct();
+			} else {
+				if ( ! empty( $price ) ) {
+					if ( empty( $quantity ) || ! is_numeric( $quantity ) ) {
+						$quantity = 1;
+					}
+					$product = new \plenigo\models\ProductBase( $prodId, null, ( $price * $quantity ), null );
+					$product->setCustomAmount( true );
+				} else {
+					$product = new \plenigo\models\ProductBase( $prodId );
+				}
+			}
+
+			if ( $tag === 'pl_renew' ) {
+				$product->setSubscriptionRenewal( true );
+			}
+
+			// getting the CSRF Token
+			$csrfToken = PlenigoSDKManager::get()->get_csrf_token();
+			try {
+
+				// creating the checkout snippet for this product
+				$checkoutBuilder = new \plenigo\builders\CheckoutSnippetBuilder( $product );
+
+				$coSettings = array( 'csrfToken' => $csrfToken, 'testMode' => $testMode );
+				if ( $useOauthLogin ) {
+					// this url must be registered in plenigo
+					$coSettings['oauth2RedirectUrl'] = $this->options['redirect_url'];
+					plenigo_log_message( "url: " . $coSettings['oauth2RedirectUrl'] );
+				}
+
+				if ( empty( trim( $sourceURL ) ) ) {
+					$sourceURL = null;
+				}
+				if ( empty( trim( $targetURL ) ) ) {
+					$targetURL = null;
+				}
+				if ( empty( trim( $affiliate ) ) ) {
+					$affiliate = null;
+				}
+
+				// checkout snippet
+				$checkoutSnippet = $checkoutBuilder->build( $coSettings, null, $useRegister, $sourceURL, $targetURL, $affiliate );
+			} catch ( \Exception $exc ) {
+				plenigo_log_message( $exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING );
+				error_log( $exc->getMessage() . ': ' . $exc->getTraceAsString() );
+			}
+		}
+
+		return $checkoutSnippet;
+	}
+
+	/**
+	 * Callback function for 'wp_ajax__ajax_fetch_custom_list' action hook.
+	 *
+	 * Loads the Custom List Table Class and calls ajax_response method
+	 */
+	public function _ajax_fetch_checkout_snippet_callback() {
+		error_log("Starting method...");
+		$encodedProductData = $_GET['product_data'];
+		$quantity           = $_GET['quantity'];
+		$verificationHash   = $_GET['verification_hash'];
+		$productData        = null;
+		$result             = array( "success" => false, "message" => "" );
+		if ( $encodedProductData ) {
+			$productData = base64_decode( $encodedProductData );
+			$productData = json_decode( $productData, true );
+			if ( json_last_error() != JSON_ERROR_NONE ) {
+				die( "alert('Invalid sent data')" );
+			}
+		}
+		$comparationHash = $this->buildProductHash( $productData['prod_id'], $productData['price'], $productData['max_quantity'] );
+
+		if ( $comparationHash !== $verificationHash ) {
+			$result["message"] = 'Invalid sent data';
+			die( json_encode($result) );
+		}
+		if ( ! is_numeric( $quantity ) ) {
+			$quantity = 1;
+		}
+		$maxQuantity = $productData["max_quantity"];
+		if ( $quantity > $maxQuantity ) {
+			$result["message"] = 'Exceeded max quantity';
+			die( json_encode($result) );
+		}
+		$productData['quantity']     = $quantity;
+		$productData['withQuantity'] = false;
+		$result["success"] = true;
+		$result["message"] = $this->getCheckoutSnippet( $productData, null, $productData['tag'] );;
+		die( json_encode($result) );
+	}
+
+	/**
+	 * @param $productData
+	 *
+	 * @return string
+	 * @throws \plenigo\Exception
+	 */
+	public function buildProductHash( $prodId, $price, $maxQuantity ) {
+		return hash_hmac( "sha256", "$prodId|$price|$maxQuantity", PlenigoManager::get()->getSecret() );
 	}
 
 }
