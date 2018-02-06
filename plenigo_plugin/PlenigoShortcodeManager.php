@@ -3,7 +3,6 @@
 namespace plenigo_plugin;
 
 use plenigo\models\UserData;
-use plenigo\PlenigoManager;
 use plenigo\services\AppManagementService;
 use plenigo\services\UserService;
 
@@ -850,7 +849,7 @@ class PlenigoShortcodeManager {
 	 * @throws \plenigo\Exception
 	 */
 	public function buildProductHash( $prodId, $price, $maxQuantity ) {
-		return hash_hmac( "sha256", "$prodId|$price|$maxQuantity", PlenigoManager::get()->getSecret() );
+		return hash_hmac( "sha256", "$prodId|$price|$maxQuantity", PlenigoSDKManager::get()->getPlenigoSDK()->getSecret());
 	}
 
 }
