@@ -803,12 +803,9 @@ class PlenigoShortcodeManager {
 	}
 
 	/**
-	 * Callback function for 'wp_ajax__ajax_fetch_custom_list' action hook.
-	 *
-	 * Loads the Custom List Table Class and calls ajax_response method
+	 * Callback function for re-creating the checkout snippet.
 	 */
 	public function _ajax_fetch_checkout_snippet_callback() {
-		error_log("Starting method...");
 		$encodedProductData = $_GET['product_data'];
 		$quantity           = $_GET['quantity'];
 		$verificationHash   = $_GET['verification_hash'];
@@ -818,13 +815,14 @@ class PlenigoShortcodeManager {
 			$productData = base64_decode( $encodedProductData );
 			$productData = json_decode( $productData, true );
 			if ( json_last_error() != JSON_ERROR_NONE ) {
-				die( "alert('Invalid sent data')" );
+				$result["message"] = 'The information sent is invalid';
+				die( json_encode($result) );
 			}
 		}
 		$comparationHash = $this->buildProductHash( $productData['prod_id'], $productData['price'], $productData['max_quantity'] );
 
 		if ( $comparationHash !== $verificationHash ) {
-			$result["message"] = 'Invalid sent data';
+			$result["message"] = 'The information sent is invalid';
 			die( json_encode($result) );
 		}
 		if ( ! is_numeric( $quantity ) ) {
@@ -832,7 +830,7 @@ class PlenigoShortcodeManager {
 		}
 		$maxQuantity = $productData["max_quantity"];
 		if ( $quantity > $maxQuantity ) {
-			$result["message"] = 'Exceeded max quantity';
+			$result["message"] = 'Exceeded max quantity of products that you can buy';
 			die( json_encode($result) );
 		}
 		$productData['quantity']     = $quantity;
