@@ -696,11 +696,8 @@ class PlenigoShortcodeManager {
 			if ( ! isset( $atts['withQuantity'] ) || $atts['withQuantity'] === true ) {
 				if ( is_numeric( $maxQuantity ) && $maxQuantity > 1 ) {
 					$quantityOptions = '';
-					for ( $i = 1; $i <= $maxQuantity; $i ++ ) {
-						$quantityOptions .= "<option value='$i'>$i</option>";
-					}
 					$quantityHtml = "<label for='plenigo-quantity' class='$quantityLabelCssClass'>$quantityTitle </label>" .
-					                "<select name='plenigo-quantity' id='plenigo-quantity' class='$quantityCssClass'>$quantityOptions</select>";
+					                "<input name='plenigo-quantity' type='number' id='plenigo-quantity' max='$maxQuantity' class='$quantityCssClass' />";
 				}
 			}
 
