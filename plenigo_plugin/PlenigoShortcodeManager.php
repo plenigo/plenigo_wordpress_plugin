@@ -692,7 +692,7 @@ class PlenigoShortcodeManager {
 				$btnTitle = $this->getButtonTitle( $prodId );
 			}
 			$checkoutSnippet = $this->buildCheckoutSnippet( $atts, $tag, $prodId );
-			$quantityHtml = '';
+			$quantityHtml    = '';
 			if ( ! isset( $atts['withQuantity'] ) || $atts['withQuantity'] === true ) {
 				if ( is_numeric( $maxQuantity ) && $maxQuantity > 1 ) {
 					$quantityOptions = '';
@@ -700,7 +700,7 @@ class PlenigoShortcodeManager {
 						$quantityOptions .= "<option value='$i'>$i</option>";
 					}
 					$quantityHtml = "<label for='plenigo-quantity' class='$quantityLabelCssClass'>$quantityTitle </label>" .
-					                "<select name='plenigo-quantity' id='plenigo-quantity' class='$quantityLabelCssClass'>$quantityOptions</select>";
+					                "<select name='plenigo-quantity' id='plenigo-quantity' class='$quantityCssClass'>$quantityOptions</select>";
 				}
 			}
 
@@ -756,7 +756,13 @@ class PlenigoShortcodeManager {
 					if ( empty( $quantity ) || ! is_numeric( $quantity ) ) {
 						$quantity = 1;
 					}
-					$product = new \plenigo\models\ProductBase( $prodId, null, ( $price * $quantity ), null );
+					$title = null;
+					if ( $quantity > 1 ) {
+						$productData = \plenigo\services\ProductService::getProductData( $prodId );
+						$title    = $quantity . " x " . $productData->getTitle();
+					}
+
+					$product = new \plenigo\models\ProductBase( $prodId, $title, ( $price * $quantity ), null );
 					$product->setCustomAmount( true );
 				} else {
 					$product = new \plenigo\models\ProductBase( $prodId );
@@ -816,14 +822,14 @@ class PlenigoShortcodeManager {
 			$productData = json_decode( $productData, true );
 			if ( json_last_error() != JSON_ERROR_NONE ) {
 				$result["message"] = 'The information sent is invalid';
-				die( json_encode($result) );
+				die( json_encode( $result ) );
 			}
 		}
 		$comparationHash = $this->buildProductHash( $productData['prod_id'], $productData['price'], $productData['max_quantity'] );
 
 		if ( $comparationHash !== $verificationHash ) {
 			$result["message"] = 'The information sent is invalid';
-			die( json_encode($result) );
+			die( json_encode( $result ) );
 		}
 		if ( ! is_numeric( $quantity ) ) {
 			$quantity = 1;
@@ -831,13 +837,13 @@ class PlenigoShortcodeManager {
 		$maxQuantity = $productData["max_quantity"];
 		if ( $quantity > $maxQuantity ) {
 			$result["message"] = 'Exceeded max quantity of products that you can buy';
-			die( json_encode($result) );
+			die( json_encode( $result ) );
 		}
 		$productData['quantity']     = $quantity;
 		$productData['withQuantity'] = false;
-		$result["success"] = true;
-		$result["message"] = $this->getCheckoutSnippet( $productData, null, $productData['tag'] );;
-		die( json_encode($result) );
+		$result["success"]           = true;
+		$result["message"]           = $this->getCheckoutSnippet( $productData, null, $productData['tag'] );;
+		die( json_encode( $result ) );
 	}
 
 	/**
@@ -847,7 +853,7 @@ class PlenigoShortcodeManager {
 	 * @throws \plenigo\Exception
 	 */
 	public function buildProductHash( $prodId, $price, $maxQuantity ) {
-		return hash_hmac( "sha256", "$prodId|$price|$maxQuantity", PlenigoSDKManager::get()->getPlenigoSDK()->getSecret());
+		return hash_hmac( "sha256", "$prodId|$price|$maxQuantity", PlenigoSDKManager::get()->getPlenigoSDK()->getSecret() );
 	}
 
 }
