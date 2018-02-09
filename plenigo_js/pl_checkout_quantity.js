@@ -1,7 +1,7 @@
 jQuery(document).ready(function () {
     jQuery('#plenigo-quantity').on('change', function (e) {
         var quantity = jQuery(this).val();
-        if (quantity) {
+        if (!isNaN(quantity) && quantity > 0) {
             var submitBtn = jQuery("#submit");
             submitBtn.prop('disabled', true);
             var productData = submitBtn.data('product-data');

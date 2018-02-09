@@ -697,7 +697,7 @@ class PlenigoShortcodeManager {
 				if ( is_numeric( $maxQuantity ) && $maxQuantity > 1 ) {
 					$quantityOptions = '';
 					$quantityHtml = "<label for='plenigo-quantity' class='$quantityLabelCssClass'>$quantityTitle </label>" .
-					                "<input name='plenigo-quantity' type='number' id='plenigo-quantity' max='$maxQuantity' class='$quantityCssClass' />";
+					                "<input name='plenigo-quantity' type='number' id='plenigo-quantity' min='1' max='$maxQuantity' class='$quantityCssClass' />";
 				}
 			}
 
