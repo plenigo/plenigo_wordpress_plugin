@@ -695,7 +695,6 @@ class PlenigoShortcodeManager {
 			$quantityHtml    = '';
 			if ( ! isset( $atts['withQuantity'] ) || $atts['withQuantity'] === true ) {
 				if ( is_numeric( $maxQuantity ) && $maxQuantity > 1 ) {
-					$quantityOptions = '';
 					$quantityHtml = "<label for='plenigo-quantity' class='$quantityLabelCssClass'>$quantityTitle </label>" .
 					                "<input name='plenigo-quantity' type='number' id='plenigo-quantity' min='1' max='$maxQuantity' class='$quantityCssClass' />";
 				}
@@ -755,8 +754,17 @@ class PlenigoShortcodeManager {
 					}
 					$title = null;
 					if ( $quantity > 1 ) {
-						$productData = \plenigo\services\ProductService::getProductData( $prodId );
-						$title    = $quantity . " x " . $productData->getTitle();
+						$productData = null;
+						try {
+							$productData = \plenigo\services\ProductService::getProductData( $prodId );
+						} catch ( \Exception $exc ) {
+							plenigo_log_message( $exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING );
+						}
+						if ( $productData !== null && ! empty( $productData->getTitle() ) ) {
+							$title = "$quantity x " . $productData->getTitle();
+						} else {
+							$title = "$quantity x Item";
+						}
 					}
 
 					$product = new \plenigo\models\ProductBase( $prodId, $title, ( $price * $quantity ), null );
