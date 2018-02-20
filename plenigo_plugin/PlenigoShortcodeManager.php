@@ -165,7 +165,7 @@ class PlenigoShortcodeManager {
 			'target'               => "",
 			'affiliate'            => "",
 			'price'                => "",
-			'quantity_title'       => "Quantity",
+			'quantity_title'       => "Stückzahl",
 			'quantity_class'       => "",
 			'quantity_label_class' => "",
 			'max_quantity'         => 1
