@@ -49,6 +49,7 @@ class RestClient {
 
     /**
      * Generate URL-encoded query string.
+     *
      * Replace http_build_query due to an error in this method.
      *
      * Taken from https://davidwalsh.name/curl-post
