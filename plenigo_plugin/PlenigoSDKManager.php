@@ -174,7 +174,7 @@ class PlenigoSDKManager {
         }
 
         if (!is_array($products) || count($products) < 1) {
-            plenigo_log_message("Plenigo bought check: false => products array is weird", E_USER_NOTICE);
+            plenigo_log_message("Plenigo bought check: false => products array is weird " . print_r($products, true), E_USER_NOTICE);
             return false;
         }
 
@@ -199,11 +199,11 @@ class PlenigoSDKManager {
                 $res = \plenigo\services\UserService::hasUserBought($currProdID);
                 //caching
                 $this->reqCache['bought'][$currProdID] = $res;
-                plenigo_log_message("Plenigo bought result true for " . $currProdID . ' - ' . var_export($res, true), E_USER_NOTICE);
+                plenigo_log_message("Plenigo bought result for " . $currProdID . ' = ' . var_export($res, true), E_USER_NOTICE);
 
                 $result = ($res === true) ? true : $result;
             } catch (\Exception $exc) {
-                plenigo_log_message($exc->getMessage() . '<br>' . $exc->getTraceAsString(), 0, E_USER_WARNING);
+                plenigo_log_message($exc->getMessage() . '<br>' . $exc->getTraceAsString(), E_USER_WARNING);
             }
             if ($result === true) {
                 break;

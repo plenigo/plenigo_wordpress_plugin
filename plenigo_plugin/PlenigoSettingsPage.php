@@ -37,6 +37,7 @@ require_once __DIR__ . '/settings/SettingOverrideProfiles.php';
 require_once __DIR__ . '/settings/SettingRedirectURL.php';
 require_once __DIR__ . '/settings/SettingLoginURL.php';
 require_once __DIR__ . '/settings/SettingProductTagDB.php';
+require_once __DIR__ . '/settings/SettingCustomCurtainDB.php';
 require_once __DIR__ . '/settings/SettingCategoryTagDB.php';
 require_once __DIR__ . '/settings/SettingCurtainTitle.php';
 require_once __DIR__ . '/settings/SettingCurtainText.php';
@@ -130,6 +131,7 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainCategoryMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingPreventTag());
+	    array_push($this->settings, new \plenigo_plugin\settings\SettingCustomCurtainDB());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonBuy());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCustom());
@@ -146,7 +148,7 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingProfileURL());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseRegister());
 
-        // Check the initialization of settings uppon upgrade
+        // Check the initialization of settings upon upgrade
         if (!isset($this->options[self::PLENIGO_VERSION_OPT]) || $this->options[self::PLENIGO_VERSION_OPT] !== PLENIGO_VERSION) {
             $this->options[self::PLENIGO_VERSION_OPT] = PLENIGO_VERSION;
             $this->initialize_defaults();
