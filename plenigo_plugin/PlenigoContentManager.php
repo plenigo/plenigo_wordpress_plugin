@@ -628,11 +628,11 @@ class PlenigoContentManager {
             $themed_template = locate_template($fileName);
             if (!is_null($themed_template) && is_string($themed_template) && $themed_template !== '') {
                 plenigo_log_message("TEMPLATE FROM THEME");
-                $this->addDebugLine("Template from Theme: " . $fileName);
+                $this->addDebugLine("Template from Theme: ". $fileName);
                 return $themed_template;
             } else {
                 plenigo_log_message("TEMPLATE FROM PLUGIN");
-                $this->addDebugLine("Template from Plugin: " . $fileName);
+                $this->addDebugLine("Template from Plugin: ". $fileName);
                 return dirname(__FILE__) . '/../plenigo_template/' . $fileName;
             }
         }
