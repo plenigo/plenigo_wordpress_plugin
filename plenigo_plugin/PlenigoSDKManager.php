@@ -288,4 +288,20 @@ class PlenigoSDKManager {
         }
     }
 
+	/**
+	 * Generates the login snippet with the current wordpress configuration.
+	 *
+	 * @return mixed
+	 */
+	public function getLoginSnippet() {
+		$options     = get_option( self::PLENIGO_SETTINGS_NAME, array() );
+		$redirectUrl = $options['redirect_url'];
+		if ( empty( $redirectUrl ) ) {
+			$redirectUrl = null;
+		}
+		$config  = new \plenigo\models\LoginConfig( $redirectUrl, \plenigo\models\AccessScope::PROFILE );
+		$builder = new \plenigo\builders\LoginSnippetBuilder( $config );
+		$token   = \plenigo_plugin\PlenigoSDKManager::get()->get_csrf_token();
+		return $builder->withCSRFToken( $token )->build();
+	}
 }
