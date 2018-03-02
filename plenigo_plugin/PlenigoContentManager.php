@@ -248,11 +248,12 @@ class PlenigoContentManager {
                 $html_curtain = null;
 
 	            $customCurtain = $this->options['plenigo_custom_curtain_db'];
+	            $hasCustomCurtain = false;
 	            if(isset( $customCurtain ) && !empty(trim($customCurtain))) {
-                	return $customCurtain;
+                	$hasCustomCurtain = true;
                 }
 
-                if (isset($this->templateMap[$rType][$hasBought])) {
+                if (isset($this->templateMap[$rType][$hasBought]) && !$hasCustomCurtain) {
                     $html_curtain = $this->templateMap[$rType][$hasBought];
                     $curtain_file = $this->locate_plenigo_template($html_curtain);
                 }
@@ -269,11 +270,19 @@ class PlenigoContentManager {
                 switch ($rType) {
                     case self::RENDER_FEED :
                         plenigo_log_message("ITS A FEED");
-                        $curtain_code = $this->plenigo_curtain($content, $curtain_file, $showByDefault);
+                        if($hasCustomCurtain) {
+	                        $curtain_code = $customCurtain;
+                        }  else {
+	                        $curtain_code = $this->plenigo_curtain($content, $curtain_file, $showByDefault);
+                        }
                         break;
                     case self::RENDER_SINGLE :
                         plenigo_log_message("ITS A SINGLE");
-                        $curtain_code = $this->plenigo_curtain($content, $curtain_file, FALSE);
+	                    if($hasCustomCurtain) {
+		                    $curtain_code = $customCurtain;
+	                    }  else {
+		                    $curtain_code = $this->plenigo_curtain( $content, $curtain_file, false );
+	                    }
                         break;
                     case self::RENDER_SEARCH :
                         plenigo_log_message("ITS A SEARCH");
