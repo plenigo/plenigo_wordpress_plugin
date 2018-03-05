@@ -55,7 +55,7 @@ class WordpressLogging implements Loggable {
 	public function logData( $msg ) {
 		$this->wpdb->insert( $this->tableName,
 			array(
-				'time' => current_time( 'mysql' ),
+				'creation_date' => current_time( 'mysql' ),
 				'log'  => $msg
 			) );
 	}

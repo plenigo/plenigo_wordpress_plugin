@@ -1,15 +1,19 @@
 tinymce.PluginManager.requireLangPack('plenigo', 'en_US,es_ES');
 
 function isInvalidNumber(number) {
-    return number !== '' && (isNaN(parseFloat(number)) && !isFinite(number));
+    return number !== '' && (isNaN(parseFloat(number)) || !isFinite(number));
 }
 
 function getAttributeIfNotEmpty(value, attributeName) {
     var trimmedValue = value.trim();
-    if(trimmedValue !== '') {
-        return '';
+    if (trimmedValue === '') {
+        return trimmedValue;
     }
-    return  attributeName + '="' + trimmedValue + '" ';
+    return attributeName + '="' + trimmedValue + '" ';
+}
+
+function isInteger(number) {
+    return !isNaN(number) && number % 1 === 0 || /^\d+$/.test(number);
 }
 
 tinymce.PluginManager.add('plenigo', function (editor, url) {
@@ -19,11 +23,6 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
         text: '',
         icon: 'pl-checkout',
         onclick: function () {
-            var quantityValues = [];
-            for (var i = 1; i <= 50; i++) {
-                var index = i + '';
-                quantityValues.push({text: index, value: index});
-            }
             // Open setup window
             editor.windowManager.open({
                 title: 'Plenigo Checkout Button',
@@ -33,7 +32,7 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                     {type: 'textbox', name: 'quantityTitle', label: 'Quantity Title'},
                     {type: 'textbox', name: 'quantityCssClass', label: 'Quantity CSS class'},
                     {type: 'textbox', name: 'quantityLabelCssClass', label: 'Quantity Label CSS class'},
-                    {type: 'listbox', name: 'maxQuantity', label: 'Max Quantity', values: quantityValues, value: '1'},
+                    {type: 'textbox', name: 'maxQuantity', label: 'Max Quantity', value: '1'},
                     {type: 'textbox', name: 'title', label: 'Button Title'},
                     {type: 'textbox', name: 'cssClass', label: 'Button CSS class'},
                     {
@@ -58,12 +57,12 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                     } else if (isInvalidNumber(price)) {
                         editor.windowManager.alert('Invalid Price!');
                         isInvalid = true;
-                    } else if (isInvalidNumber(max_quantity)) {
+                    } else if (!isInteger(max_quantity) || parseInt(max_quantity) < 0) {
                         editor.windowManager.alert('Invalid Quantity!');
                         isInvalid = true;
                     } else {
                         var selected_text = editor.selection.getContent();
-                        var prod_text  = ' prod_id="' + trimmedProdId + '" ';
+                        var prod_text = ' prod_id="' + trimmedProdId + '" ';
                         var title_text = getAttributeIfNotEmpty(e.data.title, 'title');
                         var class_text = getAttributeIfNotEmpty(e.data.cssClass, 'class');
                         var register_text = getAttributeIfNotEmpty(e.data.register, 'register');
