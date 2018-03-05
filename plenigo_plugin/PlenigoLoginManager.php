@@ -231,8 +231,14 @@ class PlenigoLoginManager {
                 $this->options['login_url'] = esc_url($sessionURL);
             }
         }
-        plenigo_log_message("Redirecting to:" . $this->options['login_url'] . "  <<<END>>>");
-        header("Location: " . $this->options['login_url']);
+	    $redirectUrl = $this->options['login_url'];
+	    if(isset($_SESSION["plenigo_checkout_redirect_url"])) {
+		    $redirectUrl = $_SESSION["plenigo_checkout_redirect_url"];
+		    unset($_SESSION["plenigo_checkout_redirect_url"]);
+	    }
+	    error_log("REDIRECTIG TO $redirectUrl");
+	    plenigo_log_message( "Redirecting to:" . $redirectUrl . "  <<<END>>>");
+        header("Location: " . $redirectUrl);
         exit;
     }
 

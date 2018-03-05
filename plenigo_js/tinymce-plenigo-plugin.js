@@ -44,7 +44,15 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                     },
                     {type: 'textbox', name: 'source', label: 'Source URL'},
                     {type: 'textbox', name: 'target', label: 'Target URL'},
-                    {type: 'textbox', name: 'affiliate', label: 'Affiliate ID'}
+                    {type: 'textbox', name: 'affiliate', label: 'Affiliate ID'},
+                    {
+                        type: 'combobox', name: 'hideWhenBought', label: 'Hide Button when bought',
+                        values: [
+                            {text: 'Yes', value: '1'},
+                            {text: 'No', value: '0'}
+                        ],
+                        value: '1'
+                    },
                 ],
                 onsubmit: function (e) {
                     var isInvalid = false;
@@ -77,6 +85,7 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                         var quantity_label_class_text = getAttributeIfNotEmpty(e.data.quantityLabelCssClass, 'quantity_label_class');
                         max_quantity = getAttributeIfNotEmpty(e.data.maxQuantity, 'max_quantity');
                         var quantity_title_text = getAttributeIfNotEmpty(e.data.quantityTitle, 'quantity_title');
+                        var hideWhenBought = getAttributeIfNotEmpty(e.data.hideWhenBought, 'hide_when_bought');
                         var return_text = '[pl_checkout '
                             + prod_text
                             + title_text
@@ -90,6 +99,7 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                             + quantity_label_class_text
                             + max_quantity
                             + quantity_title_text
+                            + hideWhenBought
                             + ' ]'
                             + selected_text
                             + '[/pl_checkout]';

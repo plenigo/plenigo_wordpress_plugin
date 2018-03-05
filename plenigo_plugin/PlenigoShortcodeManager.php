@@ -168,6 +168,7 @@ class PlenigoShortcodeManager {
 			'quantity_title'       => "Stückzahl",
 			'quantity_class'       => "",
 			'quantity_label_class' => "",
+			'hide_when_bought' => "1",
 			'max_quantity'         => 1
 		), $atts );
 		$a['withQuantity'] = true;
@@ -664,7 +665,8 @@ class PlenigoShortcodeManager {
 	public function getCheckoutSnippet( $atts, $content, $tag ) {
 		$btnTitle              = $atts['title'];
 		$cssClass              = $atts['class'];
-		$isIgnoringTag         = ( $tag == 'pl_checkout_button' || $tag == 'pl_renew' );
+		$hideWhenBought           = $atts['hide_when_bought'];
+		$isIgnoringTag         = ( $tag == 'pl_checkout_button' || $tag == 'pl_renew' || $hideWhenBought === "0");
 		$prodId                = $atts['prod_id'];
 		$price                 = $atts['price'];
 		$atts['tag']           = $tag;
@@ -808,6 +810,8 @@ class PlenigoShortcodeManager {
 				}
 				if ( empty( trim( $targetURL ) ) ) {
 					$targetURL = null;
+				} else {
+					$_SESSION["plenigo_checkout_redirect_url"] = $targetURL;
 				}
 				if ( empty( trim( $affiliate ) ) ) {
 					$affiliate = null;
