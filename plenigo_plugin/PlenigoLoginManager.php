@@ -232,7 +232,8 @@ class PlenigoLoginManager {
             }
         }
 	    $redirectUrl = $this->options['login_url'];
-	    if(isset($_SESSION["plenigo_checkout_redirect_url"])) {
+        //override redirect url only when its successful
+	    if(isset($_SESSION["plenigo_checkout_redirect_url"]) && isset($_GET["paymentState"]) && $_GET["paymentState"] == "success") {
 		    $redirectUrl = $_SESSION["plenigo_checkout_redirect_url"];
 		    unset($_SESSION["plenigo_checkout_redirect_url"]);
 	    }
