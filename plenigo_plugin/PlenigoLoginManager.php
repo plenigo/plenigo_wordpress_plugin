@@ -237,7 +237,7 @@ class PlenigoLoginManager {
 		    $redirectUrl = $_SESSION["plenigo_checkout_redirect_url"];
 		    unset($_SESSION["plenigo_checkout_redirect_url"]);
 	    }
-	    error_log("REDIRECTIG TO $redirectUrl");
+	    error_log("REDIRECTING TO $redirectUrl");
 	    plenigo_log_message( "Redirecting to:" . $redirectUrl . "  <<<END>>>");
         header("Location: " . $redirectUrl);
         exit;
