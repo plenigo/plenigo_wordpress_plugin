@@ -304,4 +304,19 @@ class PlenigoSDKManager {
 		$token   = \plenigo_plugin\PlenigoSDKManager::get()->get_csrf_token();
 		return $builder->withCSRFToken( $token )->build();
 	}
+
+
+	/**
+	 * Generates the login snippet with the current wordpress configuration.
+	 *
+	 * @return mixed
+	 */
+	public function getProfileUrl() {
+		$options     = get_option(self::PLENIGO_SETTINGS_NAME, array());
+		$profileUrl = $options['profile_url'];
+		if ( empty( $profileUrl ) ) {
+			return "";
+		}
+		return $profileUrl;
+	}
 }
