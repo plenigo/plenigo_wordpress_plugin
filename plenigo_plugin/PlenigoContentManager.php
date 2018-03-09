@@ -61,7 +61,7 @@ class PlenigoContentManager {
     private $gaEventList = array();
 
     /**
-     * Priority in which plenigo will handle content. It has to be less than 10 
+     * Priority in which plenigo will handle content. It has to be less than 10
      * (for shortcode processing) but more than 1.
      */
     const PLENIGO_CONTENT_PRIO = 5;
@@ -131,7 +131,7 @@ class PlenigoContentManager {
 
     /**
      * Check if the curtain has to be rendered and injects a meta tag for search engine robots
-     * 
+     *
      * @global WP_Post $post The Wordpress post object
      */
     public function add_metatags() {
@@ -154,7 +154,7 @@ class PlenigoContentManager {
     /**
      * This is only for testing purposes, the snipet here allows to change the
      * baseURL of the JS and PHP SDKs at the same time
-     * 
+     *
      * @global WP_Post $post The Wordpress post object
      */
     public function plenigo_js_snippet() {
@@ -349,8 +349,9 @@ class PlenigoContentManager {
             return FALSE;
         }
 
+	    $typesPluginPaywall = function_exists( 'types_render_field' ) && types_render_field( "paywall" );
         // Do not paywall if nothing is configured
-        if (trim($plenigoTagDB) === '' && trim($plenigoCatTagDB) === '') {
+        if (trim($plenigoTagDB) === '' && trim($plenigoCatTagDB) === '' && !$typesPluginPaywall) {
             plenigo_log_message("NO TAGS CONFIGURED");
             return FALSE;
         }
@@ -362,12 +363,29 @@ class PlenigoContentManager {
             //Checking for Product IDs
             $hasAnyProdTag = $this->hasAnyProductTag();
             $hasProdIdList = false;
-            if(!$hasAnyProdTag && !empty($plenigoTagDB) && function_exists( 'types_render_field' ) && types_render_field("paywall")) {
-	            $array = explode(',', $plenigoTagDB);
-	            foreach ($array as $dbProdId) {
-	            	$trimmedProdId = trim($dbProdId);
-	            	if(!empty($trimmedProdId)) {
-			            array_push($this->reqCache["csvProdList"], $trimmedProdId);
+	        if( $typesPluginPaywall ) {
+	            $plenigoGroupOne = (isset($this->options['plenigo_product_group_one_db']) ? $this->options['plenigo_product_group_one_db'] : '');
+	            $plenigoGroupTwo = (isset($this->options['plenigo_product_group_two_db']) ? $this->options['plenigo_product_group_two_db'] : '');
+	            $csvList = array();
+	            $addGroupOne        = types_render_field( "group-one" );
+	            $addGroupTwo        = types_render_field( "group-two" );
+	            $noGroupSelected     = !$addGroupOne && !$addGroupTwo;
+	            if( ($addGroupOne || $noGroupSelected) && !empty($plenigoGroupOne)) {
+		            $csvList = explode(',', $plenigoGroupOne);
+	            }
+	            if(($addGroupTwo || $noGroupSelected) && !empty($plenigoGroupTwo)) {
+		            $groupTwoArray = explode(',', $plenigoGroupTwo);
+		            if(!empty($groupTwoArray)) {
+			            $csvList = array_merge($csvList, $groupTwoArray);
+		            }
+	            }
+
+	            if(!empty($csvList)) {
+		            foreach ($csvList as $dbProdId) {
+		                $trimmedProdId = trim($dbProdId);
+		                if(!empty($trimmedProdId)) {
+				            array_push($this->reqCache["csvProdList"], $trimmedProdId);
+			            }
 		            }
 	            }
 	            $hasProdIdList =  !empty($this->reqCache["csvProdList"]);
@@ -397,10 +415,10 @@ class PlenigoContentManager {
     }
 
     /**
-     * This method checks for category IDs that need to be added to the category list 
-     * so it can be checked for bought products. Returns FALSE if there is no tag 
+     * This method checks for category IDs that need to be added to the category list
+     * so it can be checked for bought products. Returns FALSE if there is no tag
      * found on the article that reflects a tag in the plenigo settings
-     * 
+     *
      * @return bool Returns TRUE if a tag has been found and the category list is in the cache
      */
     public function hasAnyCategoryTag() {
@@ -450,7 +468,7 @@ class PlenigoContentManager {
 
     /**
      * Check if the prevent tags is present, and returns the flag indicating it
-     * 
+     *
      * @return bool TRUE if the prevent tag is present and thus the curtain shouldn't
      */
     public function hasPreventTag() {
@@ -477,10 +495,10 @@ class PlenigoContentManager {
     }
 
     /**
-     * This method checks for Product IDs that need to be added to the product list 
-     * so it can be checked for bought products. Returns FALSE if there is no tag 
+     * This method checks for Product IDs that need to be added to the product list
+     * so it can be checked for bought products. Returns FALSE if there is no tag
      * found on the article that reflects a tag in the plenigo settings
-     * 
+     *
      * @return bool Returns TRUE if a tag has been found and the product list is in the cache
      */
     private function hasAnyProductTag() {
@@ -874,7 +892,7 @@ class PlenigoContentManager {
             }
         }
         if ($curtainMode == self::CURTAIN_MODE_LCB) {
-            //[LOGIN BUTTON] [CUSTOM BUTTON] [BUY BUTTON] 
+            //[LOGIN BUTTON] [CUSTOM BUTTON] [BUY BUTTON]
             if ($isLoggedIn) {
                 $buyStyle = $strHalf;
                 $custStyle = $strHalf;
@@ -911,7 +929,7 @@ class PlenigoContentManager {
 
     /**
      * This method creates and returns a login snippet for use with the curtain login button
-     * 
+     *
      * @return string the resulting login snippet
      */
     private function get_regular_login() {
@@ -920,9 +938,9 @@ class PlenigoContentManager {
     }
 
     /**
-     * This method creates and returns a login snippet for use with the curtain login button 
+     * This method creates and returns a login snippet for use with the curtain login button
      * but using the OAuth authentication
-     * 
+     *
      * @return string the resulting login snippet
      */
     private function get_oauth_login() {
@@ -933,9 +951,9 @@ class PlenigoContentManager {
     }
 
     /**
-     * Creates a plenigo managed product with the last Product ID and/or the Cateogory ID . The Product ID comes 
+     * Creates a plenigo managed product with the last Product ID and/or the Cateogory ID . The Product ID comes
      * from the TAG , but if the category is given, it obtains it from the Current Post ID
-     * 
+     *
      * @global WP_Post $post The Wordpress post object
      * @return \plenigo\models\ProductBase The plenigo product object
      */
@@ -964,7 +982,7 @@ class PlenigoContentManager {
 
     /**
      * Adds a line at the end of the debug checklist
-     * 
+     *
      * @param string $row
      */
     private function addDebugLine($row = null) {
@@ -997,7 +1015,7 @@ class PlenigoContentManager {
 
     /**
      * Adds a line at the end of the GA event list
-     * 
+     *
      * @param string $row the format is event|action
      */
     private function addGAEvent($row = null) {
@@ -1024,7 +1042,7 @@ class PlenigoContentManager {
 
     /**
      * Returns the &lt;noscript&gt; tag found in the plugin or theme directory
-     * 
+     *
      * @return string the HTML to render or empty if no template has been found
      */
     private function getNoScriptTag() {
@@ -1039,7 +1057,7 @@ class PlenigoContentManager {
 
     /**
      * Replaces the template tags for the NOSCRIPT overlay
-     * 
+     *
      * @param string $htmlText The template HTML text
      * @return string The template HTML text with the replacement tags or empty if the NOSCRIPT functionality is disabled
      */
@@ -1058,7 +1076,7 @@ class PlenigoContentManager {
 
     /**
      * Replaces the tags in the Google Analytics HTML with the actual values to configure GA
-     * 
+     *
      * @param string $strGAhtml The HTML to be replaced
      * @return string the HTML with the tags replaced
      */
@@ -1081,7 +1099,7 @@ class PlenigoContentManager {
 
     /**
      * This method allow to strip a teaser tag from the content if it is starting with  one of the specified tags
-     * 
+     *
      * @param string $content the actual post content
      * @return string The teaser or blank if nothing is found
      */
@@ -1129,7 +1147,7 @@ class PlenigoContentManager {
 
     /**
      * Search for the needle and returns the begining of the content with the needle attached at the end
-     * 
+     *
      * @param string $content
      * @param string $needle
      * @return string
@@ -1145,7 +1163,7 @@ class PlenigoContentManager {
 
     /**
      * Sanitizes a string array to return an array, empty or with a single value as special cases
-     * 
+     *
      * @param string $stringArray
      * @return array
      */
@@ -1164,7 +1182,7 @@ class PlenigoContentManager {
 
     /**
      * Checks if the metered view is exempt by tag
-     * 
+     *
      * @return bool TRUE if the post is exempt of metered views
      */
     public function is_metered_exempt() {
@@ -1181,9 +1199,9 @@ class PlenigoContentManager {
     }
 
     /**
-     * Obtains the BUY button text in the case there is a product or a category tag 
+     * Obtains the BUY button text in the case there is a product or a category tag
      * associated to a buy text, if nothing is found then it returns a given default value.
-     * 
+     *
      * @param string $defaultValue the default value to return if no tag is found in the DB
      * @return string The final Buy button text
      */
@@ -1223,7 +1241,7 @@ class PlenigoContentManager {
 
     /**
      * Output debugging information about the condition of the post before analyzing if it has been bought or not.
-     * 
+     *
      * @global WP_Post $post The Wordpress post object
      */
     private function showDebugConditions() {

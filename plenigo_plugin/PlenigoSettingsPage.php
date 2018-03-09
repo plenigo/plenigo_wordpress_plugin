@@ -37,6 +37,8 @@ require_once __DIR__ . '/settings/SettingOverrideProfiles.php';
 require_once __DIR__ . '/settings/SettingRedirectURL.php';
 require_once __DIR__ . '/settings/SettingLoginURL.php';
 require_once __DIR__ . '/settings/SettingProductTagDB.php';
+require_once __DIR__ . '/settings/SettingProductGroupOneDB.php';
+require_once __DIR__ . '/settings/SettingProductGroupTwoDB.php';
 require_once __DIR__ . '/settings/SettingCustomCurtainDB.php';
 require_once __DIR__ . '/settings/SettingCategoryTagDB.php';
 require_once __DIR__ . '/settings/SettingCurtainTitle.php';
@@ -132,6 +134,8 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainCategoryMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingPreventTag());
 	    array_push($this->settings, new \plenigo_plugin\settings\SettingCustomCurtainDB());
+	    array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupOneDB());
+	    array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupTwoDB());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonBuy());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCustom());
