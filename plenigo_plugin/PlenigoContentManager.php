@@ -259,6 +259,8 @@ class PlenigoContentManager
                 $hasCustomCurtain = false;
                 if (isset($customCurtain) && !empty(trim($customCurtain))) {
                     $hasCustomCurtain = true;
+                    remove_filter( 'the_content', 'wpautop' );
+                    remove_filter( 'the_excerpt', 'wpautop' );
                 }
 
                 if (isset($this->templateMap[$rType][$hasBought]) && !$hasCustomCurtain) {
