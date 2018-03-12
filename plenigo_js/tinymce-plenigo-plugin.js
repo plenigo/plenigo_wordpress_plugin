@@ -1,4 +1,17 @@
 tinymce.PluginManager.requireLangPack('plenigo', 'en_US,es_ES');
+
+function isInvalidNumber(number) {
+    return number !== '' && (isNaN(parseFloat(number)) && !isFinite(number));
+}
+
+function getAttributeIfNotEmpty(value, attributeName) {
+    var trimmedValue = value.trim();
+    if(trimmedValue !== '') {
+        return '';
+    }
+    return  attributeName + '="' + trimmedValue + '" ';
+}
+
 tinymce.PluginManager.add('plenigo', function (editor, url) {
     // Add a button that opens a setup window and configures the checkout button
     editor.addButton('plenigo', {
@@ -6,14 +19,25 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
         text: '',
         icon: 'pl-checkout',
         onclick: function () {
+            var quantityValues = [];
+            for (var i = 1; i <= 50; i++) {
+                var index = i + '';
+                quantityValues.push({text: index, value: index});
+            }
             // Open setup window
             editor.windowManager.open({
                 title: 'Plenigo Checkout Button',
                 body: [
                     {type: 'textbox', name: 'prodId', label: 'Product ID*'},
+                    {type: 'textbox', name: 'price', label: 'Price(Currency is the one configured in the product)'},
+                    {type: 'textbox', name: 'quantityTitle', label: 'Quantity Title'},
+                    {type: 'textbox', name: 'quantityCssClass', label: 'Quantity CSS class'},
+                    {type: 'textbox', name: 'quantityLabelCssClass', label: 'Quantity Label CSS class'},
+                    {type: 'listbox', name: 'maxQuantity', label: 'Max Quantity', values: quantityValues, value: '1'},
                     {type: 'textbox', name: 'title', label: 'Button Title'},
                     {type: 'textbox', name: 'cssClass', label: 'Button CSS class'},
-                    {type: 'combobox', name: 'register', label: 'Show Register form',
+                    {
+                        type: 'combobox', name: 'register', label: 'Show Register form',
                         values: [
                             {text: 'Yes', value: '1'},
                             {text: 'No', value: '0'}
@@ -24,49 +48,56 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                     {type: 'textbox', name: 'affiliate', label: 'Affiliate ID'}
                 ],
                 onsubmit: function (e) {
-                    var selected_text = editor.selection.getContent();
-                    var return_text = '';
-                    var prod_text = '';
-                    var title_text = '';
-                    var register_text = '';
-                    var source_text = '';
-                    var target_text = '';
-                    var affiliate_text = '';
-                    var class_text = '';
-                    if (e.data.prodId.trim() === '' || e.data.prodId.length < 5) {
+                    var isInvalid = false;
+                    var price = e.data.price.trim();
+                    var max_quantity = e.data.maxQuantity.trim();
+                    var trimmedProdId = e.data.prodId.trim();
+                    if (trimmedProdId === '' || e.data.prodId.length < 5) {
                         editor.windowManager.alert('Invalid Product ID!');
+                        isInvalid = true;
+                    } else if (isInvalidNumber(price)) {
+                        editor.windowManager.alert('Invalid Price!');
+                        isInvalid = true;
+                    } else if (isInvalidNumber(max_quantity)) {
+                        editor.windowManager.alert('Invalid Quantity!');
+                        isInvalid = true;
                     } else {
-                        prod_text = ' prod_id="' + e.data.prodId.trim() + '" ';
-                        if (e.data.title.trim() !== '') {
-                            title_text = ' title="' + e.data.title.trim() + '" ';
+                        var selected_text = editor.selection.getContent();
+                        var prod_text  = ' prod_id="' + trimmedProdId + '" ';
+                        var title_text = getAttributeIfNotEmpty(e.data.title, 'title');
+                        var class_text = getAttributeIfNotEmpty(e.data.cssClass, 'class');
+                        var register_text = getAttributeIfNotEmpty(e.data.register, 'register');
+                        var source_text = getAttributeIfNotEmpty(e.data.source, 'source');
+                        var target_text = getAttributeIfNotEmpty(e.data.target, 'target');
+                        var affiliate_text = getAttributeIfNotEmpty(e.data.affiliate, 'affiliate');
+                        var price_text = '';
+                        if (price !== '') {
+                            price_text = ' price="' + price + '" ';
                         }
-                        if (e.data.cssClass.trim() !== '') {
-                            class_text = ' class="' + e.data.cssClass.trim() + '" ';
-                        }
-                        if (e.data.register.trim() !== '') {
-                            register_text = ' register="' + e.data.register.trim() + '" ';
-                        }
-                        if (e.data.source.trim() !== '') {
-                            source_text = ' source="' + e.data.source.trim() + '" ';
-                        }
-                        if (e.data.target.trim() !== '') {
-                            target_text = ' target="' + e.data.target.trim() + '" ';
-                        }
-                        if (e.data.affiliate.trim() !== '') {
-                            affiliate_text = ' affiliate="' + e.data.affiliate.trim() + '" ';
-                        }
-                        return_text = '[pl_checkout '
-                                + prod_text
-                                + title_text
-                                + class_text
-                                + register_text
-                                + source_text
-                                + target_text
-                                + affiliate_text
-                                + ' ]'
-                                + selected_text
-                                + '[/pl_checkout]';
+                        var quantity_class_text = getAttributeIfNotEmpty(e.data.quantityCssClass, 'quantity_class');
+                        var quantity_label_class_text = getAttributeIfNotEmpty(e.data.quantityLabelCssClass, 'quantity_label_class');
+                        max_quantity = getAttributeIfNotEmpty(e.data.maxQuantity, 'max_quantity');
+                        var quantity_title_text = getAttributeIfNotEmpty(e.data.quantityTitle, 'quantity_title');
+                        var return_text = '[pl_checkout '
+                            + prod_text
+                            + title_text
+                            + class_text
+                            + register_text
+                            + source_text
+                            + target_text
+                            + affiliate_text
+                            + price_text
+                            + quantity_class_text
+                            + quantity_label_class_text
+                            + max_quantity
+                            + quantity_title_text
+                            + ' ]'
+                            + selected_text
+                            + '[/pl_checkout]';
                         editor.execCommand('mceInsertContent', false, return_text);
+                    }
+                    if (isInvalid) {
+                        e.preventDefault();
                     }
                 }
             });

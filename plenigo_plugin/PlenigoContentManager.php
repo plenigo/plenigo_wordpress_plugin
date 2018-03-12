@@ -730,7 +730,7 @@ class PlenigoContentManager {
         $custStyle = "width:30%";
         $buyStyle = "width:30%";
         $loginTitle = $this->options['curtain_login'];
-        $loginOnClick = "javascript:alert('The login API doesn't work!');";
+	    $loginOnClick = "javascript:alert('The login API doesn\'t work!');";
         if (!isset($this->reqCache["lastCatId"])) {
             $curtainMode = (isset($this->options['curtain_mode'])) ? $this->options['curtain_mode'] : self::CURTAIN_MODE_LB;
             $custTitle = $this->options['curtain_custom_title'];
