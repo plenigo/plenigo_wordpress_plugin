@@ -25,63 +25,64 @@ namespace plenigo_plugin\settings;
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
- * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
+ *
  * @link     https://plenigo.com
  */
-class SettingCustomCurtainDB extends PlenigoWPSetting {
+class SettingCustomCurtainDB extends PlenigoWPSetting
+{
 
-	//These should be overriden
-	const SECTION_ID = 'plenigo_content_section';
-	const SETTING_ID = 'plenigo_custom_curtain_db';
+    //These should be overriden
+    const SECTION_ID = 'plenigo_content_section';
+    const SETTING_ID = 'plenigo_custom_curtain_db';
 
-	/**
-	 * Holds values for the SQL requests, so they are made just once per request
-	 */
-	private $reqCache = array();
+    /**
+     * Holds values for the SQL requests, so they are made just once per request
+     */
+    private $reqCache = array();
 
-	/**
-	 * @see PlenigoWPSetting::getSanitizedValue()
-	 */
-	protected function getSanitizedValue( $value = null ) {
-		if ( is_null( $value ) ) {
-			return $this->getDefaultValue();
-		}
+    /**
+     * @see PlenigoWPSetting::getSanitizedValue()
+     */
+    protected function getSanitizedValue($value = null) {
+        if (is_null($value)) {
+            return $this->getDefaultValue();
+        }
 
-		return trim( $value );
-	}
+        return trim($value);
+    }
 
-	/**
-	 * @see PlenigoWPSetting::getDefaultValue()
-	 */
-	public function getDefaultValue( $current = null ) {
-		if ( ! is_null( $current ) ) {
-			return $current;
-		}
+    /**
+     * @see PlenigoWPSetting::getDefaultValue()
+     */
+    public function getDefaultValue($current = null) {
+        if (!is_null($current)) {
+            return $current;
+        }
 
-		return "";
-	}
+        return "";
+    }
 
-	/**
-	 * @see PlenigoWPSetting::getTitle()
-	 */
-	public function getTitle() {
-		return __( 'Custom Curtain HTML', parent::PLENIGO_SETTINGS_GROUP );
-	}
+    /**
+     * @see PlenigoWPSetting::getTitle()
+     */
+    public function getTitle() {
+        return __('Custom Curtain HTML', parent::PLENIGO_SETTINGS_GROUP);
+    }
 
-	/**
-	 * @see PlenigoWPSetting::renderCallback()
-	 */
-	public function renderCallback() {
-		$currValue = $this->getDefaultValue( $this->getStoredValue() );
-		printf( '<textarea cols="100" wrap="off" rows="20" id="plenigo_custom_curtain_db" name="' . self::PLENIGO_SETTINGS_NAME
-		        . '[' . static::SETTING_ID . ']" placeholder="' . __( 'Enter Custom HTML...',
-				parent::PLENIGO_SETTINGS_GROUP ) . '">%s</textarea>', $currValue );
-	}
+    /**
+     * @see PlenigoWPSetting::renderCallback()
+     */
+    public function renderCallback() {
+        $currValue = $this->getDefaultValue($this->getStoredValue());
+        printf('<textarea cols="100" wrap="off" rows="20" id="plenigo_custom_curtain_db" name="' . self::PLENIGO_SETTINGS_NAME
+            . '[' . static::SETTING_ID . ']" placeholder="' . __('Enter Custom HTML...',
+                parent::PLENIGO_SETTINGS_GROUP) . '">%s</textarea>', $currValue);
+    }
 
-	/**
-	 * @see PlenigoWPSetting::getValidationForValue()
-	 */
-	public function getValidationForValue( $value = null ) {
-		return true;
-	}
+    /**
+     * @see PlenigoWPSetting::getValidationForValue()
+     */
+    public function getValidationForValue($value = null) {
+        return true;
+    }
 }

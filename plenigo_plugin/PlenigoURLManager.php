@@ -11,7 +11,6 @@ namespace plenigo_plugin;
  *
  * @category SDK
  * @package  plenigo_plugin
- * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
 class PlenigoURLManager {

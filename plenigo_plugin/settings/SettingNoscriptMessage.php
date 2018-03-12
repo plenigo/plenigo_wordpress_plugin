@@ -27,7 +27,6 @@ require_once __DIR__ . '/SettingCurtainButtonBuy.php';
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
- * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
 class SettingNoscriptMessage extends SettingCurtainButtonBuy {

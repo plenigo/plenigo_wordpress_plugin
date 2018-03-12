@@ -29,7 +29,6 @@ namespace plenigo_plugin;
  *
  * @category WordPressPlugin
  * @package  plenigoPlugin
- * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
 class PlenigoWooCManager {

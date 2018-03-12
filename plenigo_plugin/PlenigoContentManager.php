@@ -31,10 +31,10 @@ namespace plenigo_plugin;
  *
  * @category WordPressPlugin
  * @package  plenigoPlugin
- * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class PlenigoContentManager {
+class PlenigoContentManager
+{
 
     /**
      * Holds the values to be used in the fields callbacks
@@ -168,9 +168,17 @@ class PlenigoContentManager {
         //Handling other pages than single post view
         $rType = $this->get_render_type(FALSE);
         //Checking if product has been bought (Products)
-        $userBoughtProd = (isset($this->reqCache["listProdId"])) ? (PlenigoSDKManager::get()->plenigo_bought($this->reqCache["listProdId"]) === TRUE) : FALSE;
-        //Checking if product has been bought with CSV List
-	    $userBoughtProd = (isset($this->reqCache["csvProdList"])) ? (PlenigoSDKManager::get()->plenigo_bought($this->reqCache["csvProdList"]) === TRUE) : FALSE;
+        $listToCompare = null;
+        if (isset($this->reqCache["listProdId"])) {
+            $listToCompare = $this->reqCache["listProdId"];
+        } else if (isset($this->reqCache["csvProdList"])) {
+            $listToCompare = $this->reqCache["csvProdList"];
+        }
+
+        $userBoughtProd = FALSE;
+        if (!is_null($listToCompare)) {
+            $userBoughtProd = PlenigoSDKManager::get()->plenigo_bought($listToCompare) === TRUE;
+        }
         //Checking if product has been bought (Categories)
         $userBoughtCat = (isset($this->reqCache["lastCatId"])) ? (PlenigoSDKManager::get()->plenigo_bought($this->reqCache["lastCatId"]) === TRUE) : FALSE;
         //Either way the user bought it
@@ -193,10 +201,10 @@ class PlenigoContentManager {
         }
 
         $strNoScript = $this->getNoScriptTag();
-        echo'<script type="text/javascript" '
-        . 'src="' . PLENIGO_JSSDK_URL . '/static_resources/javascript/'
-        . $this->options["company_id"] . '/plenigo_sdk.min.js" '
-        . $disableText . $meteredURLText . '></script>' . $strNoScript;
+        echo '<script type="text/javascript" '
+            . 'src="' . PLENIGO_JSSDK_URL . '/static_resources/javascript/'
+            . $this->options["company_id"] . '/plenigo_sdk.min.js" '
+            . $disableText . $meteredURLText . '></script>' . $strNoScript;
 
         $this->printGoogleAnalytics();
 
@@ -229,8 +237,8 @@ class PlenigoContentManager {
      * This method handles the content itself, showing only what the author wants to show using the MORE tag
      * and then adds the plenigo curtain if not purchased. Otherwise shows the plain contents as usual.
      *
-     * @param  string  $content the contents as it will be shown
-     * @param  boolean $isFeed  TRUE if the method is being called from a FEED filter or not
+     * @param  string $content the contents as it will be shown
+     * @param  boolean $isFeed TRUE if the method is being called from a FEED filter or not
      * @global WP_Post $post The Wordpress post object
      * @return string  the content filtered if needed by the plenigo paywall
      */
@@ -247,10 +255,10 @@ class PlenigoContentManager {
                 $rType = $this->get_render_type($isFeed);
                 $html_curtain = null;
 
-	            $customCurtain = $this->options['plenigo_custom_curtain_db'];
-	            $hasCustomCurtain = false;
-	            if(isset( $customCurtain ) && !empty(trim($customCurtain))) {
-                	$hasCustomCurtain = true;
+                $customCurtain = $this->options['plenigo_custom_curtain_db'];
+                $hasCustomCurtain = false;
+                if (isset($customCurtain) && !empty(trim($customCurtain))) {
+                    $hasCustomCurtain = true;
                 }
 
                 if (isset($this->templateMap[$rType][$hasBought]) && !$hasCustomCurtain) {
@@ -267,35 +275,35 @@ class PlenigoContentManager {
                     $showByDefault = TRUE;
                 }
 
-	            switch ($rType) {
-		            case self::RENDER_FEED :
-			            plenigo_log_message("ITS A FEED");
-			            if($hasCustomCurtain) {
-				            $teaser = $this->get_teaser_from_content($content, $showByDefault);
-				            $curtain_code = $teaser . $customCurtain;
-			            }  else {
-				            $curtain_code = $this->plenigo_curtain($content, $curtain_file, $showByDefault);
-			            }
-			            break;
-		            case self::RENDER_SINGLE :
-			            plenigo_log_message("ITS A SINGLE");
-			            if($hasCustomCurtain) {
-				            $teaser = $this->get_teaser_from_content($content, false);
-				            $curtain_code = $teaser . $customCurtain ;
-			            }  else {
-				            $curtain_code = $this->plenigo_curtain( $content, $curtain_file, false );
-			            }
-			            break;
-		            case self::RENDER_SEARCH :
-			            plenigo_log_message("ITS A SEARCH");
-			            break;
-		            case self::RENDER_OTHER :
-			            plenigo_log_message("ITS OTHER");
-			            break;
-		            default:
-			            plenigo_log_message("ITS UNKNOWN");
-			            break;
-	            }
+                switch ($rType) {
+                    case self::RENDER_FEED :
+                        plenigo_log_message("ITS A FEED");
+                        if ($hasCustomCurtain) {
+                            $teaser = $this->getFirstParagrah($content);
+                            $curtain_code = $teaser . $customCurtain;
+                        } else {
+                            $curtain_code = $this->plenigo_curtain($content, $curtain_file, $showByDefault);
+                        }
+                        break;
+                    case self::RENDER_SINGLE :
+                        plenigo_log_message("ITS A SINGLE");
+                        if ($hasCustomCurtain) {
+                            $teaser = $this->getFirstParagrah($content);
+                            $curtain_code = $teaser . $customCurtain;
+                        } else {
+                            $curtain_code = $this->plenigo_curtain($content, $curtain_file, false);
+                        }
+                        break;
+                    case self::RENDER_SEARCH :
+                        plenigo_log_message("ITS A SEARCH");
+                        break;
+                    case self::RENDER_OTHER :
+                        plenigo_log_message("ITS OTHER");
+                        break;
+                    default:
+                        plenigo_log_message("ITS UNKNOWN");
+                        break;
+                }
                 $this->addGAEvent("curtain|curtain-visit");
             } else {
                 $curtain_code = $content;
@@ -310,9 +318,9 @@ class PlenigoContentManager {
      * An optional parameter can be set to TRUE if we want to return the content anyways if no MORE tag
      * is found.
      *
-     * @param  string  $content      The entire content of the post
-     * @param  string  $curtain_file the filename of the template we will search on theme directories
-     * @param  boolean $permisive    set to TRUE to return the entire content if more tag not found
+     * @param  string $content The entire content of the post
+     * @param  string $curtain_file the filename of the template we will search on theme directories
+     * @param  boolean $permisive set to TRUE to return the entire content if more tag not found
      * @return string  the content to be displayed
      */
     private function plenigo_curtain($content, $curtain_file, $permisive = FALSE) {
@@ -334,13 +342,13 @@ class PlenigoContentManager {
         if (!isset($this->reqCache["listProdId"])) {
             $this->reqCache["listProdId"] = array();
             $this->reqCache["listProdTag"] = array();
-	        $this->reqCache["csvProdList"] = array();
+            $this->reqCache["csvProdList"] = array();
         }
         // Sanitize the category cache
         if (!isset($this->reqCache["listCatId"])) {
             $this->reqCache["listCatId"] = array();
             $this->reqCache["listCatTag"] = array();
-	        $this->reqCache["csvProdList"] = array();
+            $this->reqCache["csvProdList"] = array();
         }
 
         //Prevent tag takes precedense
@@ -351,7 +359,7 @@ class PlenigoContentManager {
             return FALSE;
         }
 
-	    $typesPluginPaywall = function_exists( 'types_render_field' ) && types_render_field( "paywall" );
+        $typesPluginPaywall = function_exists('types_render_field') && types_render_field("paywall");
         // Do not paywall if nothing is configured
         if (trim($plenigoTagDB) === '' && trim($plenigoCatTagDB) === '' && !$typesPluginPaywall) {
             plenigo_log_message("NO TAGS CONFIGURED");
@@ -365,32 +373,32 @@ class PlenigoContentManager {
             //Checking for Product IDs
             $hasAnyProdTag = $this->hasAnyProductTag();
             $hasProdIdList = false;
-	        if( $typesPluginPaywall ) {
-	            $plenigoGroupOne = (isset($this->options['plenigo_product_group_one_db']) ? $this->options['plenigo_product_group_one_db'] : '');
-	            $plenigoGroupTwo = (isset($this->options['plenigo_product_group_two_db']) ? $this->options['plenigo_product_group_two_db'] : '');
-	            $csvList = array();
-	            $addGroupOne        = types_render_field( "group-one" );
-	            $addGroupTwo        = types_render_field( "group-two" );
-	            $noGroupSelected     = !$addGroupOne && !$addGroupTwo;
-	            if( ($addGroupOne || $noGroupSelected) && !empty($plenigoGroupOne)) {
-		            $csvList = explode(',', $plenigoGroupOne);
-	            }
-	            if(($addGroupTwo || $noGroupSelected) && !empty($plenigoGroupTwo)) {
-		            $groupTwoArray = explode(',', $plenigoGroupTwo);
-		            if(!empty($groupTwoArray)) {
-			            $csvList = array_merge($csvList, $groupTwoArray);
-		            }
-	            }
+            if ($typesPluginPaywall) {
+                $plenigoGroupOne = (isset($this->options['plenigo_product_group_one_db']) ? $this->options['plenigo_product_group_one_db'] : '');
+                $plenigoGroupTwo = (isset($this->options['plenigo_product_group_two_db']) ? $this->options['plenigo_product_group_two_db'] : '');
+                $csvList = array();
+                $addGroupOne = types_render_field("group-one");
+                $addGroupTwo = types_render_field("group-two");
+                $noGroupSelected = !$addGroupOne && !$addGroupTwo;
+                if (($addGroupOne || $noGroupSelected) && !empty($plenigoGroupOne)) {
+                    $csvList = explode(',', $plenigoGroupOne);
+                }
+                if (($addGroupTwo || $noGroupSelected) && !empty($plenigoGroupTwo)) {
+                    $groupTwoArray = explode(',', $plenigoGroupTwo);
+                    if (!empty($groupTwoArray)) {
+                        $csvList = array_merge($csvList, $groupTwoArray);
+                    }
+                }
 
-	            if(!empty($csvList)) {
-		            foreach ($csvList as $dbProdId) {
-		                $trimmedProdId = trim($dbProdId);
-		                if(!empty($trimmedProdId)) {
-				            array_push($this->reqCache["csvProdList"], $trimmedProdId);
-			            }
-		            }
-	            }
-	            $hasProdIdList =  !empty($this->reqCache["csvProdList"]);
+                if (!empty($csvList)) {
+                    foreach ($csvList as $dbProdId) {
+                        $trimmedProdId = trim($dbProdId);
+                        if (!empty($trimmedProdId)) {
+                            array_push($this->reqCache["csvProdList"], $trimmedProdId);
+                        }
+                    }
+                }
+                $hasProdIdList = !empty($this->reqCache["csvProdList"]);
             }
 
             if ($hasAnyCatTag && $hasAnyProdTag) {
@@ -402,9 +410,9 @@ class PlenigoContentManager {
                 $this->addGAEvent("curtain|category-matched");
                 return TRUE;
             } else if ($hasAnyProdTag || $hasProdIdList) {
-	            plenigo_log_message( "A Product tag was found matching" );
-	            $this->addGAEvent( "curtain|product-matched" );
-	            return true;
+                plenigo_log_message("A Product tag was found matching");
+                $this->addGAEvent("curtain|product-matched");
+                return true;
             } else {
                 plenigo_log_message("No product/Category was found matching");
                 return FALSE;
@@ -615,10 +623,10 @@ class PlenigoContentManager {
             if (isset($this->reqCache["lastCatId"])) {
                 $products = array($post->ID);
                 $products = array_merge($products, $this->reqCache["listProdId"]);
-            } else if(!empty($this->reqCache["csvProdList"])) {
-	            $products = $this->reqCache["csvProdList"];
+            } else if (!empty($this->reqCache["csvProdList"])) {
+                $products = $this->reqCache["csvProdList"];
             } else {
-	            $products = $this->reqCache["listProdId"];
+                $products = $this->reqCache["listProdId"];
             }
             plenigo_log_message("Checking the prod id : " . print_r($products, TRUE));
             $res = PlenigoSDKManager::get()->plenigo_bought($products);
@@ -657,11 +665,11 @@ class PlenigoContentManager {
             $themed_template = locate_template($fileName);
             if (!is_null($themed_template) && is_string($themed_template) && $themed_template !== '') {
                 plenigo_log_message("TEMPLATE FROM THEME");
-                $this->addDebugLine("Template from Theme: ". $fileName);
+                $this->addDebugLine("Template from Theme: " . $fileName);
                 return $themed_template;
             } else {
                 plenigo_log_message("TEMPLATE FROM PLUGIN");
-                $this->addDebugLine("Template from Plugin: ". $fileName);
+                $this->addDebugLine("Template from Plugin: " . $fileName);
                 return dirname(__FILE__) . '/../plenigo_template/' . $fileName;
             }
         }
@@ -709,7 +717,7 @@ class PlenigoContentManager {
      * content in the case that the content presented is alreeady a teaser and not the complete post
      * (happens in the RSS)
      *
-     * @param  string  $content   The content to get the teaser from
+     * @param  string $content The content to get the teaser from
      * @param  boolean $permisive set to TRUE to return the entire content if MORE tag not found
      * @return string  The teaser text from the user that has been set with the MORE tag
      */
@@ -781,7 +789,7 @@ class PlenigoContentManager {
         $custStyle = "width:30%";
         $buyStyle = "width:30%";
         $loginTitle = $this->options['curtain_login'];
-	    $loginOnClick = "javascript:alert('The login API doesn\'t work!');";
+        $loginOnClick = "javascript:alert('The login API doesn\'t work!');";
         if (!isset($this->reqCache["lastCatId"])) {
             $curtainMode = (isset($this->options['curtain_mode'])) ? $this->options['curtain_mode'] : self::CURTAIN_MODE_LB;
             $custTitle = $this->options['curtain_custom_title'];
@@ -792,7 +800,7 @@ class PlenigoContentManager {
             $custOnClick = "javascript:window.location.href = '" . $this->options['curtain_cat_custom_url'] . "';";
         }
 
-        if (!isset($this->options['use_login']) || ($this->options['use_login'] == 0 )) {
+        if (!isset($this->options['use_login']) || ($this->options['use_login'] == 0)) {
             $useOauthLogin = FALSE;
         } else {
             $useOauthLogin = TRUE;
@@ -824,7 +832,7 @@ class PlenigoContentManager {
                         plenigo_log_message("url: " . $coSettings['oauth2RedirectUrl']);
                     }
 
-	                $useRegister = false;
+                    $useRegister = false;
                     if (isset($this->options['use_register']) && $this->options['use_register'] == 1) {
                         $useRegister = true;
                     }
@@ -833,8 +841,8 @@ class PlenigoContentManager {
                     $buyOnClick = $checkoutBuilder->build($coSettings, null, $useRegister);
                 }
                 if (stristr($html, self::REPLACE_PRODUCT_NAME) !== FALSE ||
-                        stristr($html, self::REPLACE_PRODUCT_PRICE) !== FALSE ||
-                        stristr($html, self::REPLACE_PRODUCT_DETAILS) !== FALSE) {
+                    stristr($html, self::REPLACE_PRODUCT_PRICE) !== FALSE ||
+                    stristr($html, self::REPLACE_PRODUCT_DETAILS) !== FALSE) {
                     // get product data
                     $productData = \plenigo\services\ProductService::getProductData($product->getId());
                 }
@@ -860,7 +868,7 @@ class PlenigoContentManager {
                 }
                 //If we should show Product details
                 $prodDetails = '<table class="plenigo-product"><tr><td><b>' . $prodName . '</b></td>'
-                        . '<td width="170" style="text-align: right;"><b>' . $prodPrice . '</b></td></tr></table>';
+                    . '<td width="170" style="text-align: right;"><b>' . $prodPrice . '</b></td></tr></table>';
             }
         }
 
@@ -965,11 +973,11 @@ class PlenigoContentManager {
         $title = null;
         $catID = null;
         if (!isset($this->reqCache["lastCatId"])) {
-        	if(isset($this->reqCache["lastProdId"])) {
-		        $prodID = $this->reqCache["lastProdId"];
-	        } else if(isset($this->reqCache["csvProdList"]) && !empty($this->reqCache["csvProdList"])) {
-		        $prodID = $this->reqCache["csvProdList"][0];
-	        }
+            if (isset($this->reqCache["lastProdId"])) {
+                $prodID = $this->reqCache["lastProdId"];
+            } else if (isset($this->reqCache["csvProdList"]) && !empty($this->reqCache["csvProdList"])) {
+                $prodID = $this->reqCache["csvProdList"][0];
+            }
         } else {
             $prodID = $post->ID;
             $title = $post->post_title;
@@ -991,9 +999,9 @@ class PlenigoContentManager {
         $res = '';
         if (!is_null($row)) {
             if (!is_string($row) && !is_numeric($row)) {
-                $res.=print_r($row, TRUE);
+                $res .= print_r($row, TRUE);
             } else {
-                $res.=$row;
+                $res .= $row;
             }
         }
         array_push($this->debugChecklist, $res);
@@ -1024,7 +1032,7 @@ class PlenigoContentManager {
         $res = '';
         if (!is_null($row)) {
             if (is_string($row) && stristr($row, '|') !== FALSE) {
-                $res.=$row;
+                $res .= $row;
             }
         }
         array_push($this->gaEventList, $res);
@@ -1068,8 +1076,8 @@ class PlenigoContentManager {
         if (isset($this->options['noscript_enabled']) && $this->options['noscript_enabled'] === 1) {
             $strTitle = (isset($this->options['noscript_title'])) ? $this->options['noscript_title'] : __("You need JavaScript", self::PLENIGO_SETTINGS_GROUP);
             $strMessage = (isset($this->options['noscript_message'])) ? $this->options['noscript_message'] : __("In order to provide you with the best experience, "
-                            . "this site requires that you allow JavaScript to run. "
-                            . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
+                . "this site requires that you allow JavaScript to run. "
+                . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
             $res = str_ireplace(self::REPLACE_NS_TITLE, trim(wp_kses_post($strTitle)), $htmlText);
             $res = str_ireplace(self::REPLACE_NS_MESSAGE, trim(wp_kses_post(wpautop($strMessage))), $res);
         }
@@ -1090,7 +1098,7 @@ class PlenigoContentManager {
             $arrEventList = array_unique($this->gaEventList);
             foreach ($arrEventList as $value) {
                 $arrEvent = explode("|", $value);
-                $strGAevents.="\n_plenigo_ga('send', 'event', 'plenigo', '" . $arrEvent[0] . "', '" . $arrEvent[1] . "',{'nonInteraction': 1});";
+                $strGAevents .= "\n_plenigo_ga('send', 'event', 'plenigo', '" . $arrEvent[0] . "', '" . $arrEvent[1] . "',{'nonInteraction': 1});";
             }
 
             $res = str_ireplace(self::REPLACE_GA_CODE, $strGAcode, $strGAhtml);
@@ -1161,6 +1169,13 @@ class PlenigoContentManager {
             return $res;
         }
         return '';
+    }
+
+    public function getFirstParagrah($content) {
+            $str = wpautop($content);
+            $str = substr( $str, 0, strpos( $str, '</p>' ) + 4 );
+            $str = strip_tags($str, '<a><strong><em>');
+            return '<p>' . $str . '</p>';
     }
 
     /**

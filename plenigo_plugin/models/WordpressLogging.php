@@ -28,7 +28,6 @@ use plenigo\models\Loggable;
  *
  * @category WordPressPlugin
  * @package  plenigoPluginModels
- * @author   Ricardo Torres <rtorres@plenigo.com>
  * @link     https://plenigo.com
  */
 class WordpressLogging implements Loggable {

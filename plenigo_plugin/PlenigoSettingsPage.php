@@ -76,7 +76,6 @@ use plenigo_plugin\settings\LogTable;
  *
  * @category WordPressPlugin
  * @package  plenigoPlugin
- * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
 class PlenigoSettingsPage {

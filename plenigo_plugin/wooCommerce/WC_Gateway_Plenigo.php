@@ -25,7 +25,6 @@ namespace plenigo_plugin\wooCommerce;
  *
  * @category WordPressPlugin
  * @package  plenigoPluginWooCommerce
- * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
 class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
