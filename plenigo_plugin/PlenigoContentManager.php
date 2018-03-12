@@ -267,33 +267,35 @@ class PlenigoContentManager {
                     $showByDefault = TRUE;
                 }
 
-                switch ($rType) {
-                    case self::RENDER_FEED :
-                        plenigo_log_message("ITS A FEED");
-                        if($hasCustomCurtain) {
-	                        $curtain_code = $customCurtain;
-                        }  else {
-	                        $curtain_code = $this->plenigo_curtain($content, $curtain_file, $showByDefault);
-                        }
-                        break;
-                    case self::RENDER_SINGLE :
-                        plenigo_log_message("ITS A SINGLE");
-	                    if($hasCustomCurtain) {
-		                    $curtain_code = $customCurtain;
-	                    }  else {
-		                    $curtain_code = $this->plenigo_curtain( $content, $curtain_file, false );
-	                    }
-                        break;
-                    case self::RENDER_SEARCH :
-                        plenigo_log_message("ITS A SEARCH");
-                        break;
-                    case self::RENDER_OTHER :
-                        plenigo_log_message("ITS OTHER");
-                        break;
-                    default:
-                        plenigo_log_message("ITS UNKNOWN");
-                        break;
-                }
+	            switch ($rType) {
+		            case self::RENDER_FEED :
+			            plenigo_log_message("ITS A FEED");
+			            if($hasCustomCurtain) {
+				            $teaser = $this->get_teaser_from_content($content, $showByDefault);
+				            $curtain_code = $teaser . $customCurtain;
+			            }  else {
+				            $curtain_code = $this->plenigo_curtain($content, $curtain_file, $showByDefault);
+			            }
+			            break;
+		            case self::RENDER_SINGLE :
+			            plenigo_log_message("ITS A SINGLE");
+			            if($hasCustomCurtain) {
+				            $teaser = $this->get_teaser_from_content($content, false);
+				            $curtain_code = $teaser . $customCurtain ;
+			            }  else {
+				            $curtain_code = $this->plenigo_curtain( $content, $curtain_file, false );
+			            }
+			            break;
+		            case self::RENDER_SEARCH :
+			            plenigo_log_message("ITS A SEARCH");
+			            break;
+		            case self::RENDER_OTHER :
+			            plenigo_log_message("ITS OTHER");
+			            break;
+		            default:
+			            plenigo_log_message("ITS UNKNOWN");
+			            break;
+	            }
                 $this->addGAEvent("curtain|curtain-visit");
             } else {
                 $curtain_code = $content;
