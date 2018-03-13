@@ -78,7 +78,8 @@ use plenigo_plugin\settings\LogTable;
  * @package  plenigoPlugin
  * @link     https://plenigo.com
  */
-class PlenigoSettingsPage {
+class PlenigoSettingsPage
+{
 
     /**
      * Holds the values to be used in the fields callbacks.
@@ -132,9 +133,9 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainCategoryMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingPreventTag());
-	    array_push($this->settings, new \plenigo_plugin\settings\SettingCustomCurtainDB());
-	    array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupOneDB());
-	    array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupTwoDB());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingCustomCurtainDB());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupOneDB());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupTwoDB());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonBuy());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCustom());
@@ -490,7 +491,8 @@ class PlenigoSettingsPage {
 
         </div>
         <p class="submit">
-            <button type="button" id="mailLogBtn" class="button button-primary" name="mailLogButton">Send Mail Log</button>
+            <button type="button" id="mailLogBtn" class="button button-primary" name="mailLogButton">Send Mail Log
+            </button>
         </p>
         <?php
     }

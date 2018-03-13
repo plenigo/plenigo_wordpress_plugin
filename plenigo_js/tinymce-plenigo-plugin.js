@@ -13,7 +13,7 @@ function getAttributeIfNotEmpty(value, attributeName) {
 }
 
 function isInteger(number) {
-    return !isNaN(number) && number % 1 === 0 || /^\d+$/.test(number);
+    return !isNaN(number) && number % 1 === 0 && /^\d+$/.test(number);
 }
 
 tinymce.PluginManager.add('plenigo', function (editor, url) {
@@ -65,7 +65,7 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                     } else if (isInvalidNumber(price)) {
                         editor.windowManager.alert('Invalid Price!');
                         isInvalid = true;
-                    } else if (!isInteger(max_quantity) || parseInt(max_quantity) < 0) {
+                    } else if (!isInteger(max_quantity) || parseInt(max_quantity) <= 0) {
                         editor.windowManager.alert('Invalid Quantity!');
                         isInvalid = true;
                     } else {

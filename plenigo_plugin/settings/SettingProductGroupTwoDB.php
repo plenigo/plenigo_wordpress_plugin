@@ -64,7 +64,7 @@ class SettingProductGroupTwoDB extends PlenigoWPSetting {
 	 * @see PlenigoWPSetting::getTitle()
 	 */
 	public function getTitle() {
-		return __( 'Product Group Two', parent::PLENIGO_SETTINGS_GROUP );
+		return __( 'Produkte mit Teilzugriff', parent::PLENIGO_SETTINGS_GROUP );
 	}
 
 	/**
@@ -73,7 +73,7 @@ class SettingProductGroupTwoDB extends PlenigoWPSetting {
 	public function renderCallback() {
 		$currValue = $this->getDefaultValue( $this->getStoredValue() );
 		printf( '<textarea cols="100" wrap="off" rows="10" id="plenigo_product_group_two" name="' . self::PLENIGO_SETTINGS_NAME
-		        . '[' . static::SETTING_ID . ']" placeholder="' . __( 'Product Group Two...',
+		        . '[' . static::SETTING_ID . ']" placeholder="' . __( 'Produkte mit Teilzugriff...',
 				parent::PLENIGO_SETTINGS_GROUP ) . '">%s</textarea>', $currValue );
 	}
 

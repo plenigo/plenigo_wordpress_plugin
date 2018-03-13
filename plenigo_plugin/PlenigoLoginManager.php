@@ -7,7 +7,7 @@ use plenigo\services\UserService;
 
 /**
  * PlenigoLoginManager
- * 
+ *
  * <b>
  * This class handles the processing of the OAuth URL redirection. Register a User if needed and then logs the User in.
  * For doing all this, it hooks a method to the 'init' filter, so treat with care as it can break the entire Wordpress site.
@@ -19,7 +19,8 @@ use plenigo\services\UserService;
  * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class PlenigoLoginManager {
+class PlenigoLoginManager
+{
 
     const PLENIGO_SETTINGS_GROUP = 'plenigo';
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
@@ -82,18 +83,18 @@ class PlenigoLoginManager {
      * Ensures that plenigo cookie are is cleared after you triggered logout by other means (the WP Bar for example)
      */
     public function ensure_logout() {
-        echo'<script type="application/javascript" '
-        . 'src="' . PLENIGO_JSSDK_URL . '/static_resources/javascript/'
-        . $this->options["company_id"] . '/plenigo_sdk.min.js" data-disable-metered="true"></script>';
+        echo '<script type="application/javascript" '
+            . 'src="' . PLENIGO_JSSDK_URL . '/static_resources/javascript/'
+            . $this->options["company_id"] . '/plenigo_sdk.min.js" data-disable-metered="true"></script>';
         echo '<script type="application/javascript">';
         echo 'plenigo.logout();';
         echo '</script>';
     }
 
     /**
-     * This method checks if the page has to take care of the code received from the Oauth redirection. 
+     * This method checks if the page has to take care of the code received from the Oauth redirection.
      * If it does then it attempts to register the user, update the fields with plenigo data and the log the user in.
-     * 
+     *
      * @return void only returns abruptly if no code is found on the request
      */
     public function plenigo_process_login() {
@@ -114,20 +115,20 @@ class PlenigoLoginManager {
         $tokenData = TokenService::getAccessToken($code, $currentUrl, $csrfToken);
 
         /**
-          The TokenData object contains the following fields:
-          accessToken	This token has an expiration date and can be used to get user information
-          expiresIn	The time in seconds where the access token will expire
-          refreshToken	This token is used to get more access token
-          state           This is the csrf token in case you specified one for a more secure request
-          tokenType	The type of token
-          With this information you can access user data, a simple example of getting the user data is below:
+         * The TokenData object contains the following fields:
+         * accessToken    This token has an expiration date and can be used to get user information
+         * expiresIn    The time in seconds where the access token will expire
+         * refreshToken    This token is used to get more access token
+         * state           This is the csrf token in case you specified one for a more secure request
+         * tokenType    The type of token
+         * With this information you can access user data, a simple example of getting the user data is below:
          */
         //obtain the TokenData object with the tokenService or get it from the session if you have already done that
         $userData = UserService::getUserData($tokenData->getAccessToken());
 
         // Store the userData object for read only purposes in the SDKManager after login
         PlenigoSDKManager::get()->setSessionValue("plenigo_user_data", $userData);
-        
+
         $currentUser = $this->perform_register($userData);
         do_action('plenigo_prelogin');
         $this->perform_login($currentUser);
@@ -139,8 +140,9 @@ class PlenigoLoginManager {
      * if found, the user is updated, if not found it will look by email address, if found the user is updated,
      * if not found, it will register a new Wordpress user with the plenigo details. The username will have 'PL_'
      * prepended for visibility reasons.
-     * 
+     *
      * @param plenigo\models\UserData $userData the user data returned by the API call
+     *
      * @return int the new or existant Wordpress User ID
      */
     private function perform_register($userData) {
@@ -202,19 +204,19 @@ class PlenigoLoginManager {
         update_user_meta($user_login_id, self::PLENIGO_META_NAME, $userData->getId());
 
         // Set the login URL to the welcome URL (just in memory)
-        if(isset($this->options['welcome_url']) && !empty($this->options['welcome_url']) & !is_null($this->options['welcome_url'])){
+        if (isset($this->options['welcome_url']) && !empty($this->options['welcome_url']) & !is_null($this->options['welcome_url'])) {
             $this->options['login_url'] = esc_url($this->options['welcome_url']);
-        }     
-        
+        }
+
         return $user_login_id;
     }
 
     /**
      * Performs the actual login of a given Wordpress User ID. If defined it will redirect to the needed URL, or else
-     * it will redirect to this blog's home page. This currently doesnt support Wordpress remember me functionality as 
+     * it will redirect to this blog's home page. This currently doesnt support Wordpress remember me functionality as
      * it is more complex than just providing a cookie.
-     * 
-     * @param int $currUserID the Wordpress User ID 
+     *
+     * @param int $currUserID the Wordpress User ID
      */
     private function perform_login($currUserID) {
         //Log them in
@@ -231,24 +233,25 @@ class PlenigoLoginManager {
                 $this->options['login_url'] = esc_url($sessionURL);
             }
         }
-	    $redirectUrl = $this->options['login_url'];
+        $redirectUrl = $this->options['login_url'];
         //override redirect url only when its successful
-	    if(isset($_SESSION["plenigo_checkout_redirect_url"]) && isset($_GET["paymentState"]) && $_GET["paymentState"] == "success") {
-		    $redirectUrl = $_SESSION["plenigo_checkout_redirect_url"];
-		    unset($_SESSION["plenigo_checkout_redirect_url"]);
-	    }
-	    error_log("REDIRECTING TO $redirectUrl");
-	    plenigo_log_message( "Redirecting to:" . $redirectUrl . "  <<<END>>>");
+        if (isset($_SESSION["plenigo_checkout_redirect_url"]) && isset($_GET["paymentState"]) && $_GET["paymentState"] == "success") {
+            $redirectUrl = $_SESSION["plenigo_checkout_redirect_url"];
+            unset($_SESSION["plenigo_checkout_redirect_url"]);
+        }
+        error_log("REDIRECTING TO $redirectUrl");
+        plenigo_log_message("Redirecting to:" . $redirectUrl . "  <<<END>>>");
         header("Location: " . $redirectUrl);
         exit;
     }
 
     /**
      * This filter the user being logged in and set it's cookie expiration date one year from now
-     * 
+     *
      * @param int $length The current length of the cookie expiration (in seconds)
      * @param int $user_id The current user ID being logged in
      * @param bool $remember The remember me flag
+     *
      * @return int Number of secconds to allow the cookie to stay
      */
     public function filter_cookie_expiration($length, $user_id, $remember) {
@@ -258,8 +261,9 @@ class PlenigoLoginManager {
 
     /**
      * Provides a custom message to the login screen if the server returned errors on login redirect
-     * 
+     *
      * @param string $message An optional message that may came from other plugin or Wordpress
+     *
      * @return string The final string HTML message
      */
     public function login_error($message) {
@@ -278,8 +282,9 @@ class PlenigoLoginManager {
      * 1 - Username is set on plenigo, then use that
      * 2 - First and Last Name are set, then use "firstNameLastName" algorythm
      * 3 - Nothing is set so it takes the first part of the email address and use it as username
-     * 
+     *
      * @param plenigo\models\UserData $userData the data that comes from the API call
+     *
      * @return string the resolved username to create
      */
     private function generateUserName($userData) {
@@ -330,7 +335,7 @@ class PlenigoLoginManager {
 
     /**
      * Check if the current user has the default user role.
-     * 
+     *
      * @return bool
      */
     private function is_regular_user() {
@@ -340,11 +345,12 @@ class PlenigoLoginManager {
     }
 
     /**
-     * Checks if a particular user has a role. 
+     * Checks if a particular user has a role.
      * Returns true if a match was found.
      *
      * @param string $role Role name.
      * @param int $user_id (Optional) The ID of a user. Defaults to the current user.
+     *
      * @return bool
      */
     private function check_user_role($role, $user_id = null) {
@@ -357,12 +363,12 @@ class PlenigoLoginManager {
         if (empty($user)) {
             return false;
         }
-        return in_array($role, (array) $user->roles);
+        return in_array($role, (array)$user->roles);
     }
 
     /**
      * Updates and modifies the user profiles with the plenigo data if needed and site is allowing it
-     * 
+     *
      * @param int $id the User ID to modify
      * @param plenigo\models\UserData $userData the data that comes from the API call
      */
@@ -387,7 +393,7 @@ class PlenigoLoginManager {
 
 
         $current_url = PlenigoURLManager::get()->getSanitizedURL();
-        if(strpos($current_url, "/wp-content/") === false) {
+        if (strpos($current_url, "/wp-content/") === false) {
             $arrTokens = explode(',', self::PLENIGO_URL_EXCEPTIONS);
             $updNeeded = true;
             foreach ($arrTokens as $token) {

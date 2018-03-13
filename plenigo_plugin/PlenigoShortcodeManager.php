@@ -23,7 +23,6 @@ class PlenigoShortcodeManager
     const PLENIGO_SETTINGS_GROUP = 'plenigo';
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
     const PLENIGO_META_NAME = 'plenigo_uid';
-    const PLENIGO_PROFILE_URL = "https://www.plenigo.com/customer/personal/data/show";
     //Replacement tags
     const REPLACE_PLUGIN_DIR = "<!--[PLUGIN_DIR]-->";
     const REPLACE_PROFILE_TITLE = "<!--[PROFILE_TITLE]-->";
@@ -702,7 +701,6 @@ class PlenigoShortcodeManager
             $html = str_ireplace(self::REPLACE_TITLE_COUNTRY, __('Country:', self::PLENIGO_SETTINGS_GROUP), $html);
             $html = str_ireplace(self::REPLACE_TITLE_PLENIGO_PROFILE, __('Edit this profile at plenigo', self::PLENIGO_SETTINGS_GROUP), $html);
 
-            $html = str_ireplace(self::REPLACE_CLICK_PLENIGO_PROFILE, self::PLENIGO_PROFILE_URL, $html);
             $html = str_ireplace(self::REPLACE_VALUE_CUSTNO, $user->getId(), $html);
             $html = str_ireplace(self::REPLACE_VALUE_EMAIL, $user->getEmail(), $html);
             $html = str_ireplace(self::REPLACE_VALUE_USERNAME, $user->getUsername(), $html);

@@ -216,6 +216,7 @@ class PlenigoContentManager
      * This method redirects to the content handler for main , widget and search renderers
      *
      * @param  string $content the contents as it will be shown
+     *
      * @return string the content filtered if needed by the plenigo paywall
      */
     public function plenigo_handle_main_content($content) {
@@ -227,6 +228,7 @@ class PlenigoContentManager
      * This method is particular to the Feed functionality (Atom, RSS, etc)
      *
      * @param  string $content the contents as it will be shown
+     *
      * @return string the content filtered if needed by the plenigo paywall
      */
     public function plenigo_handle_feed_content($content) {
@@ -239,6 +241,7 @@ class PlenigoContentManager
      *
      * @param  string $content the contents as it will be shown
      * @param  boolean $isFeed TRUE if the method is being called from a FEED filter or not
+     *
      * @global WP_Post $post The Wordpress post object
      * @return string  the content filtered if needed by the plenigo paywall
      */
@@ -259,8 +262,8 @@ class PlenigoContentManager
                 $hasCustomCurtain = false;
                 if (isset($customCurtain) && !empty(trim($customCurtain))) {
                     $hasCustomCurtain = true;
-                    remove_filter( 'the_content', 'wpautop' );
-                    remove_filter( 'the_excerpt', 'wpautop' );
+                    remove_filter('the_content', 'wpautop');
+                    remove_filter('the_excerpt', 'wpautop');
                 }
 
                 if (isset($this->templateMap[$rType][$hasBought]) && !$hasCustomCurtain) {
@@ -323,6 +326,7 @@ class PlenigoContentManager
      * @param  string $content The entire content of the post
      * @param  string $curtain_file the filename of the template we will search on theme directories
      * @param  boolean $permisive set to TRUE to return the entire content if more tag not found
+     *
      * @return string  the content to be displayed
      */
     private function plenigo_curtain($content, $curtain_file, $permisive = FALSE) {
@@ -568,6 +572,7 @@ class PlenigoContentManager
      *
      * @param  boolean $isFeed TRUE if this method is being called from a feed filter
      *                         (the_content_feed, the_excerpt_feed, etc.)
+     *
      * @return bool TRUE if the user has bought or if its due to be paywalled
      */
     private function user_bought_content($isFeed = FALSE) {
@@ -660,6 +665,7 @@ class PlenigoContentManager
      * This method locates the file in theme directories if overriden, or gets it from the template directory
      *
      * @param  string $fileName name of the file that's needed and will be located
+     *
      * @return string The located filename with full path in order to read the file, NULL if there was a problem
      */
     private function locate_plenigo_template($fileName) {
@@ -684,6 +690,7 @@ class PlenigoContentManager
      * if the complete post is shown, a search result or even a embedded widget
      *
      * @param  boolean $isFeed TRUE if this method is being called from the_content_feed or the_excerpt_feed
+     *
      * @return int     One of the constants RENDER_FEED,RENDER_SINGLE,RENDER_SEARCH,RENDER_OTHER
      */
     private function get_render_type($isFeed = FALSE) {
@@ -721,6 +728,7 @@ class PlenigoContentManager
      *
      * @param  string $content The content to get the teaser from
      * @param  boolean $permisive set to TRUE to return the entire content if MORE tag not found
+     *
      * @return string  The teaser text from the user that has been set with the MORE tag
      */
     private function get_teaser_from_content($content, $permisive = FALSE) {
@@ -755,6 +763,7 @@ class PlenigoContentManager
      * returning the contents as a string.
      *
      * @param  string $curtain_file The file path to get the curtain template
+     *
      * @return string the contents of the curtain to be appended to the teaser
      */
     private function get_curtain_code($curtain_file) {
@@ -774,6 +783,7 @@ class PlenigoContentManager
      * a fully functional curtain with links and descriptions
      *
      * @param  string $html the curtain contents to replace the tags
+     *
      * @return string the contents of the curtain to be appended to the teaser
      */
     private function replace_plenigo_tags($html) {
@@ -1071,6 +1081,7 @@ class PlenigoContentManager
      * Replaces the template tags for the NOSCRIPT overlay
      *
      * @param string $htmlText The template HTML text
+     *
      * @return string The template HTML text with the replacement tags or empty if the NOSCRIPT functionality is disabled
      */
     public function replace_noscript_tags($htmlText) {
@@ -1090,6 +1101,7 @@ class PlenigoContentManager
      * Replaces the tags in the Google Analytics HTML with the actual values to configure GA
      *
      * @param string $strGAhtml The HTML to be replaced
+     *
      * @return string the HTML with the tags replaced
      */
     public function replace_ga_tags($strGAhtml) {
@@ -1113,6 +1125,7 @@ class PlenigoContentManager
      * This method allow to strip a teaser tag from the content if it is starting with  one of the specified tags
      *
      * @param string $content the actual post content
+     *
      * @return string The teaser or blank if nothing is found
      */
     private function specialTeaserSupport($content = null) {
@@ -1162,6 +1175,7 @@ class PlenigoContentManager
      *
      * @param string $content
      * @param string $needle
+     *
      * @return string
      */
     private function getTeaserText($content, $needle) {
@@ -1173,17 +1187,29 @@ class PlenigoContentManager
         return '';
     }
 
+    /**
+     * Get the first paragraph.
+     *
+     * @param $content content to get the paragraph from
+     *
+     * @return string first paragraph
+     */
     public function getFirstParagrah($content) {
-            $str = wpautop($content);
-            $str = substr( $str, 0, strpos( $str, '</p>' ) + 4 );
+        $str = wpautop($content);
+        $start = strpos($str, '<p>');
+        if ($start >= 0) {
+            $str = substr($str, $start, strpos($str, '</p>') + 4);
             $str = strip_tags($str, '<a><strong><em>');
             return '<p>' . $str . '</p>';
+        }
+        return "";
     }
 
     /**
      * Sanitizes a string array to return an array, empty or with a single value as special cases
      *
      * @param string $stringArray
+     *
      * @return array
      */
     private function resolveArray($stringArray) {
@@ -1222,6 +1248,7 @@ class PlenigoContentManager
      * associated to a buy text, if nothing is found then it returns a given default value.
      *
      * @param string $defaultValue the default value to return if no tag is found in the DB
+     *
      * @return string The final Buy button text
      */
     private function get_buy_text($defaultValue = '') {
