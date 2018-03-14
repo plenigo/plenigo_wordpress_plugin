@@ -816,6 +816,9 @@ class PlenigoShortcodeManager
         $regCheck = $atts['register'];
         $sourceURL = $atts['source'];
         $targetURL = $atts['target'];
+        if(isset($_GET["pl_checkout_target"])){
+            $targetURL = $_GET["pl_checkout_target"];
+        }
         $affiliate = $atts['affiliate'];
         $price = $atts['price'];
         $quantity = $atts['quantity'];
