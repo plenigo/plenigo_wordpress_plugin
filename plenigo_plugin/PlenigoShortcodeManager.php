@@ -769,6 +769,11 @@ class PlenigoShortcodeManager
                 $renderButton = true;
             }
         }
+        
+        if(!empty($price) && !is_numeric($price)) {
+            plenigo_log_message("Product price is incorrect, not rendering the checkout button: " . $price, E_USER_ERROR);
+            $renderButton = false;
+        }
 
         if ($renderButton) { //Do the plenigo checkout button
             // If failed payment tag, the product ID doesnt make sense
