@@ -37,6 +37,9 @@ require_once __DIR__ . '/settings/SettingOverrideProfiles.php';
 require_once __DIR__ . '/settings/SettingRedirectURL.php';
 require_once __DIR__ . '/settings/SettingLoginURL.php';
 require_once __DIR__ . '/settings/SettingProductTagDB.php';
+require_once __DIR__ . '/settings/SettingProductGroupOneDB.php';
+require_once __DIR__ . '/settings/SettingProductGroupTwoDB.php';
+require_once __DIR__ . '/settings/SettingCustomCurtainDB.php';
 require_once __DIR__ . '/settings/SettingCategoryTagDB.php';
 require_once __DIR__ . '/settings/SettingCurtainTitle.php';
 require_once __DIR__ . '/settings/SettingCurtainText.php';
@@ -73,10 +76,10 @@ use plenigo_plugin\settings\LogTable;
  *
  * @category WordPressPlugin
  * @package  plenigoPlugin
- * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class PlenigoSettingsPage {
+class PlenigoSettingsPage
+{
 
     /**
      * Holds the values to be used in the fields callbacks.
@@ -130,6 +133,9 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainCategoryMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingPreventTag());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingCustomCurtainDB());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupOneDB());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupTwoDB());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonBuy());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCustom());
@@ -146,7 +152,7 @@ class PlenigoSettingsPage {
         array_push($this->settings, new \plenigo_plugin\settings\SettingProfileURL());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseRegister());
 
-        // Check the initialization of settings uppon upgrade
+        // Check the initialization of settings upon upgrade
         if (!isset($this->options[self::PLENIGO_VERSION_OPT]) || $this->options[self::PLENIGO_VERSION_OPT] !== PLENIGO_VERSION) {
             $this->options[self::PLENIGO_VERSION_OPT] = PLENIGO_VERSION;
             $this->initialize_defaults();
@@ -485,7 +491,8 @@ class PlenigoSettingsPage {
 
         </div>
         <p class="submit">
-            <button type="button" id="mailLogBtn" class="button button-primary" name="mailLogButton">Send Mail Log</button>
+            <button type="button" id="mailLogBtn" class="button button-primary" name="mailLogButton">Send Mail Log
+            </button>
         </p>
         <?php
     }

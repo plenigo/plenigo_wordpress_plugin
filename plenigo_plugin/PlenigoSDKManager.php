@@ -4,17 +4,17 @@ namespace plenigo_plugin;
 
 /**
  * PlenigoSDKManager
- * 
+ *
  * <b>
  * This class handles the initialization, main methods and request caches for the Wordpress plugin. Initialization is done by calling the getPlenigoSDK() method once it's configured properly.
  * </b>
  *
  * @category SDK
  * @package  plenigo_plugin
- * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class PlenigoSDKManager {
+class PlenigoSDKManager
+{
 
     const PLENIGO_SETTINGS_GROUP = 'plenigo';
     const PLENIGO_SETTINGS_NAME = 'plenigo_settings';
@@ -27,7 +27,7 @@ class PlenigoSDKManager {
 
     /**
      * Holds the PlenigoManager
-     * @var \plenigo\PlenigoManager 
+     * @var \plenigo\PlenigoManager
      */
     private $plenigoSDK = null;
 
@@ -51,7 +51,7 @@ class PlenigoSDKManager {
 
     /**
      * Returns the singleton instance of the SDK Manager to use
-     * 
+     *
      * @return PlenigoSDKManager The SDK Manager
      */
     public static function get() {
@@ -64,7 +64,7 @@ class PlenigoSDKManager {
 
     /**
      * Obtain a value or object from the request cache
-     * 
+     *
      * @param string $cacheKey The Key to find
      * @return mixed The value obtained or null
      */
@@ -78,7 +78,7 @@ class PlenigoSDKManager {
 
     /**
      * Sets a cached value for this request
-     * 
+     *
      * @param string $cacheKey The Cache Key
      * @param mixed $cacheValue The Value object
      */
@@ -90,7 +90,7 @@ class PlenigoSDKManager {
 
     /**
      * Obtain a value or object from the session
-     * 
+     *
      * @param string $valueKey The Key to find
      * @return mixed The value obtained or null
      */
@@ -105,7 +105,7 @@ class PlenigoSDKManager {
 
     /**
      * Sets a cached value for this session
-     * 
+     *
      * @param string $key The session variable Key
      * @param mixed $value The Value object
      */
@@ -121,19 +121,19 @@ class PlenigoSDKManager {
 
     /**
      * Creates or configures the plenigo SDK to be used in the class for calling the plenigo Services
-     * 
+     *
      * @return \plenigo\PlenigoManager the new or reused instance of the PlenigoManager
      */
     public function getPlenigoSDK() {
         if (is_null($this->plenigoSDK)) {
             $testValue = false;
-            if (!isset($this->options['test_mode']) || ($this->options['test_mode'] == 1 )) {
+            if (!isset($this->options['test_mode']) || ($this->options['test_mode'] == 1)) {
                 $testValue = true;
             }
             plenigo_log_message('Configuring SDK for company id: ' . $this->options["company_id"], E_USER_NOTICE);
             $this->plenigoSDK = \plenigo\PlenigoManager::configure(
-                            $this->options["company_secret"], $this->options["company_id"], $testValue
-                            , PLENIGO_SVC_URL, PLENIGO_OAUTH_SVC_URL
+                $this->options["company_secret"], $this->options["company_id"], $testValue
+                , PLENIGO_SVC_URL, PLENIGO_OAUTH_SVC_URL
             );
         }
         $this->plenigoSDK->setDebug((PLENIGO_DEBUG === true));
@@ -142,7 +142,7 @@ class PlenigoSDKManager {
 
     /**
      * Generates or obtains a CRSF token to be used in Oauth and SSO requests
-     * 
+     *
      * @return string the CSRF token generated or otherwise cached in user session
      */
     public function get_csrf_token() {
@@ -160,7 +160,7 @@ class PlenigoSDKManager {
     /**
      * Calls the PHP SDK and queries the server for products already bought. Sanitizes the response as a boolean
      *
-     * @param  string  $products the product Id string or an array of product ids
+     * @param  string $products the product Id string or an array of product ids
      * @return bool true if the user has bought the product
      */
     public function plenigo_bought($products = null) {
@@ -174,7 +174,7 @@ class PlenigoSDKManager {
         }
 
         if (!is_array($products) || count($products) < 1) {
-            plenigo_log_message("Plenigo bought check: false => products array is weird", E_USER_NOTICE);
+            plenigo_log_message("Plenigo bought check: false => products array is weird " . print_r($products, true), E_USER_NOTICE);
             return false;
         }
 
@@ -199,11 +199,11 @@ class PlenigoSDKManager {
                 $res = \plenigo\services\UserService::hasUserBought($currProdID);
                 //caching
                 $this->reqCache['bought'][$currProdID] = $res;
-                plenigo_log_message("Plenigo bought result true for " . $currProdID . ' - ' . var_export($res, true), E_USER_NOTICE);
+                plenigo_log_message("Plenigo bought result for " . $currProdID . ' = ' . var_export($res, true), E_USER_NOTICE);
 
                 $result = ($res === true) ? true : $result;
             } catch (\Exception $exc) {
-                plenigo_log_message($exc->getMessage() . '<br>' . $exc->getTraceAsString(), 0, E_USER_WARNING);
+                plenigo_log_message($exc->getMessage() . '<br>' . $exc->getTraceAsString(), E_USER_WARNING);
             }
             if ($result === true) {
                 break;
@@ -288,20 +288,34 @@ class PlenigoSDKManager {
         }
     }
 
-	/**
-	 * Generates the login snippet with the current wordpress configuration.
-	 *
-	 * @return mixed
-	 */
-	public function getLoginSnippet() {
-		$options     = get_option( self::PLENIGO_SETTINGS_NAME, array() );
-		$redirectUrl = $options['redirect_url'];
-		if ( empty( $redirectUrl ) ) {
-			$redirectUrl = null;
-		}
-		$config  = new \plenigo\models\LoginConfig( $redirectUrl, \plenigo\models\AccessScope::PROFILE );
-		$builder = new \plenigo\builders\LoginSnippetBuilder( $config );
-		$token   = \plenigo_plugin\PlenigoSDKManager::get()->get_csrf_token();
-		return $builder->withCSRFToken( $token )->build();
-	}
+    /**
+     * Generates the login snippet with the current wordpress configuration.
+     *
+     * @return mixed
+     */
+    public function getLoginSnippet() {
+        $options = get_option(self::PLENIGO_SETTINGS_NAME, array());
+        $redirectUrl = $options['redirect_url'];
+        if (empty($redirectUrl)) {
+            $redirectUrl = null;
+        }
+        $config = new \plenigo\models\LoginConfig($redirectUrl, \plenigo\models\AccessScope::PROFILE);
+        $builder = new \plenigo\builders\LoginSnippetBuilder($config);
+        $token = \plenigo_plugin\PlenigoSDKManager::get()->get_csrf_token();
+        return $builder->withCSRFToken($token)->build();
+    }
+
+    /**
+     * Generates the login snippet with the current wordpress configuration.
+     *
+     * @return mixed
+     */
+    public function getProfileUrl() {
+        $options = get_option(self::PLENIGO_SETTINGS_NAME, array());
+        $profileUrl = $options['profile_url'];
+        if (empty($profileUrl)) {
+            return "";
+        }
+        return $profileUrl;
+    }
 }

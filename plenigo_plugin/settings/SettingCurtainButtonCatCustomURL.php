@@ -25,7 +25,6 @@ namespace plenigo_plugin\settings;
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
- * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
 class SettingCurtainButtonCatCustomURL extends SettingRedirectURL

@@ -21,69 +21,68 @@
 namespace plenigo_plugin\settings;
 
 /**
- * Setting class for ga_code
+ * Setting class for plenigo_custom_curtain_db
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
+ *
  * @link     https://plenigo.com
  */
-class SettingGACode extends PlenigoWPSetting
+class SettingCustomCurtainDB extends PlenigoWPSetting
 {
 
     //These should be overriden
-    const SECTION_ID = 'plenigo_general';
-    const SETTING_ID = 'ga_code';
+    const SECTION_ID = 'plenigo_content_section';
+    const SETTING_ID = 'plenigo_custom_curtain_db';
+
+    /**
+     * Holds values for the SQL requests, so they are made just once per request
+     */
+    private $reqCache = array();
 
     /**
      * @see PlenigoWPSetting::getSanitizedValue()
      */
-    protected function getSanitizedValue($value = null)
-    {
-        $tempValue = trim($value);
-        if (is_null($value) && !empty($tempValue)) {
+    protected function getSanitizedValue($value = null) {
+        if (is_null($value)) {
             return $this->getDefaultValue();
         }
-        return trim(wp_kses_post($value));
+
+        return trim($value);
     }
 
     /**
      * @see PlenigoWPSetting::getDefaultValue()
      */
-    public function getDefaultValue($current = null)
-    {
+    public function getDefaultValue($current = null) {
         if (!is_null($current)) {
             return $current;
         }
-        return '';
+
+        return "";
     }
 
     /**
      * @see PlenigoWPSetting::getTitle()
      */
-    public function getTitle()
-    {
-        return __('Google Analytics ID', parent::PLENIGO_SETTINGS_GROUP);
+    public function getTitle() {
+        return __('Custom Curtain HTML', parent::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
      * @see PlenigoWPSetting::renderCallback()
      */
-    public function renderCallback()
-    {
+    public function renderCallback() {
         $currValue = $this->getDefaultValue($this->getStoredValue());
-        printf('<input type="text" id="' . static::SETTING_ID . '" name="' . self::PLENIGO_SETTINGS_NAME
-            . '[' . static::SETTING_ID . ']" value="%s" placeholder="UA-XXXX-Y"  size="65" />', esc_attr($currValue));
+        printf('<textarea cols="100" wrap="off" rows="20" id="plenigo_custom_curtain_db" name="' . self::PLENIGO_SETTINGS_NAME
+            . '[' . static::SETTING_ID . ']" placeholder="' . __('Enter Custom HTML...',
+                parent::PLENIGO_SETTINGS_GROUP) . '">%s</textarea>', $currValue);
     }
 
     /**
      * @see PlenigoWPSetting::getValidationForValue()
      */
-    public function getValidationForValue($value = null)
-    {
-        if (!is_null($value) && strlen(trim($value)) > 5) {
-            return (stristr($value, 'UA-') !== false);
-        }
-        return false;
+    public function getValidationForValue($value = null) {
+        return true;
     }
-
 }

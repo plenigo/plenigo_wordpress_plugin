@@ -27,7 +27,6 @@ require_once __DIR__ . '/SettingPreventTag.php';
  *
  * @category WordPressPlugin
  * @package  plenigoPluginSettings
- * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
 class SettingMeteredExemptionTag extends SettingPreventTag

@@ -31,10 +31,10 @@ namespace plenigo_plugin;
  *
  * @category WordPressPlugin
  * @package  plenigoPlugin
- * @author   Sebastian Dieguez <s.dieguez@plenigo.com>
  * @link     https://plenigo.com
  */
-class PlenigoContentManager {
+class PlenigoContentManager
+{
 
     /**
      * Holds the values to be used in the fields callbacks
@@ -61,7 +61,7 @@ class PlenigoContentManager {
     private $gaEventList = array();
 
     /**
-     * Priority in which plenigo will handle content. It has to be less than 10 
+     * Priority in which plenigo will handle content. It has to be less than 10
      * (for shortcode processing) but more than 1.
      */
     const PLENIGO_CONTENT_PRIO = 5;
@@ -131,7 +131,7 @@ class PlenigoContentManager {
 
     /**
      * Check if the curtain has to be rendered and injects a meta tag for search engine robots
-     * 
+     *
      * @global WP_Post $post The Wordpress post object
      */
     public function add_metatags() {
@@ -154,7 +154,7 @@ class PlenigoContentManager {
     /**
      * This is only for testing purposes, the snipet here allows to change the
      * baseURL of the JS and PHP SDKs at the same time
-     * 
+     *
      * @global WP_Post $post The Wordpress post object
      */
     public function plenigo_js_snippet() {
@@ -168,7 +168,17 @@ class PlenigoContentManager {
         //Handling other pages than single post view
         $rType = $this->get_render_type(FALSE);
         //Checking if product has been bought (Products)
-        $userBoughtProd = (isset($this->reqCache["listProdId"])) ? (PlenigoSDKManager::get()->plenigo_bought($this->reqCache["listProdId"]) === TRUE) : FALSE;
+        $listToCompare = null;
+        if (isset($this->reqCache["listProdId"])) {
+            $listToCompare = $this->reqCache["listProdId"];
+        } else if (isset($this->reqCache["csvProdList"])) {
+            $listToCompare = $this->reqCache["csvProdList"];
+        }
+
+        $userBoughtProd = FALSE;
+        if (!is_null($listToCompare)) {
+            $userBoughtProd = PlenigoSDKManager::get()->plenigo_bought($listToCompare) === TRUE;
+        }
         //Checking if product has been bought (Categories)
         $userBoughtCat = (isset($this->reqCache["lastCatId"])) ? (PlenigoSDKManager::get()->plenigo_bought($this->reqCache["lastCatId"]) === TRUE) : FALSE;
         //Either way the user bought it
@@ -191,10 +201,10 @@ class PlenigoContentManager {
         }
 
         $strNoScript = $this->getNoScriptTag();
-        echo'<script type="text/javascript" '
-        . 'src="' . PLENIGO_JSSDK_URL . '/static_resources/javascript/'
-        . $this->options["company_id"] . '/plenigo_sdk.min.js" '
-        . $disableText . $meteredURLText . '></script>' . $strNoScript;
+        echo '<script type="text/javascript" '
+            . 'src="' . PLENIGO_JSSDK_URL . '/static_resources/javascript/'
+            . $this->options["company_id"] . '/plenigo_sdk.min.js" '
+            . $disableText . $meteredURLText . '></script>' . $strNoScript;
 
         $this->printGoogleAnalytics();
 
@@ -206,6 +216,7 @@ class PlenigoContentManager {
      * This method redirects to the content handler for main , widget and search renderers
      *
      * @param  string $content the contents as it will be shown
+     *
      * @return string the content filtered if needed by the plenigo paywall
      */
     public function plenigo_handle_main_content($content) {
@@ -217,6 +228,7 @@ class PlenigoContentManager {
      * This method is particular to the Feed functionality (Atom, RSS, etc)
      *
      * @param  string $content the contents as it will be shown
+     *
      * @return string the content filtered if needed by the plenigo paywall
      */
     public function plenigo_handle_feed_content($content) {
@@ -227,8 +239,9 @@ class PlenigoContentManager {
      * This method handles the content itself, showing only what the author wants to show using the MORE tag
      * and then adds the plenigo curtain if not purchased. Otherwise shows the plain contents as usual.
      *
-     * @param  string  $content the contents as it will be shown
-     * @param  boolean $isFeed  TRUE if the method is being called from a FEED filter or not
+     * @param  string $content the contents as it will be shown
+     * @param  boolean $isFeed TRUE if the method is being called from a FEED filter or not
+     *
      * @global WP_Post $post The Wordpress post object
      * @return string  the content filtered if needed by the plenigo paywall
      */
@@ -245,7 +258,15 @@ class PlenigoContentManager {
                 $rType = $this->get_render_type($isFeed);
                 $html_curtain = null;
 
-                if (isset($this->templateMap[$rType][$hasBought])) {
+                $customCurtain = $this->options['plenigo_custom_curtain_db'];
+                $hasCustomCurtain = false;
+                if (isset($customCurtain) && !empty(trim($customCurtain))) {
+                    $hasCustomCurtain = true;
+                    remove_filter('the_content', 'wpautop');
+                    remove_filter('the_excerpt', 'wpautop');
+                }
+
+                if (isset($this->templateMap[$rType][$hasBought]) && !$hasCustomCurtain) {
                     $html_curtain = $this->templateMap[$rType][$hasBought];
                     $curtain_file = $this->locate_plenigo_template($html_curtain);
                 }
@@ -262,11 +283,21 @@ class PlenigoContentManager {
                 switch ($rType) {
                     case self::RENDER_FEED :
                         plenigo_log_message("ITS A FEED");
-                        $curtain_code = $this->plenigo_curtain($content, $curtain_file, $showByDefault);
+                        if ($hasCustomCurtain) {
+                            $teaser = $this->getFirstParagrah($content);
+                            $curtain_code = $teaser . $customCurtain;
+                        } else {
+                            $curtain_code = $this->plenigo_curtain($content, $curtain_file, $showByDefault);
+                        }
                         break;
                     case self::RENDER_SINGLE :
                         plenigo_log_message("ITS A SINGLE");
-                        $curtain_code = $this->plenigo_curtain($content, $curtain_file, FALSE);
+                        if ($hasCustomCurtain) {
+                            $teaser = $this->getFirstParagrah($content);
+                            $curtain_code = $teaser . $customCurtain;
+                        } else {
+                            $curtain_code = $this->plenigo_curtain($content, $curtain_file, false);
+                        }
                         break;
                     case self::RENDER_SEARCH :
                         plenigo_log_message("ITS A SEARCH");
@@ -284,7 +315,6 @@ class PlenigoContentManager {
             }
             $content = $curtain_code;
         }
-
         return $content;
     }
 
@@ -293,9 +323,10 @@ class PlenigoContentManager {
      * An optional parameter can be set to TRUE if we want to return the content anyways if no MORE tag
      * is found.
      *
-     * @param  string  $content      The entire content of the post
-     * @param  string  $curtain_file the filename of the template we will search on theme directories
-     * @param  boolean $permisive    set to TRUE to return the entire content if more tag not found
+     * @param  string $content The entire content of the post
+     * @param  string $curtain_file the filename of the template we will search on theme directories
+     * @param  boolean $permisive set to TRUE to return the entire content if more tag not found
+     *
      * @return string  the content to be displayed
      */
     private function plenigo_curtain($content, $curtain_file, $permisive = FALSE) {
@@ -317,11 +348,13 @@ class PlenigoContentManager {
         if (!isset($this->reqCache["listProdId"])) {
             $this->reqCache["listProdId"] = array();
             $this->reqCache["listProdTag"] = array();
+            $this->reqCache["csvProdList"] = array();
         }
         // Sanitize the category cache
         if (!isset($this->reqCache["listCatId"])) {
             $this->reqCache["listCatId"] = array();
             $this->reqCache["listCatTag"] = array();
+            $this->reqCache["csvProdList"] = array();
         }
 
         //Prevent tag takes precedense
@@ -332,8 +365,9 @@ class PlenigoContentManager {
             return FALSE;
         }
 
+        $typesPluginPaywall = function_exists('types_render_field') && types_render_field("paywall");
         // Do not paywall if nothing is configured
-        if (trim($plenigoTagDB) === '' && trim($plenigoCatTagDB) === '') {
+        if (trim($plenigoTagDB) === '' && trim($plenigoCatTagDB) === '' && !$typesPluginPaywall) {
             plenigo_log_message("NO TAGS CONFIGURED");
             return FALSE;
         }
@@ -344,6 +378,35 @@ class PlenigoContentManager {
             $hasAnyCatTag = $this->hasAnyCategoryTag();
             //Checking for Product IDs
             $hasAnyProdTag = $this->hasAnyProductTag();
+            $hasProdIdList = false;
+            if ($typesPluginPaywall) {
+                $plenigoGroupOne = (isset($this->options['plenigo_product_group_one_db']) ? $this->options['plenigo_product_group_one_db'] : '');
+                $plenigoGroupTwo = (isset($this->options['plenigo_product_group_two_db']) ? $this->options['plenigo_product_group_two_db'] : '');
+                $csvList = array();
+                $addGroupOne = types_render_field("group-one");
+                $addGroupTwo = types_render_field("group-two");
+                $noGroupSelected = !$addGroupOne && !$addGroupTwo;
+                if (($addGroupOne || $noGroupSelected) && !empty($plenigoGroupOne)) {
+                    $csvList = explode(',', $plenigoGroupOne);
+                }
+                if (($addGroupTwo || $noGroupSelected) && !empty($plenigoGroupTwo)) {
+                    $groupTwoArray = explode(',', $plenigoGroupTwo);
+                    if (!empty($groupTwoArray)) {
+                        $csvList = array_merge($csvList, $groupTwoArray);
+                    }
+                }
+
+                if (!empty($csvList)) {
+                    foreach ($csvList as $dbProdId) {
+                        $trimmedProdId = trim($dbProdId);
+                        if (!empty($trimmedProdId)) {
+                            array_push($this->reqCache["csvProdList"], $trimmedProdId);
+                        }
+                    }
+                }
+                $hasProdIdList = !empty($this->reqCache["csvProdList"]);
+            }
+
             if ($hasAnyCatTag && $hasAnyProdTag) {
                 plenigo_log_message("A Category and a Product tag was found matching");
                 $this->addGAEvent("curtain|category-product-matched");
@@ -352,10 +415,10 @@ class PlenigoContentManager {
                 plenigo_log_message("A Category tag was found matching");
                 $this->addGAEvent("curtain|category-matched");
                 return TRUE;
-            } else if ($hasAnyProdTag) {
+            } else if ($hasAnyProdTag || $hasProdIdList) {
                 plenigo_log_message("A Product tag was found matching");
                 $this->addGAEvent("curtain|product-matched");
-                return TRUE;
+                return true;
             } else {
                 plenigo_log_message("No product/Category was found matching");
                 return FALSE;
@@ -368,10 +431,10 @@ class PlenigoContentManager {
     }
 
     /**
-     * This method checks for category IDs that need to be added to the category list 
-     * so it can be checked for bought products. Returns FALSE if there is no tag 
+     * This method checks for category IDs that need to be added to the category list
+     * so it can be checked for bought products. Returns FALSE if there is no tag
      * found on the article that reflects a tag in the plenigo settings
-     * 
+     *
      * @return bool Returns TRUE if a tag has been found and the category list is in the cache
      */
     public function hasAnyCategoryTag() {
@@ -421,7 +484,7 @@ class PlenigoContentManager {
 
     /**
      * Check if the prevent tags is present, and returns the flag indicating it
-     * 
+     *
      * @return bool TRUE if the prevent tag is present and thus the curtain shouldn't
      */
     public function hasPreventTag() {
@@ -448,10 +511,10 @@ class PlenigoContentManager {
     }
 
     /**
-     * This method checks for Product IDs that need to be added to the product list 
-     * so it can be checked for bought products. Returns FALSE if there is no tag 
+     * This method checks for Product IDs that need to be added to the product list
+     * so it can be checked for bought products. Returns FALSE if there is no tag
      * found on the article that reflects a tag in the plenigo settings
-     * 
+     *
      * @return bool Returns TRUE if a tag has been found and the product list is in the cache
      */
     private function hasAnyProductTag() {
@@ -509,6 +572,7 @@ class PlenigoContentManager {
      *
      * @param  boolean $isFeed TRUE if this method is being called from a feed filter
      *                         (the_content_feed, the_excerpt_feed, etc.)
+     *
      * @return bool TRUE if the user has bought or if its due to be paywalled
      */
     private function user_bought_content($isFeed = FALSE) {
@@ -566,6 +630,8 @@ class PlenigoContentManager {
             if (isset($this->reqCache["lastCatId"])) {
                 $products = array($post->ID);
                 $products = array_merge($products, $this->reqCache["listProdId"]);
+            } else if (!empty($this->reqCache["csvProdList"])) {
+                $products = $this->reqCache["csvProdList"];
             } else {
                 $products = $this->reqCache["listProdId"];
             }
@@ -599,6 +665,7 @@ class PlenigoContentManager {
      * This method locates the file in theme directories if overriden, or gets it from the template directory
      *
      * @param  string $fileName name of the file that's needed and will be located
+     *
      * @return string The located filename with full path in order to read the file, NULL if there was a problem
      */
     private function locate_plenigo_template($fileName) {
@@ -606,11 +673,11 @@ class PlenigoContentManager {
             $themed_template = locate_template($fileName);
             if (!is_null($themed_template) && is_string($themed_template) && $themed_template !== '') {
                 plenigo_log_message("TEMPLATE FROM THEME");
-                $this->addDebugLine("Template from Theme: ". $fileName);
+                $this->addDebugLine("Template from Theme: " . $fileName);
                 return $themed_template;
             } else {
                 plenigo_log_message("TEMPLATE FROM PLUGIN");
-                $this->addDebugLine("Template from Plugin: ". $fileName);
+                $this->addDebugLine("Template from Plugin: " . $fileName);
                 return dirname(__FILE__) . '/../plenigo_template/' . $fileName;
             }
         }
@@ -623,6 +690,7 @@ class PlenigoContentManager {
      * if the complete post is shown, a search result or even a embedded widget
      *
      * @param  boolean $isFeed TRUE if this method is being called from the_content_feed or the_excerpt_feed
+     *
      * @return int     One of the constants RENDER_FEED,RENDER_SINGLE,RENDER_SEARCH,RENDER_OTHER
      */
     private function get_render_type($isFeed = FALSE) {
@@ -658,8 +726,9 @@ class PlenigoContentManager {
      * content in the case that the content presented is alreeady a teaser and not the complete post
      * (happens in the RSS)
      *
-     * @param  string  $content   The content to get the teaser from
+     * @param  string $content The content to get the teaser from
      * @param  boolean $permisive set to TRUE to return the entire content if MORE tag not found
+     *
      * @return string  The teaser text from the user that has been set with the MORE tag
      */
     private function get_teaser_from_content($content, $permisive = FALSE) {
@@ -694,6 +763,7 @@ class PlenigoContentManager {
      * returning the contents as a string.
      *
      * @param  string $curtain_file The file path to get the curtain template
+     *
      * @return string the contents of the curtain to be appended to the teaser
      */
     private function get_curtain_code($curtain_file) {
@@ -713,6 +783,7 @@ class PlenigoContentManager {
      * a fully functional curtain with links and descriptions
      *
      * @param  string $html the curtain contents to replace the tags
+     *
      * @return string the contents of the curtain to be appended to the teaser
      */
     private function replace_plenigo_tags($html) {
@@ -730,7 +801,7 @@ class PlenigoContentManager {
         $custStyle = "width:30%";
         $buyStyle = "width:30%";
         $loginTitle = $this->options['curtain_login'];
-	    $loginOnClick = "javascript:alert('The login API doesn\'t work!');";
+        $loginOnClick = "javascript:alert('The login API doesn\'t work!');";
         if (!isset($this->reqCache["lastCatId"])) {
             $curtainMode = (isset($this->options['curtain_mode'])) ? $this->options['curtain_mode'] : self::CURTAIN_MODE_LB;
             $custTitle = $this->options['curtain_custom_title'];
@@ -741,7 +812,7 @@ class PlenigoContentManager {
             $custOnClick = "javascript:window.location.href = '" . $this->options['curtain_cat_custom_url'] . "';";
         }
 
-        if (!isset($this->options['use_login']) || ($this->options['use_login'] == 0 )) {
+        if (!isset($this->options['use_login']) || ($this->options['use_login'] == 0)) {
             $useOauthLogin = FALSE;
         } else {
             $useOauthLogin = TRUE;
@@ -773,18 +844,17 @@ class PlenigoContentManager {
                         plenigo_log_message("url: " . $coSettings['oauth2RedirectUrl']);
                     }
 
+                    $useRegister = false;
                     if (isset($this->options['use_register']) && $this->options['use_register'] == 1) {
                         $useRegister = true;
-                    } else {
-                        $useRegister = false;
                     }
 
                     // checkout snippet
-                    $buyOnClick = $checkoutBuilder->build($coSettings, null, $useRegisters);
+                    $buyOnClick = $checkoutBuilder->build($coSettings, null, $useRegister);
                 }
                 if (stristr($html, self::REPLACE_PRODUCT_NAME) !== FALSE ||
-                        stristr($html, self::REPLACE_PRODUCT_PRICE) !== FALSE ||
-                        stristr($html, self::REPLACE_PRODUCT_DETAILS) !== FALSE) {
+                    stristr($html, self::REPLACE_PRODUCT_PRICE) !== FALSE ||
+                    stristr($html, self::REPLACE_PRODUCT_DETAILS) !== FALSE) {
                     // get product data
                     $productData = \plenigo\services\ProductService::getProductData($product->getId());
                 }
@@ -810,7 +880,7 @@ class PlenigoContentManager {
                 }
                 //If we should show Product details
                 $prodDetails = '<table class="plenigo-product"><tr><td><b>' . $prodName . '</b></td>'
-                        . '<td width="170" style="text-align: right;"><b>' . $prodPrice . '</b></td></tr></table>';
+                    . '<td width="170" style="text-align: right;"><b>' . $prodPrice . '</b></td></tr></table>';
             }
         }
 
@@ -844,7 +914,7 @@ class PlenigoContentManager {
             }
         }
         if ($curtainMode == self::CURTAIN_MODE_LCB) {
-            //[LOGIN BUTTON] [CUSTOM BUTTON] [BUY BUTTON] 
+            //[LOGIN BUTTON] [CUSTOM BUTTON] [BUY BUTTON]
             if ($isLoggedIn) {
                 $buyStyle = $strHalf;
                 $custStyle = $strHalf;
@@ -876,13 +946,12 @@ class PlenigoContentManager {
         $html = str_ireplace(self::REPLACE_CUSTOM_TITLE, $custTitle, $html);
         $html = str_ireplace(self::REPLACE_CUSTOM_CLICK, $custOnClick, $html);
         $html = str_ireplace(self::REPLACE_CUSTOM_STYLE, $custStyle, $html);
-
         return $html;
     }
 
     /**
      * This method creates and returns a login snippet for use with the curtain login button
-     * 
+     *
      * @return string the resulting login snippet
      */
     private function get_regular_login() {
@@ -891,9 +960,9 @@ class PlenigoContentManager {
     }
 
     /**
-     * This method creates and returns a login snippet for use with the curtain login button 
+     * This method creates and returns a login snippet for use with the curtain login button
      * but using the OAuth authentication
-     * 
+     *
      * @return string the resulting login snippet
      */
     private function get_oauth_login() {
@@ -904,9 +973,9 @@ class PlenigoContentManager {
     }
 
     /**
-     * Creates a plenigo managed product with the last Product ID and/or the Cateogory ID . The Product ID comes 
+     * Creates a plenigo managed product with the last Product ID and/or the Cateogory ID . The Product ID comes
      * from the TAG , but if the category is given, it obtains it from the Current Post ID
-     * 
+     *
      * @global WP_Post $post The Wordpress post object
      * @return \plenigo\models\ProductBase The plenigo product object
      */
@@ -916,7 +985,11 @@ class PlenigoContentManager {
         $title = null;
         $catID = null;
         if (!isset($this->reqCache["lastCatId"])) {
-            $prodID = $this->reqCache["lastProdId"];
+            if (isset($this->reqCache["lastProdId"])) {
+                $prodID = $this->reqCache["lastProdId"];
+            } else if (isset($this->reqCache["csvProdList"]) && !empty($this->reqCache["csvProdList"])) {
+                $prodID = $this->reqCache["csvProdList"][0];
+            }
         } else {
             $prodID = $post->ID;
             $title = $post->post_title;
@@ -931,16 +1004,16 @@ class PlenigoContentManager {
 
     /**
      * Adds a line at the end of the debug checklist
-     * 
+     *
      * @param string $row
      */
     private function addDebugLine($row = null) {
         $res = '';
         if (!is_null($row)) {
             if (!is_string($row) && !is_numeric($row)) {
-                $res.=print_r($row, TRUE);
+                $res .= print_r($row, TRUE);
             } else {
-                $res.=$row;
+                $res .= $row;
             }
         }
         array_push($this->debugChecklist, $res);
@@ -964,14 +1037,14 @@ class PlenigoContentManager {
 
     /**
      * Adds a line at the end of the GA event list
-     * 
+     *
      * @param string $row the format is event|action
      */
     private function addGAEvent($row = null) {
         $res = '';
         if (!is_null($row)) {
             if (is_string($row) && stristr($row, '|') !== FALSE) {
-                $res.=$row;
+                $res .= $row;
             }
         }
         array_push($this->gaEventList, $res);
@@ -991,7 +1064,7 @@ class PlenigoContentManager {
 
     /**
      * Returns the &lt;noscript&gt; tag found in the plugin or theme directory
-     * 
+     *
      * @return string the HTML to render or empty if no template has been found
      */
     private function getNoScriptTag() {
@@ -1006,8 +1079,9 @@ class PlenigoContentManager {
 
     /**
      * Replaces the template tags for the NOSCRIPT overlay
-     * 
+     *
      * @param string $htmlText The template HTML text
+     *
      * @return string The template HTML text with the replacement tags or empty if the NOSCRIPT functionality is disabled
      */
     public function replace_noscript_tags($htmlText) {
@@ -1015,8 +1089,8 @@ class PlenigoContentManager {
         if (isset($this->options['noscript_enabled']) && $this->options['noscript_enabled'] === 1) {
             $strTitle = (isset($this->options['noscript_title'])) ? $this->options['noscript_title'] : __("You need JavaScript", self::PLENIGO_SETTINGS_GROUP);
             $strMessage = (isset($this->options['noscript_message'])) ? $this->options['noscript_message'] : __("In order to provide you with the best experience, "
-                            . "this site requires that you allow JavaScript to run. "
-                            . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
+                . "this site requires that you allow JavaScript to run. "
+                . "Please correct that and try again.", self::PLENIGO_SETTINGS_GROUP);
             $res = str_ireplace(self::REPLACE_NS_TITLE, trim(wp_kses_post($strTitle)), $htmlText);
             $res = str_ireplace(self::REPLACE_NS_MESSAGE, trim(wp_kses_post(wpautop($strMessage))), $res);
         }
@@ -1025,8 +1099,9 @@ class PlenigoContentManager {
 
     /**
      * Replaces the tags in the Google Analytics HTML with the actual values to configure GA
-     * 
+     *
      * @param string $strGAhtml The HTML to be replaced
+     *
      * @return string the HTML with the tags replaced
      */
     public function replace_ga_tags($strGAhtml) {
@@ -1037,7 +1112,7 @@ class PlenigoContentManager {
             $arrEventList = array_unique($this->gaEventList);
             foreach ($arrEventList as $value) {
                 $arrEvent = explode("|", $value);
-                $strGAevents.="\n_plenigo_ga('send', 'event', 'plenigo', '" . $arrEvent[0] . "', '" . $arrEvent[1] . "',{'nonInteraction': 1});";
+                $strGAevents .= "\n_plenigo_ga('send', 'event', 'plenigo', '" . $arrEvent[0] . "', '" . $arrEvent[1] . "',{'nonInteraction': 1});";
             }
 
             $res = str_ireplace(self::REPLACE_GA_CODE, $strGAcode, $strGAhtml);
@@ -1048,8 +1123,9 @@ class PlenigoContentManager {
 
     /**
      * This method allow to strip a teaser tag from the content if it is starting with  one of the specified tags
-     * 
+     *
      * @param string $content the actual post content
+     *
      * @return string The teaser or blank if nothing is found
      */
     private function specialTeaserSupport($content = null) {
@@ -1096,9 +1172,10 @@ class PlenigoContentManager {
 
     /**
      * Search for the needle and returns the begining of the content with the needle attached at the end
-     * 
+     *
      * @param string $content
      * @param string $needle
+     *
      * @return string
      */
     private function getTeaserText($content, $needle) {
@@ -1111,9 +1188,28 @@ class PlenigoContentManager {
     }
 
     /**
+     * Get the first paragraph.
+     *
+     * @param $content content to get the paragraph from
+     *
+     * @return string first paragraph
+     */
+    public function getFirstParagrah($content) {
+        $str = wpautop($content);
+        $start = strpos($str, '<p>');
+        if ($start >= 0) {
+            $str = substr($str, $start, strpos($str, '</p>') + 4);
+            $str = strip_tags($str, '<a><strong><em>');
+            return '<p>' . $str . '</p>';
+        }
+        return "";
+    }
+
+    /**
      * Sanitizes a string array to return an array, empty or with a single value as special cases
-     * 
+     *
      * @param string $stringArray
+     *
      * @return array
      */
     private function resolveArray($stringArray) {
@@ -1131,7 +1227,7 @@ class PlenigoContentManager {
 
     /**
      * Checks if the metered view is exempt by tag
-     * 
+     *
      * @return bool TRUE if the post is exempt of metered views
      */
     public function is_metered_exempt() {
@@ -1148,10 +1244,11 @@ class PlenigoContentManager {
     }
 
     /**
-     * Obtains the BUY button text in the case there is a product or a category tag 
+     * Obtains the BUY button text in the case there is a product or a category tag
      * associated to a buy text, if nothing is found then it returns a given default value.
-     * 
+     *
      * @param string $defaultValue the default value to return if no tag is found in the DB
+     *
      * @return string The final Buy button text
      */
     private function get_buy_text($defaultValue = '') {
@@ -1190,7 +1287,7 @@ class PlenigoContentManager {
 
     /**
      * Output debugging information about the condition of the post before analyzing if it has been bought or not.
-     * 
+     *
      * @global WP_Post $post The Wordpress post object
      */
     private function showDebugConditions() {
