@@ -53,6 +53,14 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                         ],
                         value: '1'
                     },
+                    {
+                        type: 'combobox', name: 'usePostTitle', label: 'Use Post Title',
+                        values: [
+                            {text: 'Yes', value: '1'},
+                            {text: 'No', value: '0'}
+                        ],
+                        value: '0'
+                    }
                 ],
                 onsubmit: function (e) {
                     var isInvalid = false;
@@ -85,7 +93,8 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                         var quantity_label_class_text = getAttributeIfNotEmpty(e.data.quantityLabelCssClass, 'quantity_label_class');
                         max_quantity = getAttributeIfNotEmpty(e.data.maxQuantity, 'max_quantity');
                         var quantity_title_text = getAttributeIfNotEmpty(e.data.quantityTitle, 'quantity_title');
-                        var hideWhenBought = getAttributeIfNotEmpty(e.data.hideWhenBought, 'hide_when_bought');
+                        var hide_when_bought = getAttributeIfNotEmpty(e.data.hideWhenBought, 'hide_when_bought');
+                        var use_post_title_text = getAttributeIfNotEmpty(e.data.usePostTitle, 'use_post_title');
                         var return_text = '[pl_checkout '
                             + prod_text
                             + title_text
@@ -99,7 +108,8 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
                             + quantity_label_class_text
                             + max_quantity
                             + quantity_title_text
-                            + hideWhenBought
+                            + hide_when_bought
+                            + use_post_title_text
                             + ' ]'
                             + selected_text
                             + '[/pl_checkout]';
