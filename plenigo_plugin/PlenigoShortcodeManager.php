@@ -80,6 +80,7 @@ class PlenigoShortcodeManager
         add_shortcode('pl_user_profile', array($this, 'plenigo_handle_user_shortcode'));
         add_shortcode('pl_snippet', array($this, 'plenigo_handle_snippet_shortcode'));
         add_shortcode('pl_mobile_admin', array($this, 'plenigo_handle_mobile_admin'));
+        add_shortcode('pl_login_link', array($this, 'plenigo_handle_login_shortcode'));
 
         //TinyMCE
         // add new buttons
@@ -182,6 +183,35 @@ class PlenigoShortcodeManager
         $a['withQuantity'] = true;
 
         return $this->getCheckoutSnippet($a, $content, $tag);
+    }
+
+    /**
+     * Handle login short code.
+     *
+     * @param $atts attributes
+     * @param null $content content
+     * @param null $tag shortcode tag
+     *
+     * @return string rendered snippet
+     */
+    public function plenigo_handle_login_shortcode($atts, $content = null, $tag = null) {
+        $a = shortcode_atts(array(
+            'title' => "Abmelden",
+            'cssClass' => "",
+            'target' => null
+        ), $atts);
+
+        $targetUrl = $a["target"];
+        $loginSnippet = PlenigoSDKManager::get()->getLoginSnippet();
+
+        if (empty($targetUrl) && isset($_GET["redirect"])) {
+            $targetUrl = $_GET["redirect"];
+        }
+
+        if (!empty($targetUrl)) {
+            $_SESSION["plenigo_login_redirect_url"] = $targetUrl;
+        }
+        return "<a href=\"#\" onclick=\"$loginSnippet return false;\">Abmelden</a>";
     }
 
     /**

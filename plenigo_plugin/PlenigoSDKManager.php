@@ -66,6 +66,7 @@ class PlenigoSDKManager
      * Obtain a value or object from the request cache
      *
      * @param string $cacheKey The Key to find
+     *
      * @return mixed The value obtained or null
      */
     function getCacheValue($cacheKey = null) {
@@ -92,6 +93,7 @@ class PlenigoSDKManager
      * Obtain a value or object from the session
      *
      * @param string $valueKey The Key to find
+     *
      * @return mixed The value obtained or null
      */
     function getSessionValue($valueKey = null) {
@@ -161,6 +163,7 @@ class PlenigoSDKManager
      * Calls the PHP SDK and queries the server for products already bought. Sanitizes the response as a boolean
      *
      * @param  string $products the product Id string or an array of product ids
+     *
      * @return bool true if the user has bought the product
      */
     public function plenigo_bought($products = null) {
