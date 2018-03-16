@@ -10,6 +10,8 @@ namespace plenigo_plugin\settings;
  * @since 3.1.0
  */
 
+use plenigo_plugin\PlenigoSDKManager;
+
 /**
  * Base class for displaying a list of items in an ajaxified HTML table.
  *
@@ -139,8 +141,7 @@ class WP_List_Table
      *                            Default null.
      * }
      */
-    public function __construct($args = array())
-    {
+    public function __construct($args = array()) {
         $args = wp_parse_args(
             $args, array(
                 'plural' => '',
@@ -170,8 +171,8 @@ class WP_List_Table
 
         if (empty($this->modes)) {
             $this->modes = array(
-                'list' => __('List View'),
-                'excerpt' => __('Excerpt View'),
+                'list' => __('List View', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP),
+                'excerpt' => __('Excerpt View', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP),
             );
         }
     }
@@ -182,10 +183,10 @@ class WP_List_Table
      * @since 4.0.0
      *
      * @param string $name Property to get.
+     *
      * @return mixed Property.
      */
-    public function __get($name)
-    {
+    public function __get($name) {
         if (in_array($name, $this->compat_fields)) {
             return $this->$name;
         }
@@ -198,10 +199,10 @@ class WP_List_Table
      *
      * @param string $name Property to check if set.
      * @param mixed $value Property value.
+     *
      * @return mixed Newly-set property.
      */
-    public function __set($name, $value)
-    {
+    public function __set($name, $value) {
         if (in_array($name, $this->compat_fields)) {
             return $this->$name = $value;
         }
@@ -213,10 +214,10 @@ class WP_List_Table
      * @since 4.0.0
      *
      * @param string $name Property to check if set.
+     *
      * @return bool Whether the property is set.
      */
-    public function __isset($name)
-    {
+    public function __isset($name) {
         if (in_array($name, $this->compat_fields)) {
             return isset($this->$name);
         }
@@ -229,8 +230,7 @@ class WP_List_Table
      *
      * @param string $name Property to unset.
      */
-    public function __unset($name)
-    {
+    public function __unset($name) {
         if (in_array($name, $this->compat_fields)) {
             unset($this->$name);
         }
@@ -243,10 +243,10 @@ class WP_List_Table
      *
      * @param string $name Method to call.
      * @param array $arguments Arguments to pass when calling.
+     *
      * @return mixed|bool Return value of the callback, false otherwise.
      */
-    public function __call($name, $arguments)
-    {
+    public function __call($name, $arguments) {
         if (in_array($name, $this->compat_methods)) {
             return call_user_func_array(array($this, $name), $arguments);
         }
@@ -259,8 +259,7 @@ class WP_List_Table
      * @since 3.1.0
      * @abstract
      */
-    public function ajax_user_can()
-    {
+    public function ajax_user_can() {
         die('function WP_List_Table::ajax_user_can() must be over-ridden in a sub-class.');
     }
 
@@ -272,8 +271,7 @@ class WP_List_Table
      * @since 3.1.0
      * @abstract
      */
-    public function prepare_items()
-    {
+    public function prepare_items() {
         die('function WP_List_Table::prepare_items() must be over-ridden in a sub-class.');
     }
 
@@ -284,8 +282,7 @@ class WP_List_Table
      *
      * @param array|string $args Array or string of arguments with information about the pagination.
      */
-    protected function set_pagination_args($args)
-    {
+    protected function set_pagination_args($args) {
         $args = wp_parse_args(
             $args, array(
                 'total_items' => 0,
@@ -314,10 +311,10 @@ class WP_List_Table
      *
      * @param string $key Pagination argument to retrieve. Common values include 'total_items',
      *                    'total_pages', 'per_page', or 'infinite_scroll'.
+     *
      * @return int Number of items that correspond to the given pagination argument.
      */
-    public function get_pagination_arg($key)
-    {
+    public function get_pagination_arg($key) {
         if ('page' === $key) {
             return $this->get_pagenum();
         }
@@ -334,8 +331,7 @@ class WP_List_Table
      *
      * @return bool
      */
-    public function has_items()
-    {
+    public function has_items() {
         return !empty($this->items);
     }
 
@@ -344,8 +340,7 @@ class WP_List_Table
      *
      * @since 3.1.0
      */
-    public function no_items()
-    {
+    public function no_items() {
         _e('No items found.');
     }
 
@@ -357,8 +352,7 @@ class WP_List_Table
      * @param string $text The 'submit' button label.
      * @param string $input_id ID attribute value for the search input field.
      */
-    public function search_box($text, $input_id)
-    {
+    public function search_box($text, $input_id) {
         if (empty($_REQUEST['s']) && !$this->has_items()) {
             return;
         }
@@ -380,7 +374,8 @@ class WP_List_Table
         ?>
         <p class="search-box">
             <label class="screen-reader-text" for="<?php echo esc_attr($input_id); ?>"><?php echo $text; ?>:</label>
-            <input type="search" id="<?php echo esc_attr($input_id); ?>" name="s" value="<?php _admin_search_query(); ?>"/>
+            <input type="search" id="<?php echo esc_attr($input_id); ?>" name="s"
+                   value="<?php _admin_search_query(); ?>"/>
             <?php submit_button($text, '', '', false, array('id' => 'search-submit')); ?>
         </p>
         <?php
@@ -394,8 +389,7 @@ class WP_List_Table
      *
      * @return array
      */
-    protected function get_views()
-    {
+    protected function get_views() {
         return array();
     }
 
@@ -404,8 +398,7 @@ class WP_List_Table
      *
      * @since 3.1.0
      */
-    public function views()
-    {
+    public function views() {
         $views = $this->get_views();
         /**
          * Filters the list of available list table views.
@@ -441,8 +434,7 @@ class WP_List_Table
      *
      * @return array
      */
-    protected function get_bulk_actions()
-    {
+    protected function get_bulk_actions() {
         return array();
     }
 
@@ -454,8 +446,7 @@ class WP_List_Table
      * @param string $which The location of the bulk actions: 'top' or 'bottom'.
      *                      This is designated as optional for backward compatibility.
      */
-    protected function bulk_actions($which = '')
-    {
+    protected function bulk_actions($which = '') {
         if (is_null($this->_actions)) {
             $this->_actions = $this->get_bulk_actions();
             /**
@@ -480,9 +471,10 @@ class WP_List_Table
             return;
         }
 
-        echo '<label for="bulk-action-selector-' . esc_attr($which) . '" class="screen-reader-text">' . __('Select bulk action') . '</label>';
+        echo '<label for="bulk-action-selector-' . esc_attr($which) . '" class="screen-reader-text">'
+            . __('Select bulk action', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP) . '</label>';
         echo '<select name="action' . $two . '" id="bulk-action-selector-' . esc_attr($which) . "\">\n";
-        echo '<option value="-1">' . __('Bulk Actions') . "</option>\n";
+        echo '<option value="-1">' . __('Bulk Actions', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP) . "</option>\n";
 
         foreach ($this->_actions as $name => $title) {
             $class = 'edit' === $name ? ' class="hide-if-no-js"' : '';
@@ -492,7 +484,7 @@ class WP_List_Table
 
         echo "</select>\n";
 
-        submit_button(__('Apply'), 'action', '', false, array('id' => "doaction$two"));
+        submit_button(__('Apply', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP), 'action', '', false, array('id' => "doaction$two"));
         echo "\n";
     }
 
@@ -503,8 +495,7 @@ class WP_List_Table
      *
      * @return string|false The action name or False if no action was selected
      */
-    public function current_action()
-    {
+    public function current_action() {
         if (isset($_REQUEST['filter_action']) && !empty($_REQUEST['filter_action'])) {
             return false;
         }
@@ -527,10 +518,10 @@ class WP_List_Table
      *
      * @param array $actions The list of actions
      * @param bool $always_visible Whether the actions should be always visible
+     *
      * @return string
      */
-    protected function row_actions($actions, $always_visible = false)
-    {
+    protected function row_actions($actions, $always_visible = false) {
         $action_count = count($actions);
         $i = 0;
 
@@ -546,7 +537,8 @@ class WP_List_Table
         }
         $out .= '</div>';
 
-        $out .= '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __('Show more details') . '</span></button>';
+        $out .= '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __('Show more details',
+                PlenigoSDKManager::PLENIGO_SETTINGS_GROUP) . '</span></button>';
 
         return $out;
     }
@@ -561,8 +553,7 @@ class WP_List_Table
      *
      * @param string $post_type
      */
-    protected function months_dropdown($post_type)
-    {
+    protected function months_dropdown($post_type) {
         global $wpdb, $wp_locale;
 
         /**
@@ -631,7 +622,7 @@ class WP_List_Table
                     selected($m, $year . $month, false),
                     esc_attr($arc_row->year . $month),
                     /* translators: 1: month name, 2: 4-digit year */
-                    sprintf(__('%1$s %2$d'), $wp_locale->get_month($month), $year)
+                    sprintf(__('%1$s %2$d', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP), $wp_locale->get_month($month), $year)
                 );
             }
             ?>
@@ -646,8 +637,7 @@ class WP_List_Table
      *
      * @param string $current_mode
      */
-    protected function view_switcher($current_mode)
-    {
+    protected function view_switcher($current_mode) {
         ?>
         <input type="hidden" name="mode" value="<?php echo esc_attr($current_mode); ?>"/>
         <div class="view-switch">
@@ -677,8 +667,7 @@ class WP_List_Table
      * @param int $post_id The post ID.
      * @param int $pending_comments Number of pending comments.
      */
-    protected function comments_bubble($post_id, $pending_comments)
-    {
+    protected function comments_bubble($post_id, $pending_comments) {
         $approved_comments = get_comments_number();
 
         $approved_comments_number = number_format_i18n($approved_comments);
@@ -692,7 +681,7 @@ class WP_List_Table
         if (!$approved_comments && !$pending_comments) {
             printf(
                 '<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>',
-                __('No comments')
+                __('No comments', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP)
             );
             // Approved comments have different display depending on some conditions.
         } elseif ($approved_comments) {
@@ -713,7 +702,8 @@ class WP_List_Table
             printf(
                 '<span class="post-com-count post-com-count-no-comments"><span class="comment-count comment-count-no-comments" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
                 $approved_comments_number,
-                $pending_comments ? __('No approved comments') : __('No comments')
+                $pending_comments ? __('No approved comments', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP) :
+                    __('No comments', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP)
             );
         }
 
@@ -735,7 +725,8 @@ class WP_List_Table
             printf(
                 '<span class="post-com-count post-com-count-pending post-com-count-no-pending"><span class="comment-count comment-count-no-pending" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
                 $pending_comments_number,
-                $approved_comments ? __('No pending comments') : __('No comments')
+                $approved_comments ? __('No pending comments', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP) :
+                    __('No comments', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP)
             );
         }
     }
@@ -747,8 +738,7 @@ class WP_List_Table
      *
      * @return int
      */
-    public function get_pagenum()
-    {
+    public function get_pagenum() {
         $pagenum = isset($_REQUEST['paged']) ? absint($_REQUEST['paged']) : 0;
 
         if (isset($this->_pagination_args['total_pages']) && $pagenum > $this->_pagination_args['total_pages']) {
@@ -765,10 +755,10 @@ class WP_List_Table
      *
      * @param string $option
      * @param int $default
+     *
      * @return int
      */
-    protected function get_items_per_page($option, $default = 20)
-    {
+    protected function get_items_per_page($option, $default = 20) {
         $per_page = (int)get_user_option($option);
         if (empty($per_page) || $per_page < 1) {
             $per_page = $default;
@@ -797,8 +787,7 @@ class WP_List_Table
      *
      * @param string $which
      */
-    protected function pagination($which)
-    {
+    protected function pagination($which) {
         if (empty($this->_pagination_args)) {
             return;
         }
@@ -851,7 +840,7 @@ class WP_List_Table
             $page_links[] = sprintf(
                 "<a class='first-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
                 esc_url(remove_query_arg('paged', $current_url)),
-                __('First page'),
+                __('First page', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP),
                 '&laquo;'
             );
         }
@@ -862,24 +851,27 @@ class WP_List_Table
             $page_links[] = sprintf(
                 "<a class='prev-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
                 esc_url(add_query_arg('paged', max(1, $current - 1), $current_url)),
-                __('Previous page'),
+                __('Previous page', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP),
                 '&lsaquo;'
             );
         }
 
         if ('bottom' === $which) {
             $html_current_page = $current;
-            $total_pages_before = '<span class="screen-reader-text">' . __('Current Page') . '</span><span id="table-paging" class="paging-input"><span class="tablenav-paging-text">';
+            $total_pages_before = '<span class="screen-reader-text">'
+                . __('Current Page' , PlenigoSDKManager::PLENIGO_SETTINGS_GROUP)
+                . '</span><span id="table-paging" class="paging-input"><span class="tablenav-paging-text">';
         } else {
             $html_current_page = sprintf(
                 "%s<input class='current-page' id='current-page-selector' type='text' name='paged' value='%s' size='%d' aria-describedby='table-paging' /><span class='tablenav-paging-text'>",
-                '<label for="current-page-selector" class="screen-reader-text">' . __('Current Page') . '</label>',
+                '<label for="current-page-selector" class="screen-reader-text">'
+                . __('Current Page', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP) . '</label>',
                 $current,
                 strlen($total_pages)
             );
         }
         $html_total_pages = sprintf("<span class='total-pages'>%s</span>", number_format_i18n($total_pages));
-        $page_links[] = $total_pages_before . sprintf(_x('%1$s of %2$s', 'paging'), $html_current_page, $html_total_pages) . $total_pages_after;
+        $page_links[] = $total_pages_before . sprintf(_x('%1$s of %2$s', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP), $html_current_page, $html_total_pages) . $total_pages_after;
 
         if ($disable_next) {
             $page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&rsaquo;</span>';
@@ -887,7 +879,7 @@ class WP_List_Table
             $page_links[] = sprintf(
                 "<a class='next-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
                 esc_url(add_query_arg('paged', min($total_pages, $current + 1), $current_url)),
-                __('Next page'),
+                __('Next page', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP),
                 '&rsaquo;'
             );
         }
@@ -898,7 +890,7 @@ class WP_List_Table
             $page_links[] = sprintf(
                 "<a class='last-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
                 esc_url(add_query_arg('paged', $total_pages, $current_url)),
-                __('Last page'),
+                __('Last page', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP),
                 '&raquo;'
             );
         }
@@ -928,8 +920,7 @@ class WP_List_Table
      *
      * @return array
      */
-    public function get_columns()
-    {
+    public function get_columns() {
         die('function WP_List_Table::get_columns() must be over-ridden in a sub-class.');
     }
 
@@ -945,8 +936,7 @@ class WP_List_Table
      *
      * @return array
      */
-    protected function get_sortable_columns()
-    {
+    protected function get_sortable_columns() {
         return array();
     }
 
@@ -957,8 +947,7 @@ class WP_List_Table
      *
      * @return string Name of the default primary column, in this case, an empty string.
      */
-    protected function get_default_primary_column_name()
-    {
+    protected function get_default_primary_column_name() {
         $columns = $this->get_columns();
         $column = '';
 
@@ -987,8 +976,7 @@ class WP_List_Table
      *
      * @return string Name of the default primary column.
      */
-    public function get_primary_column()
-    {
+    public function get_primary_column() {
         return $this->get_primary_column_name();
     }
 
@@ -999,8 +987,7 @@ class WP_List_Table
      *
      * @return string The name of the primary column.
      */
-    protected function get_primary_column_name()
-    {
+    protected function get_primary_column_name() {
         $columns = get_column_headers($this->screen);
         $default = $this->get_default_primary_column_name();
 
@@ -1034,8 +1021,7 @@ class WP_List_Table
      *
      * @return array
      */
-    protected function get_column_info()
-    {
+    protected function get_column_info() {
         // $_column_headers is already set / cached
         if (isset($this->_column_headers) && is_array($this->_column_headers)) {
             // Back-compat for list tables that have been manually setting $_column_headers for horse reasons.
@@ -1091,8 +1077,7 @@ class WP_List_Table
      *
      * @return int
      */
-    public function get_column_count()
-    {
+    public function get_column_count() {
         list ($columns, $hidden) = $this->get_column_info();
         $hidden = array_intersect(array_keys($columns), array_filter($hidden));
         return count($columns) - count($hidden);
@@ -1107,8 +1092,7 @@ class WP_List_Table
      *
      * @param bool $with_id Whether to set the id attribute or not
      */
-    public function print_column_headers($with_id = true)
-    {
+    public function print_column_headers($with_id = true) {
         list($columns, $hidden, $sortable, $primary) = $this->get_column_info();
 
         $current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
@@ -1128,7 +1112,8 @@ class WP_List_Table
 
         if (!empty($columns['cb'])) {
             static $cb_counter = 1;
-            $columns['cb'] = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">' . __('Select All') . '</label>'
+            $columns['cb'] = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">'
+                . __('Select All', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP) . '</label>'
                 . '<input id="cb-select-all-' . $cb_counter . '" type="checkbox" />';
             $cb_counter++;
         }
@@ -1183,8 +1168,7 @@ class WP_List_Table
      *
      * @since 3.1.0
      */
-    public function display()
-    {
+    public function display() {
         $singular = $this->_args['singular'];
 
         $this->display_tablenav('top');
@@ -1226,8 +1210,7 @@ class WP_List_Table
      *
      * @return array List of CSS classes for the table tag.
      */
-    protected function get_table_classes()
-    {
+    protected function get_table_classes() {
         return array('widefat', 'fixed', 'striped', $this->_args['plural']);
     }
 
@@ -1235,10 +1218,10 @@ class WP_List_Table
      * Generate the table navigation above or below the table
      *
      * @since 3.1.0
+     *
      * @param string $which
      */
-    protected function display_tablenav($which)
-    {
+    protected function display_tablenav($which) {
         if ('top' === $which) {
             wp_nonce_field('bulk-' . $this->_args['plural']);
         }
@@ -1249,7 +1232,7 @@ class WP_List_Table
                 <div class="alignleft actions bulkactions">
                     <?php $this->bulk_actions($which); ?>
                 </div>
-                <?php
+            <?php
             endif;
             $this->extra_tablenav($which);
             $this->pagination($which);
@@ -1267,8 +1250,7 @@ class WP_List_Table
      *
      * @param string $which
      */
-    protected function extra_tablenav($which)
-    {
+    protected function extra_tablenav($which) {
     }
 
     /**
@@ -1276,8 +1258,7 @@ class WP_List_Table
      *
      * @since 3.1.0
      */
-    public function display_rows_or_placeholder()
-    {
+    public function display_rows_or_placeholder() {
         if ($this->has_items()) {
             $this->display_rows();
         } else {
@@ -1292,8 +1273,7 @@ class WP_List_Table
      *
      * @since 3.1.0
      */
-    public function display_rows()
-    {
+    public function display_rows() {
         foreach ($this->items as $item) {
             $this->single_row($item);
         }
@@ -1306,8 +1286,7 @@ class WP_List_Table
      *
      * @param object $item The current item
      */
-    public function single_row($item)
-    {
+    public function single_row($item) {
         echo '<tr>';
         $this->single_row_columns($item);
         echo '</tr>';
@@ -1317,15 +1296,13 @@ class WP_List_Table
      * @param object $item
      * @param string $column_name
      */
-    protected function column_default($item, $column_name)
-    {
+    protected function column_default($item, $column_name) {
     }
 
     /**
      * @param object $item
      */
-    protected function column_cb($item)
-    {
+    protected function column_cb($item) {
     }
 
     /**
@@ -1335,8 +1312,7 @@ class WP_List_Table
      *
      * @param object $item The current item
      */
-    protected function single_row_columns($item)
-    {
+    protected function single_row_columns($item) {
         list($columns, $hidden, $sortable, $primary) = $this->get_column_info();
 
         foreach ($columns as $column_name => $column_display_name) {
@@ -1389,11 +1365,12 @@ class WP_List_Table
      * @param object $item The item being acted upon.
      * @param string $column_name Current column name.
      * @param string $primary Primary column name.
+     *
      * @return string The row actions HTML, or an empty string if the current column is the primary column.
      */
-    protected function handle_row_actions($item, $column_name, $primary)
-    {
-        return $column_name === $primary ? '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __('Show more details') . '</span></button>' : '';
+    protected function handle_row_actions($item, $column_name, $primary) {
+        return $column_name === $primary ? '<button type="button" class="toggle-row"><span class="screen-reader-text">'
+            . __('Show more details', PlenigoSDKManager::PLENIGO_SETTINGS_GROUP) . '</span></button>' : '';
     }
 
     /**
@@ -1401,8 +1378,7 @@ class WP_List_Table
      *
      * @since 3.1.0
      */
-    public function ajaxResponse()
-    {
+    public function ajaxResponse() {
         $this->prepare_items();
 
         ob_start();
@@ -1433,8 +1409,7 @@ class WP_List_Table
     /**
      * Send required variables to JavaScript land
      */
-    public function _js_vars()
-    {
+    public function _js_vars() {
         $args = array(
             'class' => get_class($this),
             'screen' => array(

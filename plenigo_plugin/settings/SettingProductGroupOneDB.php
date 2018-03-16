@@ -64,7 +64,8 @@ class SettingProductGroupOneDB extends PlenigoWPSetting {
 	 * @see PlenigoWPSetting::getTitle()
 	 */
 	public function getTitle() {
-		return __( 'Produkte mit Vollzugriff', parent::PLENIGO_SETTINGS_GROUP );
+	    //Produkte mit Vollzugriff
+		return __( 'Products with full access', parent::PLENIGO_SETTINGS_GROUP );
 	}
 
 	/**
@@ -72,8 +73,9 @@ class SettingProductGroupOneDB extends PlenigoWPSetting {
 	 */
 	public function renderCallback() {
 		$currValue = $this->getDefaultValue( $this->getStoredValue() );
+        //Produkte mit Vollzugriff
 		printf( '<textarea cols="100" wrap="off" rows="10" id="plenigo_product_group_one" name="' . self::PLENIGO_SETTINGS_NAME
-		        . '[' . static::SETTING_ID . ']" placeholder="' . __( 'Produkte mit Vollzugriff...',
+		        . '[' . static::SETTING_ID . ']" placeholder="' . __( 'Products with full access...',
 				parent::PLENIGO_SETTINGS_GROUP ) . '">%s</textarea>', $currValue );
 	}
 

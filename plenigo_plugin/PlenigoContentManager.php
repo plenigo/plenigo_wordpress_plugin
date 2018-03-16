@@ -789,19 +789,20 @@ class PlenigoContentManager
     private function replace_plenigo_tags($html) {
         $sdk = PlenigoSDKManager::get()->getPlenigoSDK();
 
-        $prodName = '*[ERROR check Product ID]';
-        $prodPrice = '*[ERROR]';
-        $prodDetails = '*[ERROR check Product ID]';
+        $prodName = __('*[ERROR check Product ID]', self::PLENIGO_SETTINGS_GROUP);
+        $prodPrice = __('*[ERROR]', self::PLENIGO_SETTINGS_GROUP);
+        $prodDetails = __('*[ERROR check Product ID]', self::PLENIGO_SETTINGS_GROUP);
         $courtTitle = $this->options['curtain_title'];
         $courtMsg = $this->options['curtain_text'];
         //Get buy text of the tag DB
         $buyTitle = $this->get_buy_text(isset($this->options['curtain_buy']) ? $this->options['curtain_buy'] : '');
-        $buyOnClick = "javascript:alert('This product has not been configured correctly!');";
+        $buyOnClick = "javascript:alert('"
+            . __("This product has not been configured correctly!", self::PLENIGO_SETTINGS_GROUP) . "');";
         $loginStyle = "width:30%";
         $custStyle = "width:30%";
         $buyStyle = "width:30%";
         $loginTitle = $this->options['curtain_login'];
-        $loginOnClick = "javascript:alert('The login API doesn\'t work!');";
+        $loginOnClick = "javascript:alert('" . __("The login API doesn\'t work!", self::PLENIGO_SETTINGS_GROUP) . "');";
         if (!isset($this->reqCache["lastCatId"])) {
             $curtainMode = (isset($this->options['curtain_mode'])) ? $this->options['curtain_mode'] : self::CURTAIN_MODE_LB;
             $custTitle = $this->options['curtain_custom_title'];

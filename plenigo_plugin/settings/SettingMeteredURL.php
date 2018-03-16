@@ -56,6 +56,6 @@ class SettingMeteredURL extends SettingRedirectURL {
      * @see SettingRedirectURL::getHint()
      */
     protected function getHint() {
-        return __('https://', parent::PLENIGO_SETTINGS_GROUP);
+        return 'https://';
     }
 }

@@ -302,7 +302,7 @@ class PlenigoLoginManager
             plenigo_log_message("FROM USERNAME [" . print_r($userName, true) . "]");
             $name = strtolower($userName);
         } else if (!is_null($lastName) && strlen($lastName) > 1) {
-            $firstName = !is_null($firstName) ? $firstName : __('Mr./Mis', self::PLENIGO_SETTINGS_GROUP);
+            $firstName = !is_null($firstName) ? $firstName : __('Mr./Ms', self::PLENIGO_SETTINGS_GROUP);
             plenigo_log_message("FROM FIRST, LAST: [" . print_r($firstName, true) . ", " . print_r($lastName, true) . "]");
             $name = lcfirst(ucwords($firstName)) . ucwords($lastName);
         } else {

@@ -164,7 +164,7 @@ class PlenigoSettingsPage
      */
     public function add_plugin_page() {
         // This page will be under "Settings"
-        add_menu_page('Plenigo Options', 'Plenigo', 'manage_options', self::PLENIGO_SETTINGS_PAGE, array($this, 'create_admin_page'),
+        add_menu_page(__('Plenigo Options', self::PLENIGO_SETTINGS_GROUP), 'Plenigo', 'manage_options', self::PLENIGO_SETTINGS_PAGE, array($this, 'create_admin_page'),
             plugins_url('plenigo_img/favicon.ico', dirname(__FILE__)), 79);
     }
 
@@ -193,15 +193,16 @@ class PlenigoSettingsPage
         $screen->add_help_tab(array(
             'id' => 'plenigo_help_tab',
             'title' => __('Plenigo Help', self::PLENIGO_SETTINGS_GROUP),
-            'content' => '<p>In order to configure the plenigo Paywall, '
-                . 'first got to the plenigo Website and register as a business. '
-                . '</p>'
-                . '<p>Obtain your <b>Company ID</b> and <b>Private Key</b>, we are almost there...'
-                . '</p>'
-                . '<p>Ok, last step, <a target="_blank" href="' . PLENIGO_SVC_URL
-                . '/company/product/create">create one or more managed product</a> and copy the product id'
-                . ', type the TAG, paste the product ID into the text field below and click ADD to append it to the tag list.'
-                . '</p>'
+            'content' => __('<p>In order to configure the plenigo Paywall, '
+                    . 'first got to the plenigo Website and register as a business. '
+                    . '</p>'
+                    . '<p>Obtain your <b>Company ID</b> and <b>Private Key</b>, we are almost there...'
+                    . '</p>'
+                    . '<p>Ok, last step, <a target="_blank" href="', self::PLENIGO_SETTINGS_GROUP)
+                . PLENIGO_SVC_URL
+                . __('/company/product/create">create one or more managed product</a> and copy the product id'
+                    . ', type the TAG, paste the product ID into the text field below and click ADD to append it to the tag list.'
+                    . '</p>', self::PLENIGO_SETTINGS_GROUP)
         ,
         ));
         $screen->add_help_tab(array(
@@ -403,10 +404,10 @@ class PlenigoSettingsPage
     public function print_section_general() {
         print '<div role="tabpanel" class="tab-pane active" id="plenigo_general">'
             . '<h3>' . __('General', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
-            . 'These are the basic settings for using plenigo services. '
-            . 'It allows you to set your company id, your encryption secret code, '
-            . 'working in the test environment and also disabling '
-            . 'the entire plenigo functionality alltogether.';
+            . __('These are the basic settings for using plenigo services. '
+                . 'It allows you to set your company id, your encryption secret code, '
+                . 'working in the test environment and also disabling '
+                . 'the entire plenigo functionality alltogether.', self::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
@@ -415,9 +416,9 @@ class PlenigoSettingsPage
     public function print_section_login() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_login_section">'
             . '<h3>' . __('OAuth Login', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
-            . "This section allows the Wordpress's users to login using plenigo authentication. "
-            . "The data will be stored in the Wordpress database. If you disable this, "
-            . "users may need to recover their passwords.";
+            . __("This section allows the Wordpress's users to login using plenigo authentication. "
+                . "The data will be stored in the Wordpress database. If you disable this, "
+                . "users may need to recover their passwords.", self::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
@@ -426,9 +427,10 @@ class PlenigoSettingsPage
     public function print_section_content() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_content_section">'
             . '<h3>' . __('Premium Content settings', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
-            . 'Here you configure how plenigo detects the content that is behind a Paywall. '
-            . 'Here you can set a TAG to use as &quot;Payable&quot; marker, and also you can configure the '
-            . 'plenigo managed product(s) that represents the paywall for that particular tag.';
+            . __('Here you configure how plenigo detects the content that is behind a Paywall. '
+                . 'Here you can set a TAG to use as &quot;Payable&quot; marker, and also you can configure the '
+                . 'plenigo managed product(s) that represents the paywall for that particular tag.'
+                , self::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
@@ -437,9 +439,9 @@ class PlenigoSettingsPage
     public function print_section_metered() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_metered_section">'
             . '<h3>' . __('Metered Views settings', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
-            . 'Metered Views is a way to handle certain amount of free views. '
-            . 'Here you can set a TAG to use as Metered &quot;Exemption&quot; marker, and also you '
-            . 'completely disable metered views.';
+            . __('Metered Views is a way to handle certain amount of free views. '
+                . 'Here you can set a TAG to use as Metered &quot;Exemption&quot; marker, and also you '
+                . 'completely disable metered views.', self::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
@@ -448,8 +450,9 @@ class PlenigoSettingsPage
     public function print_section_curtain() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_curtain_section">'
             . '<h3>' . __('Curtain Customization', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
-            . 'Here you can customize the curtain text and buttons. This is usefull to incentivize your customers to '
-            . 'buy your product or join your blog. Be creative and personalize the existing templates.';
+            . __('Here you can customize the curtain text and buttons. This is usefull to incentivize your customers to '
+                . 'buy your product or join your blog. Be creative and personalize the existing templates.'
+                , self::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
@@ -458,10 +461,11 @@ class PlenigoSettingsPage
     public function print_section_woo() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_woo_section">'
             . '<h3>' . __('Woo Commerce', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
-            . 'Here you can control the way plenigo integrates with '
+            . __('Here you can control the way plenigo integrates with ', self::PLENIGO_SETTINGS_GROUP)
             . '<a href="http://www.woothemes.com/woocommerce/" target="_blank">WooCommerce</a>. '
-            . 'It allows you to use the powerful features in <a href="http://www.woothemes.com/woocommerce/" target="_blank">'
-            . 'WooCommerce</a> and use plenigo as payment method.';
+            . __('It allows you to use the powerful features in ', self::PLENIGO_SETTINGS_GROUP)
+            . '<a href="http://www.woothemes.com/woocommerce/" target="_blank">'
+            . 'WooCommerce</a>' . __('and use plenigo as payment method.', self::PLENIGO_SETTINGS_GROUP);
     }
 
     /**

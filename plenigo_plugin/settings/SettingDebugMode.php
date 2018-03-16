@@ -27,7 +27,8 @@ namespace plenigo_plugin\settings;
  * @package  plenigoPluginSettings
  * @link     https://plenigo.com
  */
-class SettingDebugMode extends PlenigoWPSetting {
+class SettingDebugMode extends PlenigoWPSetting
+{
 
     //These should be overriden
     const SECTION_ID = 'plenigo_advanced_section';
@@ -69,7 +70,7 @@ class SettingDebugMode extends PlenigoWPSetting {
         $noDebugValue = '';
         $logDebugValue = '';
 
-        if (is_null($currValue) || ($currValue === 1 )) {
+        if (is_null($currValue) || ($currValue === 1)) {
             $visibleDebugValue = ' checked';
             $noDebugValue = '';
             $logDebugValue = '';
@@ -86,12 +87,16 @@ class SettingDebugMode extends PlenigoWPSetting {
         $tomorrow = strtotime("+1 day");
 
         echo '<input type="radio" id="no_debug_mode" name="' . self::PLENIGO_SETTINGS_NAME
-        . '[' . self::SETTING_ID . ']" value="0" ' . $noDebugValue . '><label for="no_debug_mode">' . __('NO DEBUG mode', parent::PLENIGO_SETTINGS_GROUP) . '</label><br>'
-        . '<input type="radio" id="visible_mode" name="' . self::PLENIGO_SETTINGS_NAME
-        . '[' . self::SETTING_ID . ']" value="1" ' . $visibleDebugValue . '><label for="visible_mode">' . __('VERBOSE DEBUG mode', parent::PLENIGO_SETTINGS_GROUP) . '</label><br>'
-        . '<input type="radio" id="debug_log_mode" name="' . self::PLENIGO_SETTINGS_NAME
-        . '[' . self::SETTING_ID . ']" value="' . $tomorrow . '" ' . $logDebugValue . '><label for="debug_log_mode">' . __('VERBOSE LOG FILE mode. Up to: ', parent::PLENIGO_SETTINGS_GROUP) . date('Y-m-d', $tomorrow) . '</label><br>'
-                . '<br>NOTE: <em>This works if there is not pre-defined WP_DEBUG,WP_DEBUG_LOG or WP_DEBUG_DISPLAY constants in your wp-config.php or any other plugins that may set those variables.</em>';
+            . '[' . self::SETTING_ID . ']" value="0" ' . $noDebugValue . '><label for="no_debug_mode">' . __('NO DEBUG mode', parent::PLENIGO_SETTINGS_GROUP) . '</label><br>'
+            . '<input type="radio" id="visible_mode" name="' . self::PLENIGO_SETTINGS_NAME
+            . '[' . self::SETTING_ID . ']" value="1" ' . $visibleDebugValue . '><label for="visible_mode">' . __('VERBOSE DEBUG mode', parent::PLENIGO_SETTINGS_GROUP) . '</label><br>'
+            . '<input type="radio" id="debug_log_mode" name="' . self::PLENIGO_SETTINGS_NAME
+            . '[' . self::SETTING_ID . ']" value="' . $tomorrow . '" ' . $logDebugValue . '><label for="debug_log_mode">'
+            . __('VERBOSE LOG FILE mode. Up to: ', parent::PLENIGO_SETTINGS_GROUP) . date('Y-m-d', $tomorrow)
+            . '</label><br>'
+            . __('<br>NOTE: <em>This works if there is not pre-defined WP_DEBUG,WP_DEBUG_LOG or WP_DEBUG_DISPLAY'
+                . ' constants in your wp-config.php or any other plugins that may set those variables.</em>'
+                , self::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
@@ -102,10 +107,10 @@ class SettingDebugMode extends PlenigoWPSetting {
             return true;
         } else
             if (date('Y-m-d', $value)) {
-            return true;
-        } else {
-            return false;
-        }
+                return true;
+            } else {
+                return false;
+            }
     }
 
 }

@@ -76,7 +76,7 @@ class SettingRedirectURL extends PlenigoWPSetting {
      * Returns the text to be used as a hint for the text box
      */
     protected function getHint() {
-        return __('http://', parent::PLENIGO_SETTINGS_GROUP);
+        return 'http://';
     }
 
     /**
