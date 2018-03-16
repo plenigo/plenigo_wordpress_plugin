@@ -196,12 +196,14 @@ class PlenigoShortcodeManager
      */
     public function plenigo_handle_login_shortcode($atts, $content = null, $tag = null) {
         $a = shortcode_atts(array(
-            'title' => "Abmelden",
+            'title' => "Login",
             'cssClass' => "",
             'target' => null
         ), $atts);
 
         $targetUrl = $a["target"];
+        $title = $a["title"];
+        $cssClass = $a["cssClass"];
         $loginSnippet = PlenigoSDKManager::get()->getLoginSnippet();
 
         if (empty($targetUrl) && isset($_GET["redirect"])) {
@@ -211,7 +213,7 @@ class PlenigoShortcodeManager
         if (!empty($targetUrl)) {
             $_SESSION["plenigo_login_redirect_url"] = $targetUrl;
         }
-        return "<a href=\"#\" onclick=\"$loginSnippet return false;\">Abmelden</a>";
+        return "<a href=\"#\" onclick=\"$loginSnippet return false;\" class=\"$cssClass\">$title</a>";
     }
 
     /**
