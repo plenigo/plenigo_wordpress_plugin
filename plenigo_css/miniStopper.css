@@ -91,7 +91,6 @@ article .txt > p, article .txtblock > p {
     text-decoration: none;
     width: auto;
     display: inline-block;
-    background-image: none;
 }
 #PlenigoLogin .btn:hover {
     text-decoration: none;
