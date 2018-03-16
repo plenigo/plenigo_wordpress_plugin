@@ -197,14 +197,16 @@ class PlenigoShortcodeManager
     public function plenigo_handle_login_shortcode($atts, $content = null, $tag = null) {
         $a = shortcode_atts(array(
             'title' => "Login",
-            'cssClass' => "",
+            'css_class' => "",
             'target' => null
         ), $atts);
 
         $targetUrl = $a["target"];
         $title = $a["title"];
-        $cssClass = $a["cssClass"];
+        $cssClass = $a["css_class"];
         $loginSnippet = PlenigoSDKManager::get()->getLoginSnippet();
+
+        error_log("Attributes without filter: ". print_r($atts, true) . ", Attributes with filter: " . print_r($a, true));
 
         if (empty($targetUrl) && isset($_GET["redirect"])) {
             $targetUrl = $_GET["redirect"];
