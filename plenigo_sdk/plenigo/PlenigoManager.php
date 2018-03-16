@@ -6,6 +6,7 @@ require_once __DIR__ . '/internal/models/Configuration.php';
 require_once __DIR__ . '/internal/ApiURLs.php';
 require_once __DIR__ . '/internal/PlenigoLogger.php';
 
+use plenigo\internal\Cache;
 use plenigo\internal\models\Configuration;
 use plenigo\internal\PlenigoLogger;
 
@@ -36,7 +37,7 @@ final class PlenigoManager {
     const PLENIGO_VIEW_COOKIE_NAME = 'plenigo_view';
 
     /**
-     * Error message when the manager hasn't been configured.
+     * Error message when the manager hasn't been configured
      */
     const ERROR_MSG_CONFIGURE = "Plenigo Manager needs to be configured first.";
 
@@ -56,7 +57,7 @@ final class PlenigoManager {
     private $loggable;
 
     /**
-     * Debug variable for PlenigoLogger commands.
+     * Debug variable for PlenigoLogger commands
      *
      * @var bool
      */
@@ -102,7 +103,6 @@ final class PlenigoManager {
      * Singleton instance retrieval method.
      *
      * @return PlenigoManager Singleton instance of {@link plenigo.PlenigoManager}
-     *
      * @throws Exception when the PlenigoManager has not been previously configured.
      */
     public static function get() {
@@ -179,13 +179,25 @@ final class PlenigoManager {
     }
 
     /**
+     * Configure Cache. Each engine may have their own set of settings.
+     * To choose an engine use $settings['engine']
+     * Engines Memcache, Memcached and APCu are implemented yet.
+     * If not set, we will use APCu if enabled or none
+     * If you want to go without any cache, set $settings['engine'] to 'None'
+     *
+     * @param array $settings
+     */
+    public static function configureCache(array $settings) {
+        Cache::configure($settings);
+    }
+
+    /**
      * Convenience method for calling NOTICE info messages. The object reference is needed to show the referenced
      * class that is calling this method. An optional Exception can be sent so it outputs the entire stacktrace.
      *
      * @param mixed $obj can be an object, a string or any other variable, if its an object, it's class is shown
      * @param string $msg the NOTICE message to send
      * @param Exception $exc an optional Exception object to show its stacktrace and messages
-     *
      * @return bool returns FALSE only if the object reference or message are NULL
      */
     public static function notice($obj, $msg, $exc = null) {

@@ -19,6 +19,7 @@ use PHPUnit\Runner\Exception;
 use plenigo\internal\ApiParams;
 use plenigo\internal\ApiResults;
 use plenigo\internal\ApiURLs;
+use plenigo\internal\Cache;
 use plenigo\internal\models\Customer;
 use plenigo\internal\services\Service;
 use plenigo\internal\utils\CurlRequest;
@@ -112,6 +113,13 @@ class UserService extends Service
      */
     public static function verifyLogin($email, $password, $data = array(), &$error = '') {
 
+        $result = Cache::get(md5($email.$password));
+
+        if (null !== $result && is_array($result)) {
+            $error = $result['error'];
+            return $result['result'];
+        }
+
         $clazz = get_class();
         PlenigoManager::notice($clazz, "Verifying the user's login");
 
@@ -126,6 +134,11 @@ class UserService extends Service
 
         try {
             $result = parent::executeRequest($LoginRequest, ApiURLs::USER_LOGIN, self::ERR_USER_LOGIN);
+            $cachedData = array(
+                'result' => $result,
+                'error'  => $error
+            );
+            Cache::set(md5($email.$password), $cachedData);
             return $result;
         }
         // we only catch one specific Exception
@@ -142,6 +155,12 @@ class UserService extends Service
             $error = $result['error'];
         }
 
+        $cachedData = array(
+            'result' => false,
+            'error'  => $error
+        );
+
+        Cache::set(md5($email.$password), $cachedData);
         return false;
     }
 
