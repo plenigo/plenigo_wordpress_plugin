@@ -171,7 +171,7 @@ class PlenigoShortcodeManager
             'target' => "",
             'affiliate' => "",
             'price' => "",
-            'quantity_title' => "Stückzahl",
+            'quantity_title' => "Stückzahl",        //Amount
             'quantity_class' => "",
             'quantity_label_class' => "",
             'hide_when_bought' => "1",

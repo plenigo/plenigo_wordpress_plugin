@@ -198,9 +198,9 @@ class PlenigoSettingsPage
                     . '</p>'
                     . '<p>Obtain your <b>Company ID</b> and <b>Private Key</b>, we are almost there...'
                     . '</p>'
-                    . '<p>Ok, last step, <a target="_blank" href="', self::PLENIGO_SETTINGS_GROUP)
-                . PLENIGO_SVC_URL
-                . __('/company/product/create">create one or more managed product</a> and copy the product id'
+                    . '<p>Ok, last step, ', self::PLENIGO_SETTINGS_GROUP)
+                . '<a target="_blank" href="/company/product/create">' . PLENIGO_SVC_URL
+                . __('create one or more managed product</a> and copy the product id'
                     . ', type the TAG, paste the product ID into the text field below and click ADD to append it to the tag list.'
                     . '</p>', self::PLENIGO_SETTINGS_GROUP)
         ,
@@ -474,9 +474,11 @@ class PlenigoSettingsPage
     public function print_section_advanced() {
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_advanced_section">'
             . '<h3>' . __('Advanced settings', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
-            . '<h2 style="color:red;">HANDS OFF!!</h2>'
-            . 'Please make sure you understand what it means to enable these settings because it can be dangerous to expose '
-            . 'this information to the user, or the plugin could compromise the site\'s look & feel.';
+            . '<h2 style="color:red;">' . __('HANDS OFF!!', self::PLENIGO_SETTINGS_GROUP) . '</h2>'
+            . __('Please make sure you understand what it means to enable these settings '
+                . 'because it can be dangerous to expose '
+                . 'this information to the user, or the plugin could compromise the site\'s look & feel.'
+                , self::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
@@ -486,8 +488,10 @@ class PlenigoSettingsPage
         $logListTable = new LogTable();
         print '</div><div role="tabpanel" class="tab-pane active" id="plenigo_error_logs_section">'
             . '<h3>' . __('Error Logs', self::PLENIGO_SETTINGS_GROUP) . '</h3>'
-            . '<p>This is where the error logs are, '
-            . 'with this information we can give you better support for any issues you have with this plugin.</p>';
+            . '<p>' . __('This is where the error logs are, '
+                . 'with this information we can give you better support for any issues you have with this plugin.'
+                , self::PLENIGO_SETTINGS_GROUP)
+            . '</p>';
         $logListTable->prepare_items();
         $logListTable->display();
         ?>
@@ -495,7 +499,10 @@ class PlenigoSettingsPage
 
         </div>
         <p class="submit">
-            <button type="button" id="mailLogBtn" class="button button-primary" name="mailLogButton">Send Mail Log
+            <button type="button" id="mailLogBtn" class="button button-primary" name="mailLogButton">
+                <?php
+                print _('Send Mail Log', self::PLENIGO_SETTINGS_GROUP);
+                ?>
             </button>
         </p>
         <?php
@@ -571,7 +578,8 @@ class PlenigoSettingsPage
         $logFileName = "$tmpfname.log";
         file_put_contents($logFileName, $logData);
         wp_mail($to, $subject, $message, array(), array($logFileName));
-        $response = array(result => 'success', message => 'email was sent');
+        $response = array(result => 'success', message => __('The email was sent successfully'
+            , self::PLENIGO_SETTINGS_GROUP));
         die(json_encode($response));
     }
 
@@ -724,7 +732,7 @@ class PlenigoSettingsPage
                         success: function (response) {
                             var returnedData = JSON.parse(response);
                             if (returnedData.result === "success") {
-                                jQuery("#alert-area").after('<div class="update-nag">The email was sent successfully.</div>');
+                                jQuery("#alert-area").after('<div class="update-nag">' + returnedData.message + '</div>');
                                 setTimeout(function () {
                                     $('.update-nag').remove();
                                 }, 3000);
