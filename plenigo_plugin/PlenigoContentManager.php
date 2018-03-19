@@ -380,6 +380,10 @@ class PlenigoContentManager
             $hasAnyProdTag = $this->hasAnyProductTag();
             $hasProdIdList = false;
             if ($typesPluginPaywall) {
+                if (isset($_SESSION["pl_override_paywall"])) {
+                    //users with this session attribute override the paywall check for the plugin paywall
+                    return FALSE;
+                }
                 $plenigoGroupOne = (isset($this->options['plenigo_product_group_one_db']) ? $this->options['plenigo_product_group_one_db'] : '');
                 $plenigoGroupTwo = (isset($this->options['plenigo_product_group_two_db']) ? $this->options['plenigo_product_group_two_db'] : '');
                 $csvList = array();
