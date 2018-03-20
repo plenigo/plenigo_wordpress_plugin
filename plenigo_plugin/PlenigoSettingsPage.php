@@ -465,7 +465,7 @@ class PlenigoSettingsPage
             . '<a href="http://www.woothemes.com/woocommerce/" target="_blank">WooCommerce</a>. '
             . __('It allows you to use the powerful features in ', self::PLENIGO_SETTINGS_GROUP)
             . '<a href="http://www.woothemes.com/woocommerce/" target="_blank">'
-            . 'WooCommerce</a>' . __('and use plenigo as payment method.', self::PLENIGO_SETTINGS_GROUP);
+            . 'WooCommerce</a>' . __(' and use plenigo as payment method.', self::PLENIGO_SETTINGS_GROUP);
     }
 
     /**
