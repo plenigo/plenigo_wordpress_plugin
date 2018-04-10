@@ -321,4 +321,15 @@ class PlenigoSDKManager
         }
         return $profileUrl;
     }
+
+    public function getPlenigoGroupOne() {
+        $csvList = array();
+        $options = get_option(self::PLENIGO_SETTINGS_NAME, array());
+        $plenigoGroupOne = (isset($options['plenigo_product_group_one_db']) ? $this->options['plenigo_product_group_one_db'] : '');
+        if (!empty($plenigoGroupOne)) {
+            $csvList = explode(',', $plenigoGroupOne);
+            $csvList = array_map('trim', $csvList);
+        }
+        return $csvList;
+    }
 }
