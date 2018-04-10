@@ -322,6 +322,11 @@ class PlenigoSDKManager
         return $profileUrl;
     }
 
+    /**
+     * Get the group one product list.
+     * 
+     * @return array product list as array
+     */
     public function getPlenigoGroupOne() {
         $csvList = array();
         $options = get_option(self::PLENIGO_SETTINGS_NAME, array());
