@@ -106,7 +106,7 @@ class Service {
         }
 
         return RestClient::post($url, $params);
-}
+    }
 
     /**
      * Returns a response to a POST RestClient request to a specific

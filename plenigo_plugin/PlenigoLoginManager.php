@@ -238,6 +238,9 @@ class PlenigoLoginManager
         if (isset($_SESSION["plenigo_checkout_redirect_url"]) && isset($_GET["paymentState"]) && $_GET["paymentState"] == "success") {
             $redirectUrl = $_SESSION["plenigo_checkout_redirect_url"];
             unset($_SESSION["plenigo_checkout_redirect_url"]);
+        } else if(isset($_SESSION["plenigo_login_redirect_url"])) {
+            $redirectUrl = $_SESSION["plenigo_login_redirect_url"];
+            unset($_SESSION["plenigo_login_redirect_url"]);
         }
         error_log("REDIRECTING TO $redirectUrl");
         plenigo_log_message("Redirecting to:" . $redirectUrl . "  <<<END>>>");

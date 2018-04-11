@@ -80,6 +80,7 @@ class PlenigoShortcodeManager
         add_shortcode('pl_user_profile', array($this, 'plenigo_handle_user_shortcode'));
         add_shortcode('pl_snippet', array($this, 'plenigo_handle_snippet_shortcode'));
         add_shortcode('pl_mobile_admin', array($this, 'plenigo_handle_mobile_admin'));
+        add_shortcode('pl_login_link', array($this, 'plenigo_handle_login_shortcode'));
 
         //TinyMCE
         // add new buttons
@@ -175,11 +176,46 @@ class PlenigoShortcodeManager
             'quantity_class' => "",
             'quantity_label_class' => "",
             'hide_when_bought' => "1",
-            'max_quantity' => 1
+            'max_quantity' => 1,
+            'post_id' => get_the_ID(),
+            'use_post_title' => "0"
         ), $atts);
         $a['withQuantity'] = true;
 
         return $this->getCheckoutSnippet($a, $content, $tag);
+    }
+
+    /**
+     * Handle login short code.
+     *
+     * @param $atts attributes
+     * @param null $content content
+     * @param null $tag shortcode tag
+     *
+     * @return string rendered snippet
+     */
+    public function plenigo_handle_login_shortcode($atts, $content = null, $tag = null) {
+        $a = shortcode_atts(array(
+            'title' => "Login",
+            'css_class' => "",
+            'target' => null
+        ), $atts);
+
+        $targetUrl = $a["target"];
+        $title = $a["title"];
+        $cssClass = $a["css_class"];
+        $loginSnippet = PlenigoSDKManager::get()->getLoginSnippet();
+
+        error_log("Attributes without filter: ". print_r($atts, true) . ", Attributes with filter: " . print_r($a, true));
+
+        if (empty($targetUrl) && isset($_GET["redirect"])) {
+            $targetUrl = $_GET["redirect"];
+        }
+
+        if (!empty($targetUrl)) {
+            $_SESSION["plenigo_login_redirect_url"] = $targetUrl;
+        }
+        return "<a href=\"#\" onclick=\"$loginSnippet return false;\" class=\"$cssClass\">$title</a>";
     }
 
     /**
@@ -609,23 +645,31 @@ class PlenigoShortcodeManager
      *
      * @return string the button title
      */
-    private function getButtonTitle($prodId) {
+    private function getButtonTitle($prodId, $title, $price) {
         $prodName = 'Unknown product';
         $prodPrice = '??.??';
         // get product data
         try {
             $productData = \plenigo\services\ProductService::getProductData($prodId);
-            $prodName = $productData->getTitle();
+
+            if (empty($title)) {
+                $prodName = $productData->getTitle();
+            }
             if ($productData->isPriceChosen()) {
                 $prodPrice = __('Choose payment!', self::PLENIGO_SETTINGS_GROUP);
             } else {
-                $prodPrice = $productData->getCurrency() . ' ' . sprintf("%06.2f", $productData->getPrice());
+                if (empty($price)) {
+                    $price = $productData->getPrice();
+                }
+                $prodPrice = $productData->getCurrency() . ' ' . sprintf("%6.2f", $price);
             }
         } catch (\Exception $exc) {
             plenigo_log_message($exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING);
             error_log($exc->getMessage() . ': ' . $exc->getTraceAsString());
         }
-
+        if (!empty($title)) {
+            $prodName = $title;
+        }
         return $prodName . " (" . $prodPrice . ")";
     }
 
@@ -752,6 +796,8 @@ class PlenigoShortcodeManager
         $quantityLabelCssClass = $atts['quantity_label_class'];
         $quantityTitle = $atts['quantity_title'];
         $maxQuantity = $atts['max_quantity'];
+        $postId = $atts['post_id'];
+        $usePostTitle = $atts['use_post_title'];
 
         //evaluate the condition
         $renderButton = null;
@@ -769,8 +815,8 @@ class PlenigoShortcodeManager
                 $renderButton = true;
             }
         }
-        
-        if(!empty($price) && !is_numeric($price)) {
+
+        if (!empty($price) && !is_numeric($price)) {
             plenigo_log_message("Product price is incorrect, not rendering the checkout button: " . $price, E_USER_ERROR);
             $renderButton = false;
         }
@@ -784,7 +830,11 @@ class PlenigoShortcodeManager
             }
 
             if ($prodId !== "" && $btnTitle === "") {
-                $btnTitle = $this->getButtonTitle($prodId);
+                $title = null;
+                if ($usePostTitle === "1") {
+                    $title = get_the_title($postId);
+                }
+                $btnTitle = $this->getButtonTitle($prodId, $title, $price);
             }
             $checkoutSnippet = $this->buildCheckoutSnippet($atts, $tag, $prodId);
             $quantityHtml = '';
@@ -800,7 +850,7 @@ class PlenigoShortcodeManager
                 . ' class="button button-primary ' . $cssClass . '" '
                 . ' value="' . $btnTitle . '" '
                 . ' onclick="' . $checkoutSnippet . '" data-product-data=\'' . base64_encode(json_encode($atts)) . '\''
-                . ' data-verification-hash="' . $this->buildProductHash($prodId, $price, $maxQuantity) . '" />';
+                . ' data-verification-hash="' . $this->buildProductHash($prodId, $price, $maxQuantity, $postId) . '" />';
         } else { //Return the content untouched
             return do_shortcode($content);
         }
@@ -821,7 +871,9 @@ class PlenigoShortcodeManager
         $regCheck = $atts['register'];
         $sourceURL = $atts['source'];
         $targetURL = $atts['target'];
-        if(isset($_GET["pl_checkout_target"])){
+        $postId = $atts['post_id'];
+        $usePostTitle = $atts['use_post_title'];
+        if (isset($_GET["pl_checkout_target"])) {
             $targetURL = $_GET["pl_checkout_target"];
         }
         $affiliate = $atts['affiliate'];
@@ -846,74 +898,85 @@ class PlenigoShortcodeManager
         $checkoutSnippet = "alert('The button was not configured correctly')";
 
         if ($prodId !== "") {
+
             // creating atts plenigo-managed product
             if ($tag === 'pl_failed') {
                 $product = \plenigo\models\ProductBase::buildFailedPaymentProduct();
             } else {
+                $title = null;
+                if ($usePostTitle === "1") {
+                    $title = get_the_title($postId);
+                }
+
                 if (!empty($price)) {
                     if (empty($quantity) || !is_numeric($quantity)) {
                         $quantity = 1;
                     }
-                    $title = null;
-                    if ($quantity > 1) {
+                    $productTitle = $title;
+                    if (empty($productTitle)) {
                         $productData = null;
                         try {
                             $productData = \plenigo\services\ProductService::getProductData($prodId);
+                            if ($productData !== null && !empty($productData->getTitle())) {
+                                $title = $productData->getTitle();
+                            } else {
+                                $productTitle = "Item";
+                            }
                         } catch (\Exception $exc) {
                             plenigo_log_message($exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING);
                         }
-                        if ($productData !== null && !empty($productData->getTitle())) {
-                            $title = "$quantity x " . $productData->getTitle();
-                        } else {
-                            $title = "$quantity x Item";
-                        }
-                    }
 
+                    }
+                    if ($quantity > 1) {
+                        $title = "$quantity x " . $productTitle;
+                    }
                     $product = new \plenigo\models\ProductBase($prodId, $title, ($price * $quantity), null);
                     $product->setCustomAmount(true);
+                } else if (!empty($title)) {
+                    $product = new \plenigo\models\ProductBase($prodId, $title);
                 } else {
                     $product = new \plenigo\models\ProductBase($prodId);
                 }
             }
-
-            if ($tag === 'pl_renew') {
-                $product->setSubscriptionRenewal(true);
-            }
-
-            // getting the CSRF Token
-            $csrfToken = PlenigoSDKManager::get()->get_csrf_token();
-            try {
-
-                // creating the checkout snippet for this product
-                $checkoutBuilder = new \plenigo\builders\CheckoutSnippetBuilder($product);
-
-                $coSettings = array('csrfToken' => $csrfToken, 'testMode' => $testMode);
-                if ($useOauthLogin) {
-                    // this url must be registered in plenigo
-                    $coSettings['oauth2RedirectUrl'] = $this->options['redirect_url'];
-                    plenigo_log_message("url: " . $coSettings['oauth2RedirectUrl']);
-                }
-
-                if (empty(trim($sourceURL))) {
-                    $sourceURL = null;
-                }
-                if (empty(trim($targetURL))) {
-                    $targetURL = null;
-                } else {
-                    $_SESSION["plenigo_checkout_redirect_url"] = $targetURL;
-                }
-                if (empty(trim($affiliate))) {
-                    $affiliate = null;
-                }
-
-                // checkout snippet
-                $checkoutSnippet = $checkoutBuilder->build($coSettings, null, $useRegister, $sourceURL, $targetURL, $affiliate);
-            } catch (\Exception $exc) {
-                plenigo_log_message($exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING);
-                error_log($exc->getMessage() . ': ' . $exc->getTraceAsString());
-            }
         }
 
+        if ($tag === 'pl_renew') {
+            $product->setSubscriptionRenewal(true);
+        }
+
+        // getting the CSRF Token
+        $csrfToken = PlenigoSDKManager::get()->get_csrf_token();
+        try {
+
+            error_log("Product data " . print_r($product, true));
+            // creating the checkout snippet for this product
+            $checkoutBuilder = new \plenigo\builders\CheckoutSnippetBuilder($product);
+
+            $coSettings = array('csrfToken' => $csrfToken, 'testMode' => $testMode);
+            if ($useOauthLogin) {
+                // this url must be registered in plenigo
+                $coSettings['oauth2RedirectUrl'] = $this->options['redirect_url'];
+                plenigo_log_message("url: " . $coSettings['oauth2RedirectUrl']);
+            }
+
+            if (empty(trim($sourceURL))) {
+                $sourceURL = null;
+            }
+            if (empty(trim($targetURL))) {
+                $targetURL = null;
+            } else {
+                $_SESSION["plenigo_checkout_redirect_url"] = $targetURL;
+            }
+            if (empty(trim($affiliate))) {
+                $affiliate = null;
+            }
+
+            // checkout snippet
+            $checkoutSnippet = $checkoutBuilder->build($coSettings, null, $useRegister, $sourceURL, $targetURL, $affiliate);
+        } catch (\Exception $exc) {
+            plenigo_log_message($exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING);
+            error_log($exc->getMessage() . ': ' . $exc->getTraceAsString());
+        }
         return $checkoutSnippet;
     }
 
@@ -934,7 +997,8 @@ class PlenigoShortcodeManager
                 die(json_encode($result));
             }
         }
-        $comparationHash = $this->buildProductHash($productData['prod_id'], $productData['price'], $productData['max_quantity']);
+        $comparationHash = $this->buildProductHash($productData['prod_id'], $productData['price'],
+            $productData['max_quantity'], $productData['post_id']);
 
         if ($comparationHash !== $verificationHash) {
             $result["message"] = 'The information sent is invalid';
@@ -951,7 +1015,7 @@ class PlenigoShortcodeManager
         $productData['quantity'] = $quantity;
         $productData['withQuantity'] = false;
         $result["success"] = true;
-        $result["message"] = $this->getCheckoutSnippet($productData, null, $productData['tag']);;
+        $result["message"] = $this->getCheckoutSnippet($productData, null, $productData['tag']);
         die(json_encode($result));
     }
 
@@ -961,8 +1025,8 @@ class PlenigoShortcodeManager
      * @return string
      * @throws \plenigo\Exception
      */
-    public function buildProductHash($prodId, $price, $maxQuantity) {
-        return hash_hmac("sha256", "$prodId|$price|$maxQuantity", PlenigoSDKManager::get()->getPlenigoSDK()->getSecret());
+    public function buildProductHash($prodId, $price, $maxQuantity, $postId) {
+        return hash_hmac("sha256", "$prodId|$price|$maxQuantity|$postId", PlenigoSDKManager::get()->getPlenigoSDK()->getSecret());
     }
 
     /**
