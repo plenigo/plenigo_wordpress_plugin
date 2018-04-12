@@ -928,7 +928,7 @@ class PlenigoShortcodeManager
 
                     }
                     if ($quantity > 1) {
-                        $title = "$quantity x " . $productTitle;
+                        $title = "$quantity x $productTitle";
                     }
                     $product = new \plenigo\models\ProductBase($prodId, $title, ($price * $quantity), null);
                     $product->setCustomAmount(true);
