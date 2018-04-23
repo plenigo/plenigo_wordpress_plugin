@@ -206,8 +206,6 @@ class PlenigoShortcodeManager
         $cssClass = $a["css_class"];
         $loginSnippet = PlenigoSDKManager::get()->getLoginSnippet();
 
-        error_log("Attributes without filter: ". print_r($atts, true) . ", Attributes with filter: " . print_r($a, true));
-
         if (empty($targetUrl) && isset($_GET["redirect"])) {
             $targetUrl = $_GET["redirect"];
         }
@@ -322,6 +320,12 @@ class PlenigoShortcodeManager
             $arr_types[] = "plenigo.Snippet.PAYMENT_METHODS";
             $arr_types[] = "plenigo.Snippet.ADDRESS_DATA";
 
+            $all_types = array_merge(array('plenigo.Snippet.BILLING_ADDRESS_DATA', 
+                'plenigo.Snippet.DELIVERY_ADDRESS_DATA', 'plenigo.Snippet.BANK_ACCOUNT', 'plenigo.Snippet.CREDIT_CARD',
+                'plenigo.Snippet.PERSONAL_DATA_SETTINGS', 'plenigo.Snippet.PERSONAL_DATA_ADDRESS',
+                'plenigo.Snippet.PERSONAL_DATA_PROTECTION', 'plenigo.Snippet.PERSONAL_DATA_SOCIAL_MEDIA',
+                'plenigo.Snippet.PERSONAL_DATA_PASSWORD'), $arr_types);
+
             if (stristr($a['redirectUrlBox'], "no") || stristr($a['redirectUrl'], "")) {
                 $redirectUrl = get_home_url();
             } else {
@@ -345,7 +349,7 @@ class PlenigoShortcodeManager
                     $content .= $endJQuery . "\n" . $endTag;
                 }
             } else {
-                if (in_array($a['name'], $arr_types)) {
+                if (in_array($a['name'], $all_types)) {
                     $genID = uniqid("snip");
                     $content .= '<div id="' . $genID . '"></div>' . "\n";
 
@@ -908,32 +912,42 @@ class PlenigoShortcodeManager
                     $title = get_the_title($postId);
                 }
 
-                if (!empty($price)) {
-                    if (empty($quantity) || !is_numeric($quantity)) {
-                        $quantity = 1;
-                    }
+                if (empty($quantity) || !is_numeric($quantity)) {
+                    $quantity = 1;
+                }
+
+                if (empty($price) || !is_numeric($price)) {
+                    $price = null;
+                }
+
+                if ($quantity > 1 || !empty($title) || !empty($price)) {
+
                     $productTitle = $title;
-                    if (empty($productTitle)) {
+                    if (empty($productTitle) || empty($price)) {
                         $productData = null;
                         try {
                             $productData = \plenigo\services\ProductService::getProductData($prodId);
-                            if ($productData !== null && !empty($productData->getTitle())) {
-                                $title = $productData->getTitle();
-                            } else {
-                                $productTitle = "Item";
+                            if (empty($productTitle)) {
+                                if ($productData !== null && !empty($productData->getTitle())) {
+                                    $productTitle = $productData->getTitle();
+                                } else {
+                                    $productTitle = "Item";
+                                }
+                            }
+                            if (empty($price)) {
+                                $price = $productData->getPrice();
                             }
                         } catch (\Exception $exc) {
                             plenigo_log_message($exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING);
+                            return 'alert(\'The product was not configured correctly!\')';
                         }
 
                     }
                     if ($quantity > 1) {
                         $title = "$quantity x $productTitle";
                     }
-                    $product = new \plenigo\models\ProductBase($prodId, $title, ($price * $quantity), null);
+                    $product = new \plenigo\models\ProductBase($prodId, $title, (floatval($price) * floatval($quantity)), null);
                     $product->setCustomAmount(true);
-                } else if (!empty($title)) {
-                    $product = new \plenigo\models\ProductBase($prodId, $title);
                 } else {
                     $product = new \plenigo\models\ProductBase($prodId);
                 }
@@ -947,8 +961,6 @@ class PlenigoShortcodeManager
         // getting the CSRF Token
         $csrfToken = PlenigoSDKManager::get()->get_csrf_token();
         try {
-
-            error_log("Product data " . print_r($product, true));
             // creating the checkout snippet for this product
             $checkoutBuilder = new \plenigo\builders\CheckoutSnippetBuilder($product);
 

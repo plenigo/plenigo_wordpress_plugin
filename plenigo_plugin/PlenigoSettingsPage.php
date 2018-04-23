@@ -134,8 +134,11 @@ class PlenigoSettingsPage
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainCategoryMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingPreventTag());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCustomCurtainDB());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupOneDB());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupTwoDB());
+        //Use this to check if you should show the groups based on toolset plugin
+        if(function_exists('types_render_field')) {
+            array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupOneDB());
+            array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupTwoDB());
+        }
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonBuy());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCustom());
@@ -143,9 +146,6 @@ class PlenigoSettingsPage
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCatCustom());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCatCustomURL());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainBuyTextDB());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingUseWoo());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingWooOrderTitle());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingWooProductType());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseQuietReport());
         array_push($this->settings, new \plenigo_plugin\settings\SettingDebugMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingWelcomeURL());
@@ -260,10 +260,6 @@ class PlenigoSettingsPage
             . 'aria-controls="plenigo_curtain_section" role="tab" data-toggle="tab">'
             . __('Curtain Customization', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
 
-        echo '<li role="presentation" class="active"><a href="#plenigo_woo_section" '
-            . 'aria-controls="plenigo_woo_section" role="tab" data-toggle="tab">'
-            . __('WooCommerce', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
-
         echo '<li role="presentation" class="active"><a href="#plenigo_advanced_section" '
             . 'aria-controls="plenigo_advanced_section" role="tab" data-toggle="tab">'
             . __('Advanced', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
@@ -328,13 +324,6 @@ class PlenigoSettingsPage
             'plenigo_curtain_section', // ID
             "", // Title
             array($this, 'print_section_curtain'), // Callback
-            self::PLENIGO_SETTINGS_PAGE // Page
-        );
-
-        add_settings_section(
-            'plenigo_woo_section', // ID
-            "", // Title
-            array($this, 'print_section_woo'), // Callback
             self::PLENIGO_SETTINGS_PAGE // Page
         );
 
