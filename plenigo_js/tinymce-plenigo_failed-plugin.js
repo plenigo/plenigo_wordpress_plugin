@@ -8,14 +8,14 @@ tinymce.PluginManager.add('plenigo_failed', function (editor, url) {
         onclick: function () {
             // Open setup window
             editor.windowManager.open({
-                title: 'Plenigo Failed Payments Button',
+                title: 'plenigo Failed Payments Button',
                 body: [
                     {type: 'textbox', name: 'title', label: 'Button Title'},
                     {type: 'textbox', name: 'cssClass', label: 'Button CSS class'}
                 ],
                 onsubmit: function (e) {
                     var selected_text = editor.selection.getContent();
-                    var return_text = '';
+
                     var title_text = '';
                     var class_text = '';
                     if (e.data.title.trim() !== '') {
@@ -24,12 +24,12 @@ tinymce.PluginManager.add('plenigo_failed', function (editor, url) {
                     if (e.data.cssClass.trim() !== '') {
                         class_text = ' class="' + e.data.cssClass.trim() + '" ';
                     }
-                    return_text = '[pl_failed '
-                            + title_text
-                            + class_text
-                            + ' ]'
-                            + selected_text
-                            + '[/pl_failed]';
+                    var return_text = '[pl_failed '
+                        + title_text
+                        + class_text
+                        + ' ]'
+                        + selected_text
+                        + '[/pl_failed]';
                     editor.execCommand('mceInsertContent', false, return_text);
                 }
             });

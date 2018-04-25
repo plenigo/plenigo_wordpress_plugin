@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plenigo_plugin 1.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-19 14:17+0100\n"
-"PO-Revision-Date: 2018-03-19 17:50+0100\n"
+"POT-Creation-Date: 2018-04-25 12:34+0200\n"
+"PO-Revision-Date: 2018-04-25 12:36+0200\n"
 "Last-Translator: admin <info@plenigo.com>\n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -22,34 +22,17 @@ msgstr ""
 "X-Loco-Target-Locale: es_ES\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: plenigo_plugin/PlenigoContentManager.php:792
-#: plenigo_plugin/PlenigoContentManager.php:794
-msgid "*[ERROR check Product ID]"
-msgstr "*[ERROR revise el ID del producto]"
-
-#: plenigo_plugin/PlenigoContentManager.php:793
-msgid "*[ERROR]"
-msgstr "*[ERROR]"
-
-#: plenigo_plugin/PlenigoContentManager.php:800
-msgid "This product has not been configured correctly!"
-msgstr "El producto no ha sido configurado correctamente"
-
-#: plenigo_plugin/PlenigoContentManager.php:805
-msgid "The login API doesn\\'t work!"
-msgstr "La API de inicio de sesión no está funcionando"
-
-#: plenigo_plugin/PlenigoContentManager.php:878
-#: plenigo_plugin/PlenigoShortcodeManager.php:620
+#: plenigo_plugin/PlenigoContentManager.php:877
+#: plenigo_plugin/PlenigoShortcodeManager.php:663
 msgid "Choose payment!"
 msgstr "Elija forma de pago!"
 
-#: plenigo_plugin/PlenigoContentManager.php:1091
+#: plenigo_plugin/PlenigoContentManager.php:1090
 #: plenigo_plugin/settings/SettingNoscriptTitle.php:45
 msgid "You need JavaScript"
 msgstr "Ud. necesita JavaScript"
 
-#: plenigo_plugin/PlenigoContentManager.php:1092
+#: plenigo_plugin/PlenigoContentManager.php:1091
 #: plenigo_plugin/settings/SettingNoscriptMessage.php:45
 msgid ""
 "In order to provide you with the best experience, this site requires that "
@@ -59,20 +42,26 @@ msgstr ""
 "permita que se ejecute JavaScript. Por favor, corrija eso y vuelve a "
 "intentarlo."
 
-#: plenigo_plugin/PlenigoLoginManager.php:305
-msgid "Mr./Ms"
+#: plenigo_plugin/PlenigoLoginManager.php:308
+#, fuzzy
+#| msgid "Mr./Ms"
+msgid "Mr./Mis"
 msgstr "Sr. / Sra"
 
-#: plenigo_plugin/PlenigoLoginWidget.php:55
-msgid "Plenigo login"
+#: plenigo_plugin/PlenigoLoginWidget.php:54
+#: plenigo_plugin/PlenigoLoginWidget.php:118
+#: plenigo_plugin/PlenigoLoginWidget.php:147
+#, fuzzy
+#| msgid "Plenigo login"
+msgid "plenigo login"
 msgstr "Inicio de sesión plenigo"
 
-#: plenigo_plugin/PlenigoLoginWidget.php:56
+#: plenigo_plugin/PlenigoLoginWidget.php:55
 msgid ""
-"This is the Plegino Login widget. Here you will find the plenigo login "
+"This is the plenigo login widget. Here you will find the plenigo login "
 "button or the user profile data related to the plenigo user."
 msgstr ""
-"Este es el widget de inicio de sesión de Plegino. Aquí encontrará el botón "
+"Este es el widget de inicio de sesión de plenigo. Aquí encontrará el botón "
 "de inicio de sesión de plenigo o los datos del perfil de usuario "
 "relacionados con el usuario de plenigo."
 
@@ -100,11 +89,6 @@ msgstr "Olvide clave"
 msgid "WordPress Login"
 msgstr "Inicio de Sesión de Wordpress"
 
-#: plenigo_plugin/PlenigoLoginWidget.php:118
-#: plenigo_plugin/PlenigoLoginWidget.php:147
-msgid "Plenigo Login"
-msgstr "Inicio de Sesión Plenigo"
-
 #: plenigo_plugin/PlenigoLoginWidget.php:119
 msgid "Welcome, "
 msgstr "Bienvenido, "
@@ -123,56 +107,23 @@ msgstr "Cerrar Sesión"
 msgid "Title:"
 msgstr "Título:"
 
-#: plenigo_plugin/PlenigoLoginWidget.php:129
-msgid "LOGIN FORM LABELS"
-msgstr "LOGIN FORM LABELS"
-
-#: plenigo_plugin/PlenigoLoginWidget.php:154
-msgid "LOGIN STATUS LABELS"
-msgstr "LOGIN STATUS LABELS"
-
 #: plenigo_plugin/PlenigoLoginWidget.php:156
 msgid "Welcome, <name>"
 msgstr "Bienvenido, <nombre>"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:167
-msgid "Plenigo Options"
-msgstr "Inicio de sesión plenigo"
-
 #: plenigo_plugin/PlenigoSettingsPage.php:195
-msgid "Plenigo Help"
-msgstr "Ayuda de Plenigo"
+msgid "plenigo help"
+msgstr "Ayuda de plenigo"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:196
-msgid ""
-"<p>In order to configure the plenigo Paywall, first got to the plenigo "
-"Website and register as a business. </p><p>Obtain your <b>Company ID</b> and "
-"<b>Private Key</b>, we are almost there...</p><p>Ok, last step, "
-msgstr ""
-"<p>Para configurar el Paywall de plenigo, first got to the plenigo Website "
-"and register as a business. </p><p>Obtain your <b>Company ID</b> and "
-"<b>Private Key</b>, we are almost there...</p><p>Ok, last step, "
-
-#: plenigo_plugin/PlenigoSettingsPage.php:203
-msgid ""
-"create one or more managed product</a> and copy the product id, type the "
-"TAG, paste the product ID into the text field below and click ADD to append "
-"it to the tag list.</p>"
-msgstr ""
-"crear uno o más productos manejados por plenigo</a> y copie el id del "
-"producto, escriba la TAG(etiqueta), pegue el ID del producto en el campo de "
-"texto debajo y haga click en ADD(Agregar) para concatenarla en la lista de "
-"etiquetas.</p>"
-
-#: plenigo_plugin/PlenigoSettingsPage.php:210
+#: plenigo_plugin/PlenigoSettingsPage.php:209
 msgid "plenigo OAuth Help"
 msgstr "Ayuda Oauth de Plenigo"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:211
+#: plenigo_plugin/PlenigoSettingsPage.php:210
 msgid "In order to configure plenigo OAuth Login: "
 msgstr "Para configurar el inicio de sesión OAuth de plenigo:"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:212
+#: plenigo_plugin/PlenigoSettingsPage.php:211
 msgid ""
 "1 - Add Login redirect URL to plenigo (Usually: <b>{YOUR BLOG URL}/wp-login."
 "php</b>) "
@@ -180,17 +131,17 @@ msgstr ""
 "1 - Agregue la URL de redirección en penigo (Normalmente: <b>{URL de su "
 "BLOG}/wp-login.php</b>) "
 
-#: plenigo_plugin/PlenigoSettingsPage.php:213
-#: plenigo_plugin/PlenigoSettingsPage.php:219
+#: plenigo_plugin/PlenigoSettingsPage.php:212
+#: plenigo_plugin/PlenigoSettingsPage.php:218
 msgid "clicking this link"
 msgstr "haciendo click en este link"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:215
+#: plenigo_plugin/PlenigoSettingsPage.php:214
 msgid "2 - Fill the same URL in the <b>OAuth redirect URL</b> below"
 msgstr ""
 "2 - Completa la misma URL en el casillero <b>OAuth redirect URL</b> abajo"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:216
+#: plenigo_plugin/PlenigoSettingsPage.php:215
 msgid ""
 "3 - (Optional) Fill the URL in the <b>URL After Login</b> for login "
 "redirection"
@@ -198,297 +149,203 @@ msgstr ""
 "3 - {Opcional} Completa la URL in el casillero <b>URL After Login</b> para "
 "redireccionamiento despues del inicio de sesión"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:217
+#: plenigo_plugin/PlenigoSettingsPage.php:216
+#, fuzzy
+#| msgid ""
+#| "4 - Enable the plenigo Login clicking <b>Use plenigo Authentication "
+#| "Provider</b> "
 msgid ""
-"4 - Enable the plenigo Login clicking <b>Use plenigo Authentication "
+"4 - Enable the plenigo login clicking <b>Use plenigo Authentication "
 "Provider</b> "
 msgstr ""
 "4 - Active el login haciendo click en <b>Usar Proveedor de autenticación "
 "plenigo</b>"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:218
-msgid "5 - Put the plenigo Login Widget in a widget area of the site "
+#: plenigo_plugin/PlenigoSettingsPage.php:217
+#, fuzzy
+#| msgid "5 - Put the plenigo Login Widget in a widget area of the site "
+msgid "5 - Put the plenigo login widget in a widget area of the site "
 msgstr "5 - Coloque el Widget de login de plenigo en algun área de su sitio"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:220
+#: plenigo_plugin/PlenigoSettingsPage.php:219
 msgid "6 - Enjoy logging in with plenigo! "
 msgstr "6 - Disfrute iniciando sesión con Plenigo"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:238
+#: plenigo_plugin/PlenigoSettingsPage.php:237
 msgid "Loading..."
 msgstr "Cargando..."
 
-#: plenigo_plugin/PlenigoSettingsPage.php:246
-#: plenigo_plugin/PlenigoSettingsPage.php:406
+#: plenigo_plugin/PlenigoSettingsPage.php:245
+#: plenigo_plugin/PlenigoSettingsPage.php:394
 msgid "General"
 msgstr "General"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:250
-#: plenigo_plugin/PlenigoSettingsPage.php:418
+#: plenigo_plugin/PlenigoSettingsPage.php:249
+#: plenigo_plugin/PlenigoSettingsPage.php:406
 msgid "OAuth Login"
 msgstr "Sesión con Oauth"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:254
+#: plenigo_plugin/PlenigoSettingsPage.php:253
 msgid "Premium Content"
 msgstr "Contenido Premium"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:258
+#: plenigo_plugin/PlenigoSettingsPage.php:257
 msgid "Metered Views"
 msgstr "Vistas contabilizadas"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:262
-#: plenigo_plugin/PlenigoSettingsPage.php:452
+#: plenigo_plugin/PlenigoSettingsPage.php:261
+#: plenigo_plugin/PlenigoSettingsPage.php:439
 msgid "Curtain Customization"
 msgstr "Personalización de la cortina"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:266
-msgid "WooCommerce"
-msgstr "WooCommerce"
-
-#: plenigo_plugin/PlenigoSettingsPage.php:270
+#: plenigo_plugin/PlenigoSettingsPage.php:265
 msgid "Advanced"
 msgstr "Avanzadas"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:274
-#: plenigo_plugin/PlenigoSettingsPage.php:490
+#: plenigo_plugin/PlenigoSettingsPage.php:269
+#: plenigo_plugin/PlenigoSettingsPage.php:473
 msgid "Error Logs"
 msgstr "Log de Errores"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:389
-msgid "Plenigo settings saved!"
-msgstr "Preferencias de Plenigo guardadas!"
+#: plenigo_plugin/PlenigoSettingsPage.php:377
+msgid "plenigo settings saved!"
+msgstr "Preferencias de plenigo guardadas!"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:392
+#: plenigo_plugin/PlenigoSettingsPage.php:380
 msgid "Data can not be empty"
 msgstr "Los datos no pueden estar vacíos"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:407
-msgid ""
-"These are the basic settings for using plenigo services. It allows you to "
-"set your company id, your encryption secret code, working in the test "
-"environment and also disabling the entire plenigo functionality alltogether."
-msgstr ""
-"Estas son las configuraciones básicas para usar los servicios de plenigo. Te "
-"permite configurar el id de la compañía, tu código secreto, selección de "
-"entorno(prueba o producción) y  tambien se puede deshabilitar la "
-"funcionalidad de plenigo."
-
-#: plenigo_plugin/PlenigoSettingsPage.php:419
-msgid ""
-"This section allows the Wordpress's users to login using plenigo "
-"authentication. The data will be stored in the Wordpress database. If you "
-"disable this, users may need to recover their passwords."
-msgstr ""
-"Esta sección permite que los usuarios de Wordpress usando la autenticación "
-"de plenigo. La información va a ser almacenada en la base de datos de "
-"Wordpress. SI deshabilitas esto, los usuarios podrían tener que recuperar "
-"sus contraseñas."
-
-#: plenigo_plugin/PlenigoSettingsPage.php:429
+#: plenigo_plugin/PlenigoSettingsPage.php:417
 msgid "Premium Content settings"
 msgstr "Preferencias de Contenido Premium"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:430
-msgid ""
-"Here you configure how plenigo detects the content that is behind a Paywall. "
-"Here you can set a TAG to use as &quot;Payable&quot; marker, and also you "
-"can configure the plenigo managed product(s) that represents the paywall for "
-"that particular tag."
-msgstr ""
-"Aqui configuras como plenigo detecta el contenido que esta detras del muro "
-"de pago. Aquí puedes configurar una etiqueta para usar como un  marcador de "
-"&quot;Contenido Pago&quot;, y también puedes configurar los productos "
-"manejados por plenigo que representan la etiqueta en particular."
-
-#: plenigo_plugin/PlenigoSettingsPage.php:441
+#: plenigo_plugin/PlenigoSettingsPage.php:428
 msgid "Metered Views settings"
 msgstr "Preferencias de vistas contabilizadas"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:442
-msgid ""
-"Metered Views is a way to handle certain amount of free views. Here you can "
-"set a TAG to use as Metered &quot;Exemption&quot; marker, and also you "
-"completely disable metered views."
-msgstr ""
-"Vistas medidas es una forma de manejar una cierta cantidad de vistas "
-"gratuitas. Aquí puedes poner una etiqueta para usar como marcador para los "
-"artículos que no se miden, y también puedes deshabilitar las vistas medidas. "
-
-#: plenigo_plugin/PlenigoSettingsPage.php:453
-msgid ""
-"Here you can customize the curtain text and buttons. This is usefull to "
-"incentivize your customers to buy your product or join your blog. Be "
-"creative and personalize the existing templates."
-msgstr ""
-"Aquí puedes personalizar el texto de la cortina y los botones. Esto es útil "
-"para incentivar a los clientes a comprar tú producto o a unirse a su blog. "
-"Se creativo y personaliza las pantillas."
-
-#: plenigo_plugin/PlenigoSettingsPage.php:463
+#: plenigo_plugin/PlenigoSettingsPage.php:449
 msgid "Woo Commerce"
 msgstr "WooCommerce"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:464
-msgid "Here you can control the way plenigo integrates with "
-msgstr "Aquí puedes controlar la forma en la que plengio se integra con "
-
-#: plenigo_plugin/PlenigoSettingsPage.php:466
-msgid "It allows you to use the powerful features in "
-msgstr "Te permite usar las poderosas funcionalidades en "
-
-#: plenigo_plugin/PlenigoSettingsPage.php:468
-msgid " and use plenigo as payment method."
-msgstr "y usar a plenigo como método de pago."
-
-#: plenigo_plugin/PlenigoSettingsPage.php:476
+#: plenigo_plugin/PlenigoSettingsPage.php:461
 msgid "Advanced settings"
 msgstr "Preferencias avanzadas"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:477
-msgid "HANDS OFF!!"
-msgstr "CUIDADO!!"
-
-#: plenigo_plugin/PlenigoSettingsPage.php:478
-msgid ""
-"Please make sure you understand what it means to enable these settings "
-"because it can be dangerous to expose this information to the user, or the "
-"plugin could compromise the site's look & feel."
-msgstr ""
-"Porfavor asegurese de que entiende lo que significa habilitar estas "
-"configuraciones porque puede ser peligroso exponer esta información al "
-"usuario, o el plugin podría modificar como la página se ve"
-
-#: plenigo_plugin/PlenigoSettingsPage.php:491
-msgid ""
-"This is where the error logs are, with this information we can give you "
-"better support for any issues you have with this plugin."
-msgstr ""
-"Aquí están los registros de errores, con esta información podemos darle "
-"mejor soporte por cualquier problema que tenga con este plugin."
-
-#: plenigo_plugin/PlenigoSettingsPage.php:504
-msgid "Send Mail Log"
-msgstr "Enviar registros por correo"
-
-#: plenigo_plugin/PlenigoSettingsPage.php:532
+#: plenigo_plugin/PlenigoSettingsPage.php:510
 #, php-format
 msgid "Validation failed: %s"
 msgstr "Validación falló: %s"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:548
+#: plenigo_plugin/PlenigoSettingsPage.php:526
 #, php-format
 msgid "Setting has been set to default value: %s"
 msgstr "La preferencias ha sido configurada a su valor por defecto: %s"
 
-#: plenigo_plugin/PlenigoSettingsPage.php:581
-msgid "The email was sent successfully"
-msgstr "El correo fue enviado exitosamente"
-
-#: plenigo_plugin/PlenigoShortcodeManager.php:466
+#: plenigo_plugin/PlenigoShortcodeManager.php:506
 msgid "Could not create or delete App ID."
 msgstr "No se pudo crear o borrar el ID de Aplicación."
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:472
+#: plenigo_plugin/PlenigoShortcodeManager.php:512
 msgid "Product ID"
 msgstr "ID de Producto"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:473
+#: plenigo_plugin/PlenigoShortcodeManager.php:513
 msgid "Product Name"
 msgstr "Nombre del Producto"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:474
+#: plenigo_plugin/PlenigoShortcodeManager.php:514
 msgid "Mobile Code"
 msgstr "Código para Móviles"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:486
+#: plenigo_plugin/PlenigoShortcodeManager.php:526
 msgid "There are no products bought available for use"
 msgstr "No hay productos disponibles para su uso"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:489
+#: plenigo_plugin/PlenigoShortcodeManager.php:529
 msgid "Are you sure you want to remove this App ID?"
 msgstr "¿Está seguro que desea borrar el ID de Aplicación?"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:537
+#: plenigo_plugin/PlenigoShortcodeManager.php:577
 msgid "Create"
 msgstr "Crear"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:538
+#: plenigo_plugin/PlenigoShortcodeManager.php:578
 msgid "Remove"
 msgstr "Eliminar"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:540
+#: plenigo_plugin/PlenigoShortcodeManager.php:580
 msgid "Device Description"
 msgstr "Descripción de dispositivo"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:546
+#: plenigo_plugin/PlenigoShortcodeManager.php:586
 msgid "Your Token"
 msgstr "Su Token"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:548
+#: plenigo_plugin/PlenigoShortcodeManager.php:588
 msgid "Created for"
 msgstr "Creado para"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:554
+#: plenigo_plugin/PlenigoShortcodeManager.php:594
 msgid "Create for"
 msgstr "Crear para"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:689
+#: plenigo_plugin/PlenigoShortcodeManager.php:737
 msgid "User Profile"
 msgstr "Perfil de Usuario"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:690
+#: plenigo_plugin/PlenigoShortcodeManager.php:738
 msgid "Customer ID:"
 msgstr "ID de Cliente:"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:691
+#: plenigo_plugin/PlenigoShortcodeManager.php:739
 msgid "Email Address:"
 msgstr "Dirección de E-Mail:"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:692
+#: plenigo_plugin/PlenigoShortcodeManager.php:740
 msgid "User Name:"
 msgstr "Nombre de Usuario:"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:693
+#: plenigo_plugin/PlenigoShortcodeManager.php:741
 msgid "Gender:"
 msgstr "Genero:"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:694
+#: plenigo_plugin/PlenigoShortcodeManager.php:742
 msgid "Full Name:"
 msgstr "Nombre completo:"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:695
+#: plenigo_plugin/PlenigoShortcodeManager.php:743
 msgid "First Name:"
 msgstr "Primer Nombre:"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:696
+#: plenigo_plugin/PlenigoShortcodeManager.php:744
 msgid "Last Name:"
 msgstr "Apellido:"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:697
+#: plenigo_plugin/PlenigoShortcodeManager.php:745
 msgid "Street Address:"
 msgstr "Dirección Calle:"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:698
+#: plenigo_plugin/PlenigoShortcodeManager.php:746
 msgid "Additional Information:"
 msgstr "Información Adicional:"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:699
+#: plenigo_plugin/PlenigoShortcodeManager.php:747
 msgid "ZIP Code:"
 msgstr "Código Postal:"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:700
+#: plenigo_plugin/PlenigoShortcodeManager.php:748
 msgid "City:"
 msgstr "Ciudad:"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:701
+#: plenigo_plugin/PlenigoShortcodeManager.php:749
 msgid "Country:"
 msgstr "País:"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:702
+#: plenigo_plugin/PlenigoShortcodeManager.php:750
 msgid "Edit this profile at plenigo"
 msgstr "Editar este perfil en plenigo"
 
-#: plenigo_plugin/PlenigoShortcodeManager.php:782
+#: plenigo_plugin/PlenigoShortcodeManager.php:832
 msgid "Failed Payments"
 msgstr "Pagos fallídos"
 
@@ -650,31 +507,21 @@ msgstr "HTML de Cortina Personalizada"
 msgid "Enter Custom HTML..."
 msgstr "Ingrese el HTML personalizado"
 
-#: plenigo_plugin/settings/SettingDebugMode.php:61
+#: plenigo_plugin/settings/SettingDebugMode.php:60
 msgid "Debug Mode"
 msgstr "Modo de depuración"
 
-#: plenigo_plugin/settings/SettingDebugMode.php:90
+#: plenigo_plugin/settings/SettingDebugMode.php:89
 msgid "NO DEBUG mode"
 msgstr "Sin modo de depuración"
 
-#: plenigo_plugin/settings/SettingDebugMode.php:92
+#: plenigo_plugin/settings/SettingDebugMode.php:91
 msgid "VERBOSE DEBUG mode"
 msgstr "Modo de depuración verboso"
 
-#: plenigo_plugin/settings/SettingDebugMode.php:95
+#: plenigo_plugin/settings/SettingDebugMode.php:93
 msgid "VERBOSE LOG FILE mode. Up to: "
 msgstr "Archivo de registro verboso hasta:"
-
-#: plenigo_plugin/settings/SettingDebugMode.php:97
-msgid ""
-"<br>NOTE: <em>This works if there is not pre-defined WP_DEBUG,WP_DEBUG_LOG "
-"or WP_DEBUG_DISPLAY constants in your wp-config.php or any other plugins "
-"that may set those variables.</em>"
-msgstr ""
-"<br>NOTA: <em>Esto funciona si no hay constantes pre-definidas como WP_DEBUG,"
-"WP_DEBUG_LOG ó WP_DEBUG_DISPLAY en el archivo wp-config.php o cualquier otro "
-"plugin que podríá configurarlas.</em>"
 
 #: plenigo_plugin/settings/SettingGACode.php:65
 msgid "Google Analytics ID"
@@ -696,6 +543,10 @@ msgstr "Etiqueta de excepción de vistas contabilizadas"
 #: plenigo_plugin/settings/SettingMeteredURL.php:52
 msgid "Metered explanation URL"
 msgstr "URL de explicación de las vistas contabilizadas"
+
+#: plenigo_plugin/settings/SettingMeteredURL.php:59
+msgid "https://"
+msgstr "https://"
 
 #: plenigo_plugin/settings/SettingNoscriptMessage.php:54
 msgid "no-Javascript overlay Message"
@@ -721,21 +572,21 @@ msgstr "Permitir a los usuarios de Wordpress modificar sus datos"
 msgid "Prevent Payment Tag"
 msgstr "Etiqueta de prevención de pago"
 
-#: plenigo_plugin/settings/SettingProductGroupOneDB.php:68
-msgid "Products with full access"
-msgstr "Productos con acceso total"
+#: plenigo_plugin/settings/SettingProductGroupOneDB.php:67
+msgid "Produkte mit Vollzugriff"
+msgstr "Producto con acceso completo"
 
-#: plenigo_plugin/settings/SettingProductGroupOneDB.php:78
-msgid "Products with full access..."
-msgstr "Productos con acceso total..."
+#: plenigo_plugin/settings/SettingProductGroupOneDB.php:76
+msgid "Produkte mit Vollzugriff..."
+msgstr "Producto con acceso completo..."
 
-#: plenigo_plugin/settings/SettingProductGroupTwoDB.php:68
-msgid "Products with partial access"
-msgstr "Productos con acceso parcial"
+#: plenigo_plugin/settings/SettingProductGroupTwoDB.php:67
+msgid "Produkte mit Teilzugriff"
+msgstr "Producto con acceso parcial"
 
-#: plenigo_plugin/settings/SettingProductGroupTwoDB.php:78
-msgid "Products with partial access..."
-msgstr "Productos con acceso parcial..."
+#: plenigo_plugin/settings/SettingProductGroupTwoDB.php:76
+msgid "Produkte mit Teilzugriff..."
+msgstr "Producto con acceso parcial..."
 
 #: plenigo_plugin/settings/SettingProductTagDB.php:69
 msgid "Premium Content Products"
@@ -766,6 +617,10 @@ msgstr "Dejar en blanco para usar el perfil de Wordpress..."
 msgid "OAuth redirect URL"
 msgstr "URL de Redireccionamiento Oauth"
 
+#: plenigo_plugin/settings/SettingRedirectURL.php:79
+msgid "http://"
+msgstr "http://"
+
 #: plenigo_plugin/settings/SettingTestMode.php:64
 msgid "Test Mode"
 msgstr "Modo de Pruebas"
@@ -780,7 +635,7 @@ msgstr "Modo Producción"
 
 #: plenigo_plugin/settings/SettingUseLogin.php:60
 msgid "Use OAuth Login"
-msgstr "Usar Sesión con Oauth"
+msgstr "Usar Sesión con OAuth"
 
 #: plenigo_plugin/settings/SettingUseLogin.php:103
 msgid "Use plenigo Authentication Provider"
@@ -857,158 +712,139 @@ msgstr "Desactivar medio de pago"
 msgid "URL After NEW USER"
 msgstr "URL para NUEVOS USUARIOS"
 
-#: plenigo_plugin/settings/SettingWooOrderTitle.php:41
+#: plenigo_plugin/settings/SettingWooOrderTitle.php:40
 msgid "Order Title Format"
 msgstr "Formato del título de la Orden"
 
-#: plenigo_plugin/settings/SettingWooOrderTitle.php:60
+#: plenigo_plugin/settings/SettingWooOrderTitle.php:59
 msgid "Order Title Format: replacement variables"
 msgstr "Formato del título de la Orden: Variables de reemplazo"
-
-#: plenigo_plugin/settings/SettingWooOrderTitle.php:61
-#, php-format
-msgid ""
-"<br><br><b>%%SITE_TITLE%%</b> - The Site&#39;s title.<br><b>%%ORDER_ID%%</b> "
-"- This is the order ID.<br><b>%%ORDER_NO%%</b> - This is the order number "
-"(maybe same as ID, depending on other plugins).<br><b>%%ORDER_KEY%%</b> - "
-"This is the order identifier key (usually <i>wc_order_XXXXXXXXXX</i>).<br><b>"
-"%%PROD_NAMES%%</b> - A comma separated list of order&#39;s product names. "
-"<b>*</b><br><b>%%PROD_IDS%%</b> - A comma separated list of order&#39;s "
-"product IDs. <b>*</b><br><b>%%PROD_SKUS%%</b> - A comma separated list of "
-"order&#39;s product SKUs. <b>*</b><br><br><b>*</b> WARNING: Very long "
-"generated text are most likely to be trimmed by reports, invoices, credit "
-"card reports, etc."
-msgstr ""
-"<br><br><b>%%SITE_TITLE%%</b> - El título de la página.<br><b>%%ORDER_ID%%</"
-"b> - Este es el id de la orden.<br><b>%%ORDER_NO%%</b> - Este es el número "
-"de la órden (tal vez igual que el ID, dependiendo de otros plugins).<br><b>"
-"%%ORDER_KEY%%</b> - Esta es la llave del id de la órden usualmente "
-"<i>wc_order_XXXXXXXXXX</i>).<br><b>%%PROD_NAMES%%</b> - Una lista separada "
-"por coma de los nombres de los productos en la órden. <b>*</b><br><b>"
-"%%PROD_IDS%%</b> - Una lista separada por coma de los ids de los productos "
-"en la órden. <b>*</b><br><b>%%PROD_SKUS%%</b> - Una lista separada por coma "
-"de los SKUs de los productos. <b>*</b><br><br><b>*</b> ADVERTENCIA: Si el "
-"texto generado es muy largo, lo probable es que se corte en los reportes, "
-"facturas, reportes de tarjeta de crédito, etc."
 
 #: plenigo_plugin/settings/SettingWooProductType.php:64
 msgid "Product Type"
 msgstr "Tipo de producto"
 
-#: plenigo_plugin/settings/WP_List_Table.php:174
+#: plenigo_plugin/settings/WP_List_Table.php:173
 msgid "List View"
 msgstr "Vista de listado"
 
-#: plenigo_plugin/settings/WP_List_Table.php:175
+#: plenigo_plugin/settings/WP_List_Table.php:174
 msgid "Excerpt View"
 msgstr "Vista de extracto"
 
-#: plenigo_plugin/settings/WP_List_Table.php:344
+#: plenigo_plugin/settings/WP_List_Table.php:349
 msgid "No items found."
 msgstr "No se han encontrado resultados"
 
-#: plenigo_plugin/settings/WP_List_Table.php:475
+#: plenigo_plugin/settings/WP_List_Table.php:483
 msgid "Select bulk action"
 msgstr "Seleccione la acción de grupo"
 
-#: plenigo_plugin/settings/WP_List_Table.php:477
+#: plenigo_plugin/settings/WP_List_Table.php:485
 msgid "Bulk Actions"
 msgstr "Acciones de grupo"
 
-#: plenigo_plugin/settings/WP_List_Table.php:487
+#: plenigo_plugin/settings/WP_List_Table.php:495
 msgid "Apply"
 msgstr "Aplicar"
 
-#: plenigo_plugin/settings/WP_List_Table.php:540
-#: plenigo_plugin/settings/WP_List_Table.php:1373
+#: plenigo_plugin/settings/WP_List_Table.php:549
+#: plenigo_plugin/settings/WP_List_Table.php:1396
 msgid "Show more details"
 msgstr "Mostrar más detalles"
 
-#: plenigo_plugin/settings/WP_List_Table.php:608
+#: plenigo_plugin/settings/WP_List_Table.php:617
 msgid "Filter by date"
 msgstr "Filtrar por fecha"
 
-#: plenigo_plugin/settings/WP_List_Table.php:610
+#: plenigo_plugin/settings/WP_List_Table.php:619
 msgid "All dates"
 msgstr "Todas las fechas"
 
-#: plenigo_plugin/settings/WP_List_Table.php:625
+#: plenigo_plugin/settings/WP_List_Table.php:634
 #, php-format
 msgid "%1$s %2$d"
 msgstr "%1$s %2$d"
 
-#: plenigo_plugin/settings/WP_List_Table.php:676
+#: plenigo_plugin/settings/WP_List_Table.php:687
 #, php-format
 msgid "%s comment"
 msgid_plural "%s comments"
 msgstr[0] "%s comentario"
 msgstr[1] "%s comentarios"
 
-#: plenigo_plugin/settings/WP_List_Table.php:677
+#: plenigo_plugin/settings/WP_List_Table.php:688
 #, php-format
 msgid "%s approved comment"
 msgid_plural "%s approved comments"
 msgstr[0] "%s comentario aprobado"
 msgstr[1] "%s comentqarios aprobados"
 
-#: plenigo_plugin/settings/WP_List_Table.php:678
+#: plenigo_plugin/settings/WP_List_Table.php:689
 #, php-format
 msgid "%s pending comment"
 msgid_plural "%s pending comments"
 msgstr[0] "%s comentario pendiente"
 msgstr[1] "%s comentarios pendientes"
 
-#: plenigo_plugin/settings/WP_List_Table.php:684
-#: plenigo_plugin/settings/WP_List_Table.php:706
-#: plenigo_plugin/settings/WP_List_Table.php:729
+#: plenigo_plugin/settings/WP_List_Table.php:695
+#: plenigo_plugin/settings/WP_List_Table.php:716
+#: plenigo_plugin/settings/WP_List_Table.php:738
 msgid "No comments"
 msgstr "No hay comentarios"
 
-#: plenigo_plugin/settings/WP_List_Table.php:705
+#: plenigo_plugin/settings/WP_List_Table.php:716
 msgid "No approved comments"
 msgstr "No hay comentarios aprobados"
 
-#: plenigo_plugin/settings/WP_List_Table.php:728
+#: plenigo_plugin/settings/WP_List_Table.php:738
 msgid "No pending comments"
 msgstr "No hay comentarios pendientes"
 
-#: plenigo_plugin/settings/WP_List_Table.php:806
-#: plenigo_plugin/settings/WP_List_Table.php:1397
+#: plenigo_plugin/settings/WP_List_Table.php:817
+#: plenigo_plugin/settings/WP_List_Table.php:1421
 #, php-format
 msgid "%s item"
 msgid_plural "%s items"
 msgstr[0] "%s item"
 msgstr[1] "%s items"
 
-#: plenigo_plugin/settings/WP_List_Table.php:843
+#: plenigo_plugin/settings/WP_List_Table.php:854
 msgid "First page"
 msgstr "Primera Página"
 
-#: plenigo_plugin/settings/WP_List_Table.php:854
+#: plenigo_plugin/settings/WP_List_Table.php:865
 msgid "Previous page"
 msgstr "Página previa"
 
-#: plenigo_plugin/settings/WP_List_Table.php:862
-#: plenigo_plugin/settings/WP_List_Table.php:868
+#: plenigo_plugin/settings/WP_List_Table.php:872
+#: plenigo_plugin/settings/WP_List_Table.php:876
 msgid "Current Page"
 msgstr "Página actual"
 
 #: plenigo_plugin/settings/WP_List_Table.php:882
+#, fuzzy, php-format
+#| msgid "%1$s %2$d"
+msgctxt "paging"
+msgid "%1$s of %2$s"
+msgstr "%1$s %2$d"
+
+#: plenigo_plugin/settings/WP_List_Table.php:890
 msgid "Next page"
 msgstr "Próxima página"
 
-#: plenigo_plugin/settings/WP_List_Table.php:893
+#: plenigo_plugin/settings/WP_List_Table.php:901
 msgid "Last page"
 msgstr "Última página"
 
-#: plenigo_plugin/settings/WP_List_Table.php:1116
+#: plenigo_plugin/settings/WP_List_Table.php:1131
 msgid "Select All"
 msgstr "Seleccionar todo"
 
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:71
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:72
-msgid "Plenigo Payment"
-msgstr "Pago de Plenigo"
+msgid "plenigo Payment"
+msgstr "Pago de plenigo"
 
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:73
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:74
@@ -1024,7 +860,7 @@ msgid "Awaiting plenigo checkout process"
 msgstr "Esperando la facturación de plenigo"
 
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:168
-msgid "Plenigo checkout stating"
+msgid "plenigo checkout stating"
 msgstr "Facturación con plenigo iniciando"
 
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:211
@@ -1032,9 +868,9 @@ msgid "Continue to plenigo checkout"
 msgstr "Continuar al pago con plenigo"
 
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:214
-msgid "Plenigo not configured, contact the administrators"
+msgid "plenigo not configured, contact the administrators"
 msgstr ""
-"Plenigo no está debidamente configurado. Contacte a los administradores del "
+"plenigo no está debidamente configurado. Contacte a los administradores del "
 "sitio."
 
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:220
@@ -1043,7 +879,7 @@ msgstr "Ud. Ya ha comprado este product! Muchas Gracias!"
 
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:222
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:298
-msgid "Plenigo payment complete. Thank you!"
+msgid "plenigo payment complete. Thank you!"
 msgstr "Pago con plenigo completado! Gracias!"
 
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:234
@@ -1070,6 +906,183 @@ msgstr "Activar pago con cheques"
 msgid "Product type is not configured, contact the administrators"
 msgstr "El tipo de productos no está configurado, contacte al administrador."
 
+#~ msgid "*[ERROR check Product ID]"
+#~ msgstr "*[ERROR revise el ID del producto]"
+
+#~ msgid "*[ERROR]"
+#~ msgstr "*[ERROR]"
+
+#~ msgid "This product has not been configured correctly!"
+#~ msgstr "El producto no ha sido configurado correctamente"
+
+#~ msgid "The login API doesn\\'t work!"
+#~ msgstr "La API de inicio de sesión no está funcionando"
+
+#~ msgid "Plenigo Login"
+#~ msgstr "Inicio de Sesión Plenigo"
+
+#~ msgid "LOGIN FORM LABELS"
+#~ msgstr "LOGIN FORM LABELS"
+
+#~ msgid "LOGIN STATUS LABELS"
+#~ msgstr "LOGIN STATUS LABELS"
+
+#~ msgid "Plenigo Options"
+#~ msgstr "Inicio de sesión plenigo"
+
+#~ msgid ""
+#~ "<p>In order to configure the plenigo Paywall, first got to the plenigo "
+#~ "Website and register as a business. </p><p>Obtain your <b>Company ID</b> "
+#~ "and <b>Private Key</b>, we are almost there...</p><p>Ok, last step, "
+#~ msgstr ""
+#~ "<p>Para configurar el Paywall de plenigo, first got to the plenigo "
+#~ "Website and register as a business. </p><p>Obtain your <b>Company ID</b> "
+#~ "and <b>Private Key</b>, we are almost there...</p><p>Ok, last step, "
+
+#~ msgid ""
+#~ "create one or more managed product</a> and copy the product id, type the "
+#~ "TAG, paste the product ID into the text field below and click ADD to "
+#~ "append it to the tag list.</p>"
+#~ msgstr ""
+#~ "crear uno o más productos manejados por plenigo</a> y copie el id del "
+#~ "producto, escriba la TAG(etiqueta), pegue el ID del producto en el campo "
+#~ "de texto debajo y haga click en ADD(Agregar) para concatenarla en la "
+#~ "lista de etiquetas.</p>"
+
+#~ msgid "WooCommerce"
+#~ msgstr "WooCommerce"
+
+#~ msgid ""
+#~ "These are the basic settings for using plenigo services. It allows you to "
+#~ "set your company id, your encryption secret code, working in the test "
+#~ "environment and also disabling the entire plenigo functionality "
+#~ "alltogether."
+#~ msgstr ""
+#~ "Estas son las configuraciones básicas para usar los servicios de plenigo. "
+#~ "Te permite configurar el id de la compañía, tu código secreto, selección "
+#~ "de entorno(prueba o producción) y  tambien se puede deshabilitar la "
+#~ "funcionalidad de plenigo."
+
+#~ msgid ""
+#~ "This section allows the Wordpress's users to login using plenigo "
+#~ "authentication. The data will be stored in the Wordpress database. If you "
+#~ "disable this, users may need to recover their passwords."
+#~ msgstr ""
+#~ "Esta sección permite que los usuarios de Wordpress usando la "
+#~ "autenticación de plenigo. La información va a ser almacenada en la base "
+#~ "de datos de Wordpress. SI deshabilitas esto, los usuarios podrían tener "
+#~ "que recuperar sus contraseñas."
+
+#~ msgid ""
+#~ "Here you configure how plenigo detects the content that is behind a "
+#~ "Paywall. Here you can set a TAG to use as &quot;Payable&quot; marker, and "
+#~ "also you can configure the plenigo managed product(s) that represents the "
+#~ "paywall for that particular tag."
+#~ msgstr ""
+#~ "Aqui configuras como plenigo detecta el contenido que esta detras del "
+#~ "muro de pago. Aquí puedes configurar una etiqueta para usar como un  "
+#~ "marcador de &quot;Contenido Pago&quot;, y también puedes configurar los "
+#~ "productos manejados por plenigo que representan la etiqueta en particular."
+
+#~ msgid ""
+#~ "Metered Views is a way to handle certain amount of free views. Here you "
+#~ "can set a TAG to use as Metered &quot;Exemption&quot; marker, and also "
+#~ "you completely disable metered views."
+#~ msgstr ""
+#~ "Vistas medidas es una forma de manejar una cierta cantidad de vistas "
+#~ "gratuitas. Aquí puedes poner una etiqueta para usar como marcador para "
+#~ "los artículos que no se miden, y también puedes deshabilitar las vistas "
+#~ "medidas. "
+
+#~ msgid ""
+#~ "Here you can customize the curtain text and buttons. This is usefull to "
+#~ "incentivize your customers to buy your product or join your blog. Be "
+#~ "creative and personalize the existing templates."
+#~ msgstr ""
+#~ "Aquí puedes personalizar el texto de la cortina y los botones. Esto es "
+#~ "útil para incentivar a los clientes a comprar tú producto o a unirse a su "
+#~ "blog. Se creativo y personaliza las pantillas."
+
+#~ msgid "Here you can control the way plenigo integrates with "
+#~ msgstr "Aquí puedes controlar la forma en la que plengio se integra con "
+
+#~ msgid "It allows you to use the powerful features in "
+#~ msgstr "Te permite usar las poderosas funcionalidades en "
+
+#~ msgid " and use plenigo as payment method."
+#~ msgstr "y usar a plenigo como método de pago."
+
+#~ msgid "HANDS OFF!!"
+#~ msgstr "CUIDADO!!"
+
+#~ msgid ""
+#~ "Please make sure you understand what it means to enable these settings "
+#~ "because it can be dangerous to expose this information to the user, or "
+#~ "the plugin could compromise the site's look & feel."
+#~ msgstr ""
+#~ "Porfavor asegurese de que entiende lo que significa habilitar estas "
+#~ "configuraciones porque puede ser peligroso exponer esta información al "
+#~ "usuario, o el plugin podría modificar como la página se ve"
+
+#~ msgid ""
+#~ "This is where the error logs are, with this information we can give you "
+#~ "better support for any issues you have with this plugin."
+#~ msgstr ""
+#~ "Aquí están los registros de errores, con esta información podemos darle "
+#~ "mejor soporte por cualquier problema que tenga con este plugin."
+
+#~ msgid "Send Mail Log"
+#~ msgstr "Enviar registros por correo"
+
+#~ msgid "The email was sent successfully"
+#~ msgstr "El correo fue enviado exitosamente"
+
+#~ msgid ""
+#~ "<br>NOTE: <em>This works if there is not pre-defined WP_DEBUG,"
+#~ "WP_DEBUG_LOG or WP_DEBUG_DISPLAY constants in your wp-config.php or any "
+#~ "other plugins that may set those variables.</em>"
+#~ msgstr ""
+#~ "<br>NOTA: <em>Esto funciona si no hay constantes pre-definidas como "
+#~ "WP_DEBUG,WP_DEBUG_LOG ó WP_DEBUG_DISPLAY en el archivo wp-config.php o "
+#~ "cualquier otro plugin que podríá configurarlas.</em>"
+
+#~ msgid "Products with full access"
+#~ msgstr "Productos con acceso total"
+
+#~ msgid "Products with full access..."
+#~ msgstr "Productos con acceso total..."
+
+#~ msgid "Products with partial access"
+#~ msgstr "Productos con acceso parcial"
+
+#~ msgid "Products with partial access..."
+#~ msgstr "Productos con acceso parcial..."
+
+#~ msgid ""
+#~ "<br><br><b>%%SITE_TITLE%%</b> - The Site&#39;s title.<br><b>%%ORDER_ID%%</"
+#~ "b> - This is the order ID.<br><b>%%ORDER_NO%%</b> - This is the order "
+#~ "number (maybe same as ID, depending on other plugins).<br><b>%%ORDER_KEY%"
+#~ "%</b> - This is the order identifier key (usually <i>wc_order_XXXXXXXXXX</"
+#~ "i>).<br><b>%%PROD_NAMES%%</b> - A comma separated list of order&#39;s "
+#~ "product names. <b>*</b><br><b>%%PROD_IDS%%</b> - A comma separated list "
+#~ "of order&#39;s product IDs. <b>*</b><br><b>%%PROD_SKUS%%</b> - A comma "
+#~ "separated list of order&#39;s product SKUs. <b>*</b><br><br><b>*</b> "
+#~ "WARNING: Very long generated text are most likely to be trimmed by "
+#~ "reports, invoices, credit card reports, etc."
+#~ msgstr ""
+#~ "<br><br><b>%%SITE_TITLE%%</b> - El título de la página.<br><b>%%ORDER_ID%"
+#~ "%</b> - Este es el id de la orden.<br><b>%%ORDER_NO%%</b> - Este es el "
+#~ "número de la órden (tal vez igual que el ID, dependiendo de otros "
+#~ "plugins).<br><b>%%ORDER_KEY%%</b> - Esta es la llave del id de la órden "
+#~ "usualmente <i>wc_order_XXXXXXXXXX</i>).<br><b>%%PROD_NAMES%%</b> - Una "
+#~ "lista separada por coma de los nombres de los productos en la órden. "
+#~ "<b>*</b><br><b>%%PROD_IDS%%</b> - Una lista separada por coma de los ids "
+#~ "de los productos en la órden. <b>*</b><br><b>%%PROD_SKUS%%</b> - Una "
+#~ "lista separada por coma de los SKUs de los productos. <b>*</"
+#~ "b><br><br><b>*</b> ADVERTENCIA: Si el texto generado es muy largo, lo "
+#~ "probable es que se corte en los reportes, facturas, reportes de tarjeta "
+#~ "de crédito, etc."
+
 #~ msgid "The user is not logged in with plenigo"
 #~ msgstr "El usuario no inició sesión con plenigo"
 
@@ -1090,9 +1103,3 @@ msgstr "El tipo de productos no está configurado, contacte al administrador."
 
 #~ msgid "https://www.plenigo.com"
 #~ msgstr "https://www.plenigo.com"
-
-#~ msgid "https://"
-#~ msgstr "https://"
-
-#~ msgid "http://"
-#~ msgstr "http://"

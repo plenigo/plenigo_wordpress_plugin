@@ -192,7 +192,7 @@ class PlenigoSettingsPage
         $screen = get_current_screen();
         $screen->add_help_tab(array(
             'id' => 'plenigo_help_tab',
-            'title' => __('Plenigo Help', self::PLENIGO_SETTINGS_GROUP),
+            'title' => __('plenigo help', self::PLENIGO_SETTINGS_GROUP),
             'content' => '<p>In order to configure the plenigo Paywall, '
                 . 'first got to the plenigo Website and register as a business. '
                 . '</p>'
@@ -213,8 +213,8 @@ class PlenigoSettingsPage
                     self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
                 . __('2 - Fill the same URL in the <b>OAuth redirect URL</b> below', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
                 . __('3 - (Optional) Fill the URL in the <b>URL After Login</b> for login redirection', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
-                . __('4 - Enable the plenigo Login clicking <b>Use plenigo Authentication Provider</b> ', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
-                . __('5 - Put the plenigo Login Widget in a widget area of the site ', self::PLENIGO_SETTINGS_GROUP)
+                . __('4 - Enable the plenigo login clicking <b>Use plenigo Authentication Provider</b> ', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
+                . __('5 - Put the plenigo login widget in a widget area of the site ', self::PLENIGO_SETTINGS_GROUP)
                 . ' <a target="_blank" href="' . admin_url('/widgets.php') . '">' . __('clicking this link', self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
                 . __('6 - Enjoy logging in with plenigo! ', self::PLENIGO_SETTINGS_GROUP)
                 . '</p>'
@@ -374,7 +374,7 @@ class PlenigoSettingsPage
                     $new_input[$setInstance::SETTING_ID] = $setInstance->sanitize($input);
                 }
             }
-            $message = __('Plenigo settings saved!', self::PLENIGO_SETTINGS_GROUP);
+            $message = __('plenigo settings saved!', self::PLENIGO_SETTINGS_GROUP);
         } else {
             $type = 'error';
             $message = __('Data can not be empty', self::PLENIGO_SETTINGS_GROUP);

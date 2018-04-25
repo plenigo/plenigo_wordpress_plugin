@@ -68,8 +68,8 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
         $this->icon = "https://www.plenigo.com/assets/favicon.ico";
         $this->has_fields = true;
         $this->enabled = true;
-        $this->title = __('Plenigo Payment', self::PLENIGO_SETTINGS_GROUP);
-        $this->method_title = __('Plenigo Payment', self::PLENIGO_SETTINGS_GROUP);
+        $this->title = __('plenigo Payment', self::PLENIGO_SETTINGS_GROUP);
+        $this->method_title = __('plenigo Payment', self::PLENIGO_SETTINGS_GROUP);
         $this->description = __('WooCommerce plenigo Description', self::PLENIGO_SETTINGS_GROUP);
         $this->method_description = __('WooCommerce plenigo Description', self::PLENIGO_SETTINGS_GROUP);
         $this->order_button_text = __('Pay with plenigo', self::PLENIGO_SETTINGS_GROUP);
@@ -165,7 +165,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
             if (!$user_bought) {
                 $this->addDebugLine("Order wasn't payed!");
                 // Mark as processing (checkout process)
-                $order->update_status('pending', __('Plenigo checkout stating', self::PLENIGO_SETTINGS_GROUP));
+                $order->update_status('pending', __('plenigo checkout stating', self::PLENIGO_SETTINGS_GROUP));
                 plenigo_log_message("WOO: Creating checkout snippet:", E_USER_NOTICE);
 
                 //Let's create a unmanaged Plenigo product for this order
@@ -211,7 +211,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                     . __('Continue to plenigo checkout', self::PLENIGO_SETTINGS_GROUP)
                     . '</button></div>';
                 } else {
-                    $errorMessge = __('Plenigo not configured, contact the administrators', self::PLENIGO_SETTINGS_GROUP);
+                    $errorMessge = __('plenigo not configured, contact the administrators', self::PLENIGO_SETTINGS_GROUP);
                     $this->addDebugLine("Failed: " . $errorMessge);
                     $order->update_status('failed', $errorMessge);
                     wc_add_notice($errorMessge, 'error');
@@ -219,7 +219,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
             } else {
                 $order->add_order_note(__('You already purchased this order! Thank You!', self::PLENIGO_SETTINGS_GROUP));
                 $order->payment_complete();
-                $order->update_status('completed', __('Plenigo payment complete. Thank you!', self::PLENIGO_SETTINGS_GROUP));
+                $order->update_status('completed', __('plenigo payment complete. Thank you!', self::PLENIGO_SETTINGS_GROUP));
                 $this->addDebugLine("Already payed!");
                 // If its an anonymous user
                 if ($order->customer_user == 0) {
@@ -291,11 +291,11 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
             $order = new \WC_Order($order_id);
             $user_bought = \plenigo_plugin\PlenigoSDKManager::get()->plenigo_bought($order_id);
             if ($user_bought === true) {
-                plenigo_log_message("WOO: User bouight it with plenigo!", E_USER_NOTICE);
+                plenigo_log_message("WOO: User bought it with plenigo!", E_USER_NOTICE);
                 $this->addDebugLine("The order was purchased with plenigo");
                 // Set Order as complete
                 $order->payment_complete();
-                $order->update_status('completed', __('Plenigo payment complete. Thank you!', self::PLENIGO_SETTINGS_GROUP));
+                $order->update_status('completed', __('plenigo payment complete. Thank you!', self::PLENIGO_SETTINGS_GROUP));
             } else {
                 // Here could be maybe a payment timeout to set it as cancelled
                 plenigo_log_message("WOO: User DID NOT buy this with plenigo...yet?!", E_USER_NOTICE);

@@ -57,7 +57,7 @@ add_action('plugins_loaded', function () {
     load_plugin_textdomain('plenigo', FALSE, basename(dirname(__FILE__)) . '/plenigo_i18n/');
     $upgraded = plenigo_plugin_upgrade();
     if ($upgraded) {
-        plenigo_log_message("Plenigo setting Updated!!!");
+        plenigo_log_message("plenigo setting Updated!!!");
     }
     //Initializing SDK
     $sdk = \plenigo_plugin\PlenigoSDKManager::get();

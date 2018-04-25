@@ -10,7 +10,7 @@ tinymce.PluginManager.add('plenigo_snippet', function (editor, url) {
         onclick: function () {
             // Open setup window
             editor.windowManager.open({
-                title: 'Plenigo Snippet Selection',
+                title: 'plenigo Snippet Selection',
                 body: [
                     {
                         type: 'combobox', name: 'snippet', label: 'Snippet ID',

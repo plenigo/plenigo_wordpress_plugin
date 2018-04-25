@@ -535,7 +535,7 @@ msgid "Awaiting plenigo checkout process"
 msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:169
-msgid "Plenigo checkout stating"
+msgid "plenigo checkout stating"
 msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:212
@@ -543,7 +543,7 @@ msgid "Continue to plenigo checkout"
 msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:215
-msgid "Plenigo not configured, contact the administrators"
+msgid "plenigo not configured, contact the administrators"
 msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:221
@@ -552,7 +552,7 @@ msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:223 ..
 #: plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:299
-msgid "Plenigo payment complete. Thank you!"
+msgid "plenigo payment complete. Thank you!"
 msgstr ""
 
 #: ../plenigo_plugin/wooCommerce/WC_Gateway_Plenigo.php:235
@@ -580,7 +580,7 @@ msgid "Product type is not configured, contact the administrators"
 msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:181
-msgid "Plenigo Help"
+msgid "plenigo Help"
 msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:195
@@ -619,7 +619,7 @@ msgid ""
 msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:203
-msgid "5 - Put the plenigo Login Widget in a widget area of the site "
+msgid "5 - Put the plenigo login widget in a widget area of the site "
 msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:205
@@ -662,7 +662,7 @@ msgid "Advanced"
 msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:365
-msgid "Plenigo settings saved!"
+msgid "plenigo settings saved!"
 msgstr ""
 
 #: ../plenigo_plugin/PlenigoSettingsPage.php:368
