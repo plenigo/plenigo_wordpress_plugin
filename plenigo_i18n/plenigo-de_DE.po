@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: plenigo_plugin 1.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-25 12:32+0200\n"
-"PO-Revision-Date: 2018-04-25 12:33+0200\n"
+"PO-Revision-Date: 2018-04-25 12:50+0200\n"
 "Last-Translator: admin <info@plenigo.com>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -400,7 +400,7 @@ msgstr "Registrieren"
 
 #: plenigo_plugin/settings/SettingCurtainButtonBuy.php:65
 msgid "BUY Button Text"
-msgstr "Kaufen Tastentext"
+msgstr "Kaufen Button-Text"
 
 #: plenigo_plugin/settings/SettingCurtainButtonCatCustom.php:45
 msgid "Subscribe"
@@ -436,7 +436,7 @@ msgstr "LOGIN Button Text"
 
 #: plenigo_plugin/settings/SettingCurtainBuyTextDB.php:69
 msgid "Buy Button Text (based on tag)"
-msgstr "Kaufen Button-Text (basierend auf dem Schlagwort"
+msgstr "Kaufen Button-Text (basierend auf dem Schlagwort)"
 
 #: plenigo_plugin/settings/SettingCurtainBuyTextDB.php:80
 msgid "Buy button text..."
@@ -642,7 +642,7 @@ msgstr "Benutzern erlauben, Javascript zu deaktivieren"
 
 #: plenigo_plugin/settings/SettingUseQuietReport.php:62
 msgid "Enable \"Quiet\" mini report"
-msgstr "Enable \"ruhigen\" mini-Bericht"
+msgstr "Aktiviere \"ruhigen\" mini-Bericht\""
 
 #: plenigo_plugin/settings/SettingUseQuietReport.php:71
 msgid "Show an HTML comment tag with verbose information about the purchase"
@@ -660,15 +660,15 @@ msgstr ""
 
 #: plenigo_plugin/settings/SettingUseRegister.php:103
 msgid "Show register form to annonymous users when buying products"
-msgstr ""
+msgstr "Registrierungsseite bei anonymen Benutzern beim Einkauf anzeigen"
 
 #: plenigo_plugin/settings/SettingUseRegister.php:112
 msgid "Do not show the registration form when buying products"
-msgstr ""
+msgstr "Registrierungsseite beim Einkauf nicht anzeigen"
 
 #: plenigo_plugin/settings/SettingUseWPLogin.php:64
 msgid "Enable Wordpress Login"
-msgstr "Aktivieren Sie Wordpress Einloggen"
+msgstr "Wordpress Login aktivieren"
 
 #: plenigo_plugin/settings/SettingUseWPLogin.php:85
 msgid "Show the Wordpress login form"
@@ -696,11 +696,11 @@ msgstr "URL Nach BENUTZER ANMELDUNG"
 
 #: plenigo_plugin/settings/SettingWooOrderTitle.php:40
 msgid "Order Title Format"
-msgstr "Bestellen Titelformat"
+msgstr "Bestellung Titelformat"
 
 #: plenigo_plugin/settings/SettingWooOrderTitle.php:59
 msgid "Order Title Format: replacement variables"
-msgstr "Bestellen Titelformat : Ersatzvariablen"
+msgstr "Bestellung Titelformat : Ersatzvariablen"
 
 #: plenigo_plugin/settings/SettingWooProductType.php:64
 msgid "Product Type"
@@ -708,7 +708,7 @@ msgstr "Produktart"
 
 #: plenigo_plugin/settings/WP_List_Table.php:173
 msgid "List View"
-msgstr ""
+msgstr "Listenansicht"
 
 #: plenigo_plugin/settings/WP_List_Table.php:174
 msgid "Excerpt View"
@@ -716,7 +716,7 @@ msgstr ""
 
 #: plenigo_plugin/settings/WP_List_Table.php:349
 msgid "No items found."
-msgstr ""
+msgstr "Keine Daten gefunden."
 
 #: plenigo_plugin/settings/WP_List_Table.php:483
 msgid "Select bulk action"
@@ -733,11 +733,11 @@ msgstr ""
 #: plenigo_plugin/settings/WP_List_Table.php:549
 #: plenigo_plugin/settings/WP_List_Table.php:1396
 msgid "Show more details"
-msgstr ""
+msgstr "Mehr Details anzeigen"
 
 #: plenigo_plugin/settings/WP_List_Table.php:617
 msgid "Filter by date"
-msgstr ""
+msgstr "Nach Datum filtern"
 
 #: plenigo_plugin/settings/WP_List_Table.php:619
 msgid "All dates"
@@ -799,12 +799,12 @@ msgstr "Vorname:"
 
 #: plenigo_plugin/settings/WP_List_Table.php:865
 msgid "Previous page"
-msgstr ""
+msgstr "Vorherige Seite"
 
 #: plenigo_plugin/settings/WP_List_Table.php:872
 #: plenigo_plugin/settings/WP_List_Table.php:876
 msgid "Current Page"
-msgstr ""
+msgstr "Aktuelle Seite"
 
 #: plenigo_plugin/settings/WP_List_Table.php:882
 #, php-format
@@ -814,7 +814,7 @@ msgstr ""
 
 #: plenigo_plugin/settings/WP_List_Table.php:890
 msgid "Next page"
-msgstr ""
+msgstr "Nächste Seite"
 
 #: plenigo_plugin/settings/WP_List_Table.php:901
 #, fuzzy
