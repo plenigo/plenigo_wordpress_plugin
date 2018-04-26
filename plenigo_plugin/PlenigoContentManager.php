@@ -620,7 +620,7 @@ class PlenigoContentManager
             return $this->reqCache["plenigoCheck"];
         }
         plenigo_log_message("LOOKING FOR THE FULL PLENIGO SDK CHECK");
-        $this->addDebugLine("Plenigo backend check");
+        $this->addDebugLine("plenigo backend check");
         $sdk = PlenigoSDKManager::get()->getPlenigoSDK();
         //Checking if the metered view is exempt by tag
         $tagExempt = $this->is_metered_exempt();
@@ -657,7 +657,7 @@ class PlenigoContentManager
             $this->addGAEvent("product|freeview-visit");
         }
         $this->reqCache["plenigoCheck"] = $res;
-        $this->addDebugLine("Plenigo bought: " . var_export($res, TRUE));
+        $this->addDebugLine("plenigo bought: " . var_export($res, TRUE));
         return $res;
     }
 
@@ -1025,11 +1025,11 @@ class PlenigoContentManager
     private function printDebugChecklist() {
         if (isset($this->options['quiet_report_enabled'])) {
             if (is_array($this->debugChecklist) && count($this->debugChecklist) > 0) {
-                echo "<!-- *** Plenigo debug checklist ***\n";
+                echo "<!-- *** plenigo debug checklist ***\n";
                 foreach ($this->debugChecklist as $debugRow) {
                     echo "## - " . $debugRow . " \n";
                 }
-                echo "// *** Plenigo debug checklist *** -->";
+                echo "// *** plenigo debug checklist *** -->";
             }
         }
         $this->debugChecklist = array();

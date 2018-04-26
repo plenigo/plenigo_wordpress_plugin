@@ -134,8 +134,11 @@ class PlenigoSettingsPage
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainCategoryMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingPreventTag());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCustomCurtainDB());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupOneDB());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupTwoDB());
+        //Use this to check if you should show the groups based on toolset plugin
+        if(function_exists('types_render_field')) {
+            array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupOneDB());
+            array_push($this->settings, new \plenigo_plugin\settings\SettingProductGroupTwoDB());
+        }
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonBuy());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCustom());
@@ -143,9 +146,6 @@ class PlenigoSettingsPage
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCatCustom());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainButtonCatCustomURL());
         array_push($this->settings, new \plenigo_plugin\settings\SettingCurtainBuyTextDB());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingUseWoo());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingWooOrderTitle());
-        array_push($this->settings, new \plenigo_plugin\settings\SettingWooProductType());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseQuietReport());
         array_push($this->settings, new \plenigo_plugin\settings\SettingDebugMode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingWelcomeURL());
@@ -192,7 +192,7 @@ class PlenigoSettingsPage
         $screen = get_current_screen();
         $screen->add_help_tab(array(
             'id' => 'plenigo_help_tab',
-            'title' => __('Plenigo Help', self::PLENIGO_SETTINGS_GROUP),
+            'title' => __('plenigo help', self::PLENIGO_SETTINGS_GROUP),
             'content' => '<p>In order to configure the plenigo Paywall, '
                 . 'first got to the plenigo Website and register as a business. '
                 . '</p>'
@@ -213,8 +213,8 @@ class PlenigoSettingsPage
                     self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
                 . __('2 - Fill the same URL in the <b>OAuth redirect URL</b> below', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
                 . __('3 - (Optional) Fill the URL in the <b>URL After Login</b> for login redirection', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
-                . __('4 - Enable the plenigo Login clicking <b>Use plenigo Authentication Provider</b> ', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
-                . __('5 - Put the plenigo Login Widget in a widget area of the site ', self::PLENIGO_SETTINGS_GROUP)
+                . __('4 - Enable the plenigo login clicking <b>Use plenigo Authentication Provider</b> ', self::PLENIGO_SETTINGS_GROUP) . '<br/>'
+                . __('5 - Put the plenigo login widget in a widget area of the site ', self::PLENIGO_SETTINGS_GROUP)
                 . ' <a target="_blank" href="' . admin_url('/widgets.php') . '">' . __('clicking this link', self::PLENIGO_SETTINGS_GROUP) . '</a><br/>'
                 . __('6 - Enjoy logging in with plenigo! ', self::PLENIGO_SETTINGS_GROUP)
                 . '</p>'
@@ -259,10 +259,6 @@ class PlenigoSettingsPage
         echo '<li role="presentation" class="active"><a href="#plenigo_curtain_section" '
             . 'aria-controls="plenigo_curtain_section" role="tab" data-toggle="tab">'
             . __('Curtain Customization', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
-
-        echo '<li role="presentation" class="active"><a href="#plenigo_woo_section" '
-            . 'aria-controls="plenigo_woo_section" role="tab" data-toggle="tab">'
-            . __('WooCommerce', self::PLENIGO_SETTINGS_GROUP) . '</a></li>';
 
         echo '<li role="presentation" class="active"><a href="#plenigo_advanced_section" '
             . 'aria-controls="plenigo_advanced_section" role="tab" data-toggle="tab">'
@@ -332,13 +328,6 @@ class PlenigoSettingsPage
         );
 
         add_settings_section(
-            'plenigo_woo_section', // ID
-            "", // Title
-            array($this, 'print_section_woo'), // Callback
-            self::PLENIGO_SETTINGS_PAGE // Page
-        );
-
-        add_settings_section(
             'plenigo_advanced_section', // ID
             "", // Title
             array($this, 'print_section_advanced'), // Callback
@@ -385,7 +374,7 @@ class PlenigoSettingsPage
                     $new_input[$setInstance::SETTING_ID] = $setInstance->sanitize($input);
                 }
             }
-            $message = __('Plenigo settings saved!', self::PLENIGO_SETTINGS_GROUP);
+            $message = __('plenigo settings saved!', self::PLENIGO_SETTINGS_GROUP);
         } else {
             $type = 'error';
             $message = __('Data can not be empty', self::PLENIGO_SETTINGS_GROUP);

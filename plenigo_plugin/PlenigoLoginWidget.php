@@ -51,8 +51,8 @@ class PlenigoLoginWidget extends \WP_Widget {
     function __construct() {
         parent::__construct(
                 'plenigo_login_widget', // Base ID
-                __('Plenigo login', self::PLENIGO_SETTINGS_GROUP), // Name
-                array('description' => __('This is the Plegino Login widget. Here you will find the plenigo login button '
+                __('plenigo login', self::PLENIGO_SETTINGS_GROUP), // Name
+                array('description' => __('This is the plenigo login widget. Here you will find the plenigo login button '
                     . 'or the user profile data related to the plenigo user.', self::PLENIGO_SETTINGS_GROUP),) // Args
         );
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME, array());
@@ -115,7 +115,7 @@ class PlenigoLoginWidget extends \WP_Widget {
         $password = !empty($inst['password']) ? $inst['password'] : __('Password:', self::PLENIGO_SETTINGS_GROUP);
         $forgot = !empty($inst['forgot']) ? $inst['forgot'] : __('Forgot password', self::PLENIGO_SETTINGS_GROUP);
         $wpLogin = !empty($inst['wp_login']) ? $inst['wp_login'] : __('WordPress Login', self::PLENIGO_SETTINGS_GROUP);
-        $plLogin = !empty($inst['pl_login']) ? $inst['pl_login'] : __('Plenigo Login', self::PLENIGO_SETTINGS_GROUP);
+        $plLogin = !empty($inst['pl_login']) ? $inst['pl_login'] : __('plenigo login', self::PLENIGO_SETTINGS_GROUP);
         $welcome = !empty($inst['welcome']) ? $inst['welcome'] : __('Welcome, ', self::PLENIGO_SETTINGS_GROUP);
         $editProfile = !empty($inst['profile']) ? $inst['profile'] : __('Edit Profile', self::PLENIGO_SETTINGS_GROUP);
         $logout = !empty($inst['logout']) ? $inst['logout'] : __('Logout', self::PLENIGO_SETTINGS_GROUP);
@@ -144,7 +144,7 @@ class PlenigoLoginWidget extends \WP_Widget {
         echo '<input class="widefat" id="' . $this->get_field_id('wp_login') . '" name="'
         . $this->get_field_name('wp_login') . '" type="text" value="' . esc_attr($wpLogin) . '"><br/>';
 
-        echo '<label for="' . $this->get_field_id('pl_login') . '">' . __('Plenigo Login', self::PLENIGO_SETTINGS_GROUP) . '</label> ';
+        echo '<label for="' . $this->get_field_id('pl_login') . '">' . __('plenigo login', self::PLENIGO_SETTINGS_GROUP) . '</label> ';
         echo '<input class="widefat" id="' . $this->get_field_id('pl_login') . '" name="'
         . $this->get_field_name('pl_login') . '" type="text" value="' . esc_attr($plLogin) . '"><br/>';
 

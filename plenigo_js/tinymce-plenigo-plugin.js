@@ -25,7 +25,7 @@ tinymce.PluginManager.add('plenigo', function (editor, url) {
         onclick: function () {
             // Open setup window
             editor.windowManager.open({
-                title: 'Plenigo Checkout Button',
+                title: 'plenigo Checkout Button',
                 body: [
                     {type: 'textbox', name: 'prodId', label: 'Product ID*'},
                     {type: 'textbox', name: 'price', label: 'Price(Currency is the one configured in the product)'},

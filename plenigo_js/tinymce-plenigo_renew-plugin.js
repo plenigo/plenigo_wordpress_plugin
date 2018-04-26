@@ -8,7 +8,7 @@ tinymce.PluginManager.add('plenigo_renew', function (editor, url) {
         onclick: function () {
             // Open setup window
             editor.windowManager.open({
-                title: 'Plenigo Renew Button',
+                title: 'plenigo Renew Button',
                 body: [
                     {type: 'textbox', name: 'prodId', label: 'Product ID*'},
                     {type: 'textbox', name: 'title', label: 'Button Title'},
