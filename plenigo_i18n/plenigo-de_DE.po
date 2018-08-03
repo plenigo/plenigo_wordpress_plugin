@@ -924,7 +924,7 @@ msgstr "Produkttyp nicht konfiguriert ist, wenden Sie sich die Administratoren"
 #~ msgstr ""
 #~ "Bisher war die technische Umsetzung des Paid Content für Verlage und "
 #~ "Medienunternehmen sehr zeitaufwändig und kostenintensiv. Plenigo macht "
-#~ "Schluss mit diesem."
+#~ "Schluss damit."
 
 #~ msgid "https://www.plenigo.com"
 #~ msgstr "https://www.plenigo.com"

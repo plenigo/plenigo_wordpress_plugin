@@ -529,12 +529,14 @@ class PlenigoContentManager
         if ($rowSplit == FALSE || count($rowSplit) == 0) {
             $rowSplit = array($prodTagList);
         }
+
         foreach ($rowSplit as $tagRow) {
             $strTag = explode("->", $tagRow);
             $arrToken = array();
             //Obtain the {slug}
             preg_match('/{(.*?)}/', $strTag[0], $arrToken);
-            if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && has_tag($arrToken[1])) {
+
+            if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && (has_term($arrToken[1]) || has_category($arrToken))) {
                 plenigo_log_message("Product TAG! TAG=" . $strTag[0] . " ProductID(s):" . $strTag[1]);
                 $this->addDebugLine("Product match: " . $strTag[0]);
                 $arrProds = array();
@@ -551,6 +553,7 @@ class PlenigoContentManager
                     }
                     array_push($this->reqCache["listProdId"], trim($pid));
                     array_push($this->reqCache["listProdTag"], trim($arrToken[1]));
+
                     $res = TRUE;
                 }
             }
@@ -627,6 +630,7 @@ class PlenigoContentManager
         $res = FALSE;
         if (!is_null($sdk) && ($sdk instanceof \plenigo\PlenigoManager)) {
             plenigo_log_message("Checking if category is there");
+
             if (isset($this->reqCache["lastCatId"])) {
                 $products = array($post->ID);
                 $products = array_merge($products, $this->reqCache["listProdId"]);
@@ -635,6 +639,7 @@ class PlenigoContentManager
             } else {
                 $products = $this->reqCache["listProdId"];
             }
+
             plenigo_log_message("Checking the prod id : " . print_r($products, TRUE));
             $res = PlenigoSDKManager::get()->plenigo_bought($products);
 

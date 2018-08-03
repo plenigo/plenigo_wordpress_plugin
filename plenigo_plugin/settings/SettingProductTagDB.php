@@ -154,15 +154,17 @@ class SettingProductTagDB extends PlenigoWPSetting
         }
         global $wpdb;
         $res = '';
+        $type = '';
 
-        $search_tags = $wpdb->get_results("SELECT a.name,a.slug FROM " . $wpdb->terms
+        $search_tags = $wpdb->get_results("SELECT a.name,a.slug,b.taxonomy FROM " . $wpdb->terms
             . " a," . $wpdb->term_taxonomy . " b WHERE a.term_id=b.term_id "
-            . " and b.taxonomy='post_tag' ");
+            . " and (b.taxonomy='post_tag' or b.taxonomy='category') ");
         foreach ($search_tags as $mytag) {
             if (strlen($res) !== 0) {
                 $res.=",";
             }
-            $res.= $mytag->name . "{" . $mytag->slug . "}";
+            $type = $mytag->taxonomy == 'category' ? 'Categories' : 'Tags';
+            $res.= $mytag->name . " ({$type}) " . "{" . $mytag->slug . "}";
         }
         $this->reqCache['term-query'] = $res;
         return $res;
