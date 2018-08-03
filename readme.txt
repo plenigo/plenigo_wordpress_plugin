@@ -298,6 +298,13 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
+= 1.7.6 - Updated dependencies =
+- New plenigo PHP SDK fixing potential bugs with some PHP versions
+- Now you can use categories, to control the paywall
+
+= 1.7.5 - Updated dependencies =
+- New plenigo PHP SDK fixing potential bugs with some PHP versions
+
 = 1.7.4 - Updated dependencies =
 - New plenigo PHP SDK fixing potential bugs with some PHP versions
 
