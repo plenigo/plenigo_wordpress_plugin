@@ -356,7 +356,7 @@ msgstr "Premium Kategorien"
 #: plenigo_plugin/settings/SettingPreventTag.php:79
 #: plenigo_plugin/settings/SettingProductTagDB.php:78
 msgid "Enter Tag name..."
-msgstr "Geben Sie einen Tag-Namen ein ..."
+msgstr "Geben Sie einen Tag- oder Kategorie-Namen ein ..."
 
 #: plenigo_plugin/settings/SettingCategoryTagDB.php:80
 msgid "Enter Category ID(s)..."
