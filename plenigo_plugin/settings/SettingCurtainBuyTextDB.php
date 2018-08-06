@@ -170,7 +170,7 @@ class SettingCurtainBuyTextDB extends PlenigoWPSetting
                 $res.=",";
             }
             $type = $mytag->taxonomy == 'category' ? 'Categories' : 'Tags';
-            $res.= $mytag->name . " ({$type}) " . "{" . $mytag->slug . "}";
+            $res.= str_replace('"', '', $mytag->name) . " ({$type}) " . "{" . $mytag->slug . "}";
         }
         $this->reqCache['term-query'] = $res;
         return $res;
