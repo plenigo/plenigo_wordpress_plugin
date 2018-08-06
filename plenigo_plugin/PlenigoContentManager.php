@@ -449,12 +449,20 @@ class PlenigoContentManager
         if ($rowSplit === FALSE || count($rowSplit) == 0) {
             $rowSplit = array($catTagList);
         }
+
         foreach ($rowSplit as $tagRow) {
             $strTag = explode("->", $tagRow);
             $arrToken = array();
-            //Obtain the {slug}
+            //Obtain the {slug} or {id}
             preg_match('/{(.*?)}/', $strTag[0], $arrToken);
-            if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && (has_tag($arrToken[1]) || has_category($arrToken[1]))) {
+
+            if (is_numeric($arrToken[1])) {
+                $categories = $this->getCategoryChildren(intval($arrToken[1]));
+            } else {
+                $categories = $arrToken[1];
+            }
+
+            if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && (has_tag($arrToken[1]) || has_category($categories))) {
                 plenigo_log_message("Category TAG! TAG=" . $strTag[0] . " CategoryID(s):" . $strTag[1]);
                 $this->addDebugLine("Category match: " . $strTag[0]);
                 $arrCats = array();
@@ -496,7 +504,14 @@ class PlenigoContentManager
         $res = FALSE;
         $arrToken = array();
         preg_match('/{(.*?)}/', $prevTag, $arrToken);
-        if (count($arrToken) == 2 && (has_tag($arrToken[1]) || has_category($arrToken[1]))) {
+
+        if (is_numeric($arrToken[1])) {
+            $categories = $this->getCategoryChildren(intval($arrToken[1]));
+        } else {
+            $categories = $arrToken[1];
+        }
+
+        if (count($arrToken) == 2 && (has_tag($arrToken[1]) || has_category($categories))) {
             plenigo_log_message("Prevent TAG! TAG=" . $prevTag);
             $this->addDebugLine("Prevent Tag: " . $prevTag);
 
@@ -508,6 +523,28 @@ class PlenigoContentManager
         }
         $this->reqCache["hasPreventTag"] = $res;
         return $res;
+    }
+
+    private function getCategoryChildren($id) {
+
+        $categories = array();
+        $categories[$id] = $id;
+
+        $cats = get_categories( array( 'parent' => $id ));
+
+        if (empty($cats)) {
+            return array();
+        }
+
+        foreach ($cats as $category) {
+            $categories[$category->term_id] = $category->term_id;
+            $sub = $this->getCategoryChildren($category->term_id);
+            if (!empty($sub)) {
+                $categories = array_merge($categories, $sub);
+            }
+        }
+
+        return $categories;
     }
 
     /**
@@ -533,10 +570,16 @@ class PlenigoContentManager
         foreach ($rowSplit as $tagRow) {
             $strTag = explode("->", $tagRow);
             $arrToken = array();
-            //Obtain the {slug}
+            //Obtain the {slug} or {id}
             preg_match('/{(.*?)}/', $strTag[0], $arrToken);
 
-            if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && (has_tag($arrToken[1]) || has_category($arrToken[1]))) {
+            if (is_numeric($arrToken[1])) {
+                $categories = $this->getCategoryChildren(intval($arrToken[1]));
+            } else {
+                $categories = $arrToken[1];
+            }
+
+            if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && (has_tag($arrToken[1]) || has_category($categories))) {
                 plenigo_log_message("Product TAG! TAG=" . $strTag[0] . " ProductID(s):" . $strTag[1]);
                 $this->addDebugLine("Product match: " . $strTag[0]);
                 $arrProds = array();
