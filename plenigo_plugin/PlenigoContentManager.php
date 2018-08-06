@@ -431,24 +431,32 @@ class PlenigoContentManager
         return FALSE;
     }
 
-    /**
-     * This method checks for category IDs that need to be added to the category list
-     * so it can be checked for bought products. Returns FALSE if there is no tag
-     * found on the article that reflects a tag in the plenigo settings
-     *
-     * @return bool Returns TRUE if a tag has been found and the category list is in the cache
-     */
-    public function hasAnyCategoryTag() {
-        if (isset($this->reqCache["hasAnyCategoryTag"])) {
-            $this->addDebugLine("[Cached] has Category Tag: " . $this->reqCache["hasAnyCategoryTag"]);
-            return $this->reqCache["hasAnyCategoryTag"];
+    protected function postHasTerm($configRow) {
+        $strTag = explode("->", $configRow);
+        $arrToken = array();
+        //Obtain the {slug} or {id}
+        preg_match('/{(.*?)}/', $strTag[0], $arrToken);
+
+        if (is_numeric($arrToken[1])) {
+            $categories = $this->getCategoryChildren(intval($arrToken[1]));
+        } else {
+            $categories = $arrToken[1];
         }
-        $catTagList = (isset($this->options['plenigo_cat_tag_db']) ? $this->options['plenigo_cat_tag_db'] : '');
-        $res = FALSE;
-        //TAGS WITH CATEGORY IDS
-        $rowSplit = explode("\n", $catTagList);
+
+        return ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && (has_tag($arrToken[1]) || has_category($categories)));
+    }
+
+    /**
+     * @param string $tagList
+     * @param string $type
+     * @return bool
+     */
+    protected function hasTerm($tagList, $type = 'Product') {
+        $shortType = $type === 'Product' ? 'Prod' : 'Cat';
+        $rowSplit = explode("\n", $tagList);
+        $res = false;
         if ($rowSplit === FALSE || count($rowSplit) == 0) {
-            $rowSplit = array($catTagList);
+            $rowSplit = array($tagList);
         }
 
         foreach ($rowSplit as $tagRow) {
@@ -464,8 +472,8 @@ class PlenigoContentManager
             }
 
             if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && (has_tag($arrToken[1]) || has_category($categories))) {
-                plenigo_log_message("Category TAG! TAG=" . $strTag[0] . " CategoryID(s):" . $strTag[1]);
-                $this->addDebugLine("Category match: " . $strTag[0]);
+                plenigo_log_message("{$type} TAG! TAG=" . $strTag[0] . " {$type}ID(s):" . $strTag[1]);
+                $this->addDebugLine("{$type} match: " . $strTag[0]);
                 $arrCats = array();
                 //Support for multiple ids in one tag
                 if (stristr($strTag[1], ',')) {
@@ -474,16 +482,39 @@ class PlenigoContentManager
                     $arrCats = array($strTag[1]);
                 }
                 foreach ($arrCats as $cid) {
-                    if (!isset($this->reqCache["lastCatId"])) {
-                        $this->reqCache["lastCatId"] = trim($cid);
-                        $this->reqCache["lastCatTag"] = trim($arrToken[1]);
+                    if (!isset($this->reqCache["last{$shortType}Id"])) {
+                        $this->reqCache["last{$shortType}Id"] = trim($cid);
+                        $this->reqCache["last{$shortType}Tag"] = trim($arrToken[1]);
                     }
-                    array_push($this->reqCache["listCatId"], trim($cid));
-                    array_push($this->reqCache["listCatTag"], trim($arrToken[1]));
+                    array_push($this->reqCache["list{$shortType}Id"], trim($cid));
+                    array_push($this->reqCache["list{$shortType}Tag"], trim($arrToken[1]));
                     $res = TRUE;
                 }
             }
         }
+        return $res;
+    }
+
+    /**
+     * This method checks for category IDs that need to be added to the category list
+     * so it can be checked for bought products. Returns FALSE if there is no tag
+     * found on the article that reflects a tag in the plenigo settings
+     *
+     * @return bool Returns TRUE if a tag has been found and the category list is in the cache
+     */
+    public function hasAnyCategoryTag() {
+        if (isset($this->reqCache["hasAnyCategoryTag"])) {
+            $this->addDebugLine("[Cached] has Category Tag: " . $this->reqCache["hasAnyCategoryTag"]);
+            return $this->reqCache["hasAnyCategoryTag"];
+        }
+        $catTagList = (isset($this->options['plenigo_cat_tag_db']) ? $this->options['plenigo_cat_tag_db'] : '');
+        $res = FALSE;
+        //TAGS WITH CATEGORY IDS
+
+        if (!empty($catTagList)) {
+            $res = $this->hasTerm($catTagList, 'Category');
+        }
+
         if ($res === TRUE) {
             $this->addDebugLine("Categories: " . var_export($this->reqCache["listCatId"], TRUE));
         }
@@ -535,7 +566,7 @@ class PlenigoContentManager
         $cats = get_categories( array( 'parent' => $id ));
 
         if (empty($cats)) {
-            return array();
+            return $categories;
         }
 
         foreach ($cats as $category) {
@@ -564,45 +595,14 @@ class PlenigoContentManager
         $prodTagList = (isset($this->options['plenigo_tag_db']) ? $this->options['plenigo_tag_db'] : '');
         $res = FALSE;
         //TAGS WITH PRODUCT IDS
-        $rowSplit = explode("\n", $prodTagList);
-        if ($rowSplit == FALSE || count($rowSplit) == 0) {
-            $rowSplit = array($prodTagList);
+
+        if (!empty($prodTagList)) {
+
+            $res = $this->hasTerm($prodTagList, 'Product');
+
         }
 
-        foreach ($rowSplit as $tagRow) {
-            $strTag = explode("->", $tagRow);
-            $arrToken = array();
-            //Obtain the {slug} or {id}
-            preg_match('/{(.*?)}/', $strTag[0], $arrToken);
 
-            if (is_numeric($arrToken[1])) {
-                $categories = $this->getCategoryChildren(intval($arrToken[1]));
-            } else {
-                $categories = $arrToken[1];
-            }
-
-            if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && (has_tag($arrToken[1]) || has_category($categories))) {
-                plenigo_log_message("Product TAG! TAG=" . $strTag[0] . " ProductID(s):" . $strTag[1]);
-                $this->addDebugLine("Product match: " . $strTag[0]);
-                $arrProds = array();
-                //Support for multiple ids in one tag
-                if (stristr($strTag[1], ',')) {
-                    $arrProds = explode(',', $strTag[1]);
-                } else {
-                    $arrProds = array($strTag[1]);
-                }
-                foreach ($arrProds as $pid) {
-                    if (!isset($this->reqCache["lastProdId"])) {
-                        $this->reqCache["lastProdId"] = trim($pid);
-                        $this->reqCache["lastProdTag"] = trim($arrToken[1]);
-                    }
-                    array_push($this->reqCache["listProdId"], trim($pid));
-                    array_push($this->reqCache["listProdTag"], trim($arrToken[1]));
-
-                    $res = TRUE;
-                }
-            }
-        }
         if ($res === TRUE) {
             $this->addDebugLine("Products: " . var_export($this->reqCache["listProdId"], TRUE));
         }
