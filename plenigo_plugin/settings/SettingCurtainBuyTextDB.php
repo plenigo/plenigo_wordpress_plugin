@@ -37,7 +37,7 @@ class SettingCurtainBuyTextDB extends PlenigoWPSetting
     /**
      * Holds values for storing values, so they are generated just once per request
      */
-    private $reqCache = array();
+//    private $reqCache = array();
 
     /**
      * @see PlenigoWPSetting::getSanitizedValue()
@@ -147,32 +147,4 @@ class SettingCurtainBuyTextDB extends PlenigoWPSetting
         }
     }
 
-    /**
-     * This method allows the autocomplete field to populate with all the current tag values
-     * 
-     * @global type $wpdb The WordPress database object
-     * @return string A comma separated list of all existing tags
-     */
-    private function get_term_data()
-    {
-        if (isset($this->reqCache['term-query'])) {
-            return $this->reqCache['term-query'];
-        }
-        global $wpdb;
-        $res = '';
-        $type = '';
-
-        $search_tags = $wpdb->get_results("SELECT a.name,a.slug,a.term_id as id,b.taxonomy FROM " . $wpdb->terms
-            . " a," . $wpdb->term_taxonomy . " b WHERE a.term_id=b.term_id "
-            . " and (b.taxonomy='post_tag' or b.taxonomy='category') ");
-        foreach ($search_tags as $mytag) {
-            if (strlen($res) !== 0) {
-                $res.=",";
-            }
-            $type = $mytag->taxonomy == 'category' ? 'Categories' : 'Tags';
-            $res.= str_replace('"', '', $mytag->name) . " ({$type}) " . "{" . $mytag->id . "}";
-        }
-        $this->reqCache['term-query'] = $res;
-        return $res;
-    }
 }

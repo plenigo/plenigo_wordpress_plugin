@@ -38,6 +38,8 @@ abstract class PlenigoWPSetting
 
     private $store = array();
 
+    protected $reqCache = array();
+
     public function __construct()
     {
         $this->store = get_option(self::PLENIGO_SETTINGS_NAME);
@@ -116,5 +118,58 @@ abstract class PlenigoWPSetting
         }
         return $this->store[static::SETTING_ID];
     }
+
+    final protected function getCategoryChildren($id) {
+
+        $categories = array();
+        $categories[$id] = $id;
+
+        $cats = get_categories( array( 'parent' => $id ));
+
+        var_dump($cats);
+        if (empty($cats)) {
+            return implode('|', $categories);
+        }
+
+        foreach ($cats as $category) {
+            $categories[$category->term_id] = $category->term_id;
+            $sub = $this->getCategoryChildren($category->term_id);
+            if (!empty($sub)) {
+                $categories = array_merge($categories, $sub);
+            }
+        }
+
+        return implode('|', $categories);
+    }
+
+    /**
+     * This method allows the autocomplete field to populate with all the current tag values
+     *
+     * @global type $wpdb The WordPress database object
+     * @return string A comma separated list of all existing tags
+     */
+    final protected function get_term_data()
+    {
+        if (isset($this->reqCache['term-query'])) {
+            return $this->reqCache['term-query'];
+        }
+        global $wpdb;
+        $res = '';
+        $type = '';
+
+        $search_tags = $wpdb->get_results("SELECT a.name,a.slug,a.term_id as id,b.taxonomy FROM " . $wpdb->terms
+            . " a," . $wpdb->term_taxonomy . " b WHERE a.term_id=b.term_id "
+            . " and (b.taxonomy='post_tag' or b.taxonomy='category') ");
+        foreach ($search_tags as $mytag) {
+            if (strlen($res) !== 0) {
+                $res.=",";
+            }
+            $type = $mytag->taxonomy == 'category' ? 'Categories' : 'Tags';
+            $res.= str_replace('"', '', $mytag->name) . " ({$type}) " . "{" . ($mytag->id) . "}";
+        }
+        $this->reqCache['term-query'] = $res;
+        return $res;
+    }
+
 
 }

@@ -36,7 +36,7 @@ class SettingProductGroupTwoDB extends PlenigoWPSetting {
 	/**
 	 * Holds values for the SQL requests, so they are made just once per request
 	 */
-	private $reqCache = array();
+//	private $reqCache = array();
 
 	/**
 	 * @see PlenigoWPSetting::getSanitizedValue()

@@ -34,7 +34,7 @@ class PlenigoSDKManager
     /**
      * Holds values for the SDK requests, so they are made just once per request
      */
-    private $reqCache = array();
+//    private $reqCache = array();
 
     /**
      * Singleton instance.

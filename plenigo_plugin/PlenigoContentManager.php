@@ -367,6 +367,7 @@ class PlenigoContentManager
 
         $typesPluginPaywall = function_exists('types_render_field') && types_render_field("paywall");
         // Do not paywall if nothing is configured
+
         if (trim($plenigoTagDB) === '' && trim($plenigoCatTagDB) === '' && !$typesPluginPaywall) {
             plenigo_log_message("NO TAGS CONFIGURED");
             return FALSE;
@@ -522,6 +523,7 @@ class PlenigoContentManager
             $this->addDebugLine("Curtain display prevented by Tag");
         }
         $this->reqCache["hasPreventTag"] = $res;
+
         return $res;
     }
 
