@@ -454,7 +454,7 @@ class PlenigoContentManager
             $arrToken = array();
             //Obtain the {slug}
             preg_match('/{(.*?)}/', $strTag[0], $arrToken);
-            if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && has_tag($arrToken[1])) {
+            if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && (has_tag($arrToken[1]) || has_category($arrToken[1]))) {
                 plenigo_log_message("Category TAG! TAG=" . $strTag[0] . " CategoryID(s):" . $strTag[1]);
                 $this->addDebugLine("Category match: " . $strTag[0]);
                 $arrCats = array();
@@ -496,7 +496,7 @@ class PlenigoContentManager
         $res = FALSE;
         $arrToken = array();
         preg_match('/{(.*?)}/', $prevTag, $arrToken);
-        if (count($arrToken) == 2 && has_tag($arrToken[1])) {
+        if (count($arrToken) == 2 && (has_tag($arrToken[1]) || has_category($arrToken[1]))) {
             plenigo_log_message("Prevent TAG! TAG=" . $prevTag);
             $this->addDebugLine("Prevent Tag: " . $prevTag);
 
@@ -536,7 +536,7 @@ class PlenigoContentManager
             //Obtain the {slug}
             preg_match('/{(.*?)}/', $strTag[0], $arrToken);
 
-            if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && (has_term($arrToken[1]) || has_category($arrToken))) {
+            if ($strTag !== FALSE && count($strTag) == 2 && count($arrToken) == 2 && (has_tag($arrToken[1]) || has_category($arrToken[1]))) {
                 plenigo_log_message("Product TAG! TAG=" . $strTag[0] . " ProductID(s):" . $strTag[1]);
                 $this->addDebugLine("Product match: " . $strTag[0]);
                 $arrProds = array();
@@ -1241,7 +1241,7 @@ class PlenigoContentManager
         if (!is_null($optExempt) && $optExempt !== '') {
             $arrToken = array();
             preg_match('/{(.*?)}/', $optExempt, $arrToken);
-            if (count($arrToken) == 2 && has_tag(trim($arrToken[1]))) {
+            if (count($arrToken) == 2 && (has_tag($arrToken[1]) || has_category($arrToken[1]))) {
                 $res = TRUE;
             }
         }
