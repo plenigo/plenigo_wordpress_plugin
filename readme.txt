@@ -298,7 +298,7 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
-= 1.7.8 - Fixed Dispplaying Categories with quotes
+= 1.7.8 - Fixed Displaying Categories with quotes
 
 = 1.7.7 - Fixed Translations
 

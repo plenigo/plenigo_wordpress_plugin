@@ -373,6 +373,8 @@ class PlenigoContentManager
             return FALSE;
         }
 
+//        var_dump(PlenigoSDKManager::get()->isPayWallEnabled());
+
         // If Paywall is disabled, we dont check anything
         if (PlenigoSDKManager::get()->isPayWallEnabled()) {
             //Checking for category IDs
@@ -601,7 +603,6 @@ class PlenigoContentManager
             $res = $this->hasTerm($prodTagList, 'Product');
 
         }
-
 
         if ($res === TRUE) {
             $this->addDebugLine("Products: " . var_export($this->reqCache["listProdId"], TRUE));
