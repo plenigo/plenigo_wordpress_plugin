@@ -200,11 +200,16 @@ class PlenigoContentManager
             $meteredURLText = ' data-metered-description-url="' . esc_url(trim($this->options['metered_url'])) . '" ';
         }
 
+        $analyticsCallback = '';
+        if (!empty($this->options['analytics_callback'])) {
+            $analyticsCallback = ' data-on-action="' . trim($this->options['analytics_callback']) . '" ';
+        }
+
         $strNoScript = $this->getNoScriptTag();
         echo '<script type="text/javascript" '
             . 'src="' . PLENIGO_JSSDK_URL . '/static_resources/javascript/'
             . $this->options["company_id"] . '/plenigo_sdk.min.js" '
-            . $disableText . $meteredURLText . '></script>' . $strNoScript;
+            . $disableText . $meteredURLText . $analyticsCallback. '></script>' . $strNoScript;
 
         $this->printGoogleAnalytics();
 
