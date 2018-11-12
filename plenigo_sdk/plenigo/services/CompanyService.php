@@ -13,10 +13,12 @@ require_once __DIR__ . '/../models/OrderList.php';
 require_once __DIR__ . '/../models/ErrorCode.php';
 
 use plenigo\internal\ApiURLs;
+use plenigo\internal\ApiParams;
 use plenigo\internal\services\Service;
 use plenigo\internal\utils\SdkUtils;
 use plenigo\models\CompanyUserList;
 use plenigo\models\FailedPaymentList;
+use plenigo\models\Order;
 use plenigo\models\OrderList;
 use plenigo\models\SubscriptionList;
 use plenigo\PlenigoException;
@@ -29,8 +31,9 @@ use plenigo\PlenigoException;
 class CompanyService extends Service {
 
     const ERR_MSG_GET = "Error geting company users";
-    const ERR_MSG_GET_FAILED = "Error geting failed payments";
-    const ERR_MSG_GET_ORDERS = "Error geting orders";
+    const ERR_MSG_GET_FAILED = "Error getting failed payments";
+    const ERR_MSG_GET_ORDERS = "Error getting orders";
+    const ERR_MSG_GET_ORDER = "Error getting order";
 
     /**
      * The constructor for the CompanyService instance.
@@ -103,20 +106,91 @@ class CompanyService extends Service {
     }
 
     /**
+     * Returns a list of payments of the specified company.
+     *
+     * @param string $startDate date od the startdate of selection (format YYYY-MM-DD)
+     * @param string $endDate date od the enddate of selection - must be greater then $startDate (format YYYY-MM-DD)
+     * @param int $page Number of the page (starting from 0)
+     * @param int $size Size of the page - must be between 10 and 100
+     *
+     * @return array  A list of payments of the specified company
+     */
+    public static function getIncomingPayments($startDate = '-1 week', $endDate = 'now', $page = 0, $size = 10) {
+
+        $testMode = false;
+        $map = array(
+            'startDate' => date("Y-m-d", strtotime($startDate)),
+            'endDate' => date("Y-m-d",strtotime($endDate)),
+            'testMode' => $testMode ? 'true' : 'false',
+            'page' => SdkUtils::clampNumber($page, 0, null),
+            'size' => SdkUtils::clampNumber($size, 10, 100)
+        );
+
+        $url = ApiURLs::COMPANY_INCOMING_PAYMENTS;
+
+        $request = static::getRequest($url, false, $map);
+
+        $appTokenRequest = new static($request);
+
+        $data = parent::executeRequest($appTokenRequest, ApiURLs::COMPANY_INCOMING_PAYMENTS, self::ERR_MSG_GET);
+
+        $result = (array) $data;
+
+        return $result;
+    }
+
+    /**
+     * Returns a list of invoices of the specified company.
+     *
+     * @param string $startDate date od the startdate of selection (format YYYY-MM-DD)
+     * @param string $endDate date od the enddate of selection - must be greater then $startDate (format YYYY-MM-DD)
+     * @param int $page Number of the page (starting from 0)
+     * @param int $size Size of the page - must be between 10 and 100
+     *
+     * @return array  A list of invoices of the specified company
+     */
+    public static function getInvoices($startDate = '-1 week', $endDate = 'now', $page = 0, $size = 10) {
+
+        $testMode = false;
+        $map = array(
+            'startDate' => date("Y-m-d", strtotime($startDate)),
+            'endDate' => date("Y-m-d",strtotime($endDate)),
+            'testMode' => $testMode ? 'true' : 'false',
+            'page' => SdkUtils::clampNumber($page, 0, null),
+            'size' => SdkUtils::clampNumber($size, 10, 100)
+        );
+
+        $url = ApiURLs::COMPANY_INVOICES;
+
+        $request = static::getRequest($url, false, $map);
+
+        $appTokenRequest = new static($request);
+
+        $data = parent::executeRequest($appTokenRequest, ApiURLs::COMPANY_INVOICES, self::ERR_MSG_GET);
+
+        $result = (array) $data;
+
+        return $result;
+    }
+
+    /**
      * Returns a list of users based on the given ids.
      * 
      * @param string $userIds a comma separated list if ids
-     * 
+     * @param boolean $useExternalCustomerId (optional) Flag indicating if customer id sent is the external customer id
+     *
      * @return CompanyUserList A  list of users of the specified company with the given ids
      */
-    public static function getUserByIds($userIds = "") {
-        $map = array(
-            'userIds' => $userIds
+    public static function getUserByIds($userIds = "", $useExternalCustomerId = false) {
+
+        $params = array(
+            'userIds' => $userIds,
+            ApiParams::USE_EXTERNAL_CUSTOMER_ID => ($useExternalCustomerId ? 'true' : 'false')
         );
 
         $url = ApiURLs::COMPANY_USERS_SELECT;
 
-        $request = static::getRequest($url, false, $map);
+        $request = static::getRequest($url, false, $params);
 
         $appTokenRequest = new static($request);
 
@@ -187,16 +261,44 @@ class CompanyService extends Service {
         return $result;
     }
 
+
+    /**
+     * Returns an order from API
+     *
+     * @param string $id ID of the order
+     * @param bool $testMode
+     * @return Order the requested order
+     * @throws PlenigoException
+     */
+    public static function getOrder($id, $testMode = false) {
+
+        if (empty($id)) {
+            throw new PlenigoException("Order ID should not be empty!");
+        }
+
+        $url = str_ireplace(ApiParams::URL_ORDER_ID_TAG, $id, ApiURLs::COMPANY_ORDER);
+        $map = array(
+            'testMode' => $testMode ? 'true' : 'false'
+        );
+
+        $request = static::getRequest($url, false, $map);
+        $fpRequest = new static($request);
+        $data = parent::executeRequest($fpRequest, ApiURLs::COMPANY_ORDER, self::ERR_MSG_GET_ORDER);
+        $result = Order::createFromMap((array) $data);
+
+        return $result;
+    }
+
     /**
      * Returns a list of orders of the specified company.
-     * 
+     *
      * @param string $start Date start of the interval (String format YYYY-MM-DD)
      * @param string $end Date end of the interval (String format YYYY-MM-DD)
      * @param bool $testMode Test mode Flag
      * @param int $page Number of the page (starting from 0)
      * @param int $size Size of the page - must be between 10 and 100
-     * 
-     * @return mixed list of orders
+     *
+     * @return OrderList
      */
     public static function getOrders($start = null, $end = null, $testMode = false , $page = 0, $size = 10) {
         // sanitize dates
@@ -211,7 +313,7 @@ class CompanyService extends Service {
         // Check that start date is valid
         if (is_null($start)) {
             $dEnd = new \DateTime($end);
-            $start = date("Y-m-d", strtotime("-12 MONTH", $dEnd)); // 6 month before end date
+            $start = date("Y-m-d", strtotime("-12 MONTH", $dEnd->getTimestamp() )); // 6 month before end date
         }
 
         // parameter array
@@ -273,7 +375,7 @@ class CompanyService extends Service {
     /**
      * Executes the prepared request and returns the Response object on success.
      *
-     * @return The request's response.
+     * @return string The request's response.
      *
      * @throws PlenigoException on request error.
      */

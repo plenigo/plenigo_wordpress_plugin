@@ -10,6 +10,7 @@ require_once __DIR__ . '/../internal/services/Service.php';
 
 use plenigo\internal\ApiParams;
 use plenigo\internal\ApiURLs;
+use plenigo\internal\exceptions\RegistrationException;
 use plenigo\internal\services\Service;
 use plenigo\PlenigoException;
 use plenigo\PlenigoManager;
@@ -24,6 +25,7 @@ class UserManagementService extends Service
 {
 
     const ERR_MSG_EMAIL = "Invalid email address!";
+    const ERR_MSG_ADDRESS = "Invalid or empty address!";
     const ERR_MSG_REGISTER = "Error registering a customer";
     const ERR_MSG_CHANGEMAIL = "The email address could not be changed for this user";
     const ERR_MSG_ADDEXTERNALUSERID = "The external user id could not be added to this user";
@@ -52,12 +54,13 @@ class UserManagementService extends Service
      * @param string $firstName A given name for the new user
      * @param string $name A last name for the new user
      * @param boolean $withPasswordReset flag indicating if user should get an email with a one time password
+     * @param boolean $failByExistingEmail flag indicating if the registration process should fail if the user is already registered
      *
      * @return string Id of the created customer.
      *
      * @throws PlenigoException In case of communication errors or invalid parameters.
      */
-    public static function registerUser($email, $language = "en", $externalUserId = null, $firstName = null, $name = null, $withPasswordReset = false)
+    public static function registerUser($email, $language = "en", $externalUserId = null, $firstName = null, $name = null, $withPasswordReset = false, $failByExistingEmail = false)
     {
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -69,10 +72,11 @@ class UserManagementService extends Service
         $map = array(
             'email' => $email,
             'language' => $language,
-            'withPasswordReset' => $withPasswordReset
+            'withPasswordReset' => $withPasswordReset,
+            'failByExistingEmail' => $failByExistingEmail
         );
 
-        if (!is_null($externalUserId) && is_int($externalUserId)) {
+        if (!is_null($externalUserId)) {
             $map["externalUserId"] = $externalUserId;
         }
         if (!is_null($firstName) && is_string($firstName)) {
@@ -127,6 +131,46 @@ class UserManagementService extends Service
         $url = str_ireplace(ApiParams::URL_USE_EXTERNAL_ID_TAG, var_export($useExternalCustomerId, true), $url);
 
         $request = static::putJSONRequest($url, $map);
+
+        $curlRequest = new static($request);
+
+        parent::executeRequest($curlRequest, ApiURLs::USER_MGMT_CHANGEMAIL, self::ERR_MSG_CHANGEMAIL);
+
+        return true;
+    }
+
+    /**
+     * Change address of an existing user.
+     * @link https://plenigo.github.io/user_management_php
+     *
+     * @param string $customerId Customer id of the user to change address for
+     * @param array $address
+     * @param bool $useExternalCustomerId Flag indicating if customer id sent is the external customer id
+     * @return bool TRUE address changed
+     *
+     * @throws PlenigoException In case of communication errors or invalid parameters
+     */
+    public static function changeAddress($customerId, $address, $useExternalCustomerId = false)
+    {
+
+        if (empty($address) || !is_array($address) || !isset($address['gender'])) {
+            $clazz = get_class();
+            PlenigoManager::error($clazz, self::ERR_MSG_ADDRESS);
+            return false;
+        }
+
+        if (!empty($address['street']) && empty($address['country'])) {
+            $clazz = get_class();
+            PlenigoManager::error($clazz, self::ERR_MSG_ADDRESS);
+            return false;
+        }
+
+        $address['gender'] = strtoupper($address['gender']);
+
+        $url = str_ireplace(ApiParams::URL_USER_ID_TAG, $customerId, ApiURLs::USER_MGMT_CHANGEADDRESS);
+        $url = str_ireplace(ApiParams::URL_USE_EXTERNAL_ID_TAG, var_export($useExternalCustomerId, true), $url);
+
+        $request = static::putJSONRequest($url, $address);
 
         $curlRequest = new static($request);
 
@@ -253,6 +297,8 @@ class UserManagementService extends Service
     {
         try {
             $response = parent::execute();
+        } catch (RegistrationException $exception) {
+          throw $exception;
         } catch (\Exception $exc) {
             throw new PlenigoException('User Management Service execution failed!', $exc->getCode(), $exc);
         }

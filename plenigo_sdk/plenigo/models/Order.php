@@ -30,6 +30,13 @@ class Order {
     private $customerId;
 
     /**
+     * Customer Id
+     * @var string
+     */
+
+    private $externalCustomerId;
+
+    /**
      * Currency of the order price
      * @var string 
      */
@@ -90,6 +97,28 @@ class Order {
     private $orderItems;
 
     /**
+     * Affiliate ID used for this purchase, if one
+     * @var string
+     */
+    private $affiliateId;
+
+    /**
+     * @return mixed
+     */
+    public function getAffiliateId()
+    {
+        return $this->affiliateId;
+    }
+
+    /**
+     * @param mixed $affiliateId
+     */
+    public function setAffiliateId($affiliateId)
+    {
+        $this->affiliateId = $affiliateId;
+    }
+
+    /**
      * Default constructor.
      */
     private function __construct() {
@@ -121,6 +150,15 @@ class Order {
     public function getCustomerId() {
         return $this->customerId;
     }
+
+    /**
+     * @return string
+     */
+    public function getExternalCustomerId()
+    {
+        return $this->externalCustomerId;
+    }
+
 
     /**
      * Get the Currency.
@@ -241,6 +279,14 @@ class Order {
     }
 
     /**
+     * @param string $externalCustomerId
+     */
+    public function setExternalCustomerId($externalCustomerId)
+    {
+        $this->externalCustomerId = $externalCustomerId;
+    }
+
+    /**
      * Setter method for currency.
      * 
      * @param string $currency
@@ -343,6 +389,7 @@ class Order {
         $instance->setOrderId(isset($map['orderId']) ? $map['orderId'] : null);
         $instance->setOrderDate(isset($map['orderDate']) ? $map['orderDate'] : null);
         $instance->setCustomerId(isset($map['customerId']) ? $map['customerId'] : null);
+        $instance->setExternalCustomerId(isset($map['externalCustomerId']) ? $map['externalCustomerId'] : null);
         $instance->setCurrency(isset($map['currency']) ? $map['currency'] : null);
         $instance->setCumulatedPrice(isset($map['cumulatedPrice']) ? $map['cumulatedPrice'] : null);
         $instance->setVatNumber(isset($map['vatNumber']) ? $map['vatNumber'] : null);
@@ -352,6 +399,7 @@ class Order {
         $instance->setDiscount(isset($map['discount']) ? $map['discount'] : null);
         $instance->setDiscountPercentage(isset($map['discountPercentage']) ? $map['discountPercentage'] : null);
         $instance->setVoucherCode(isset($map['voucherCode']) ? $map['voucherCode'] : null);
+        $instance->setAffiliateId(isset($map['affiliateId']) ? $map['affiliateId'] : null);
         if (isset($map['orderItems']) && !is_null($map['orderItems']) && count(($map['orderItems'])) > 0) {
             $arrItems = array();
             foreach ($map['orderItems'] as $oItem) {

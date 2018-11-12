@@ -150,6 +150,11 @@ final class ApiURLs
     const USER_MGMT_CHANGEMAIL = "/api/v2/externalUser/{USER_ID}/changeEmail?useExternalCustomerId={USE_EXTERNAL_ID}";
 
     /**
+     * This is the URL used to change email address of an existing user.
+     */
+    const USER_MGMT_CHANGEADDRESS = "/api/v2/user/{USER_ID}/address?useExternalCustomerId={USE_EXTERNAL_ID}";
+
+    /**
      * This is the URL used to add an external user id to an existing user.
      */
     const USER_MGMT_ADDEXTERNALUSERID = "/api/v2/externalUser/{USER_ID}/addExternalUserId";
@@ -170,6 +175,16 @@ final class ApiURLs
     const COMPANY_USERS_CHANGED = "/api/v2/company/users/search/changes";
 
     /**
+     * This URL is used to get the paginated list of changed users in a given time frame
+     */
+    const COMPANY_INCOMING_PAYMENTS = "/api/v2/incomingPayments/search";
+
+    /**
+     * This URL is used to get the paginated list of changed users in a given time frame
+     */
+    const COMPANY_INVOICES = "/api/v2/invoices/search";
+
+    /**
      * This URL is used to get the paginated list of company users
      */
     const COMPANY_USERS = "/api/v2/company/users";
@@ -188,6 +203,12 @@ final class ApiURLs
      * This URL is used to get a list of company orders
      */
     const COMPANY_ORDERS = "/api/v2/orders/search";
+
+
+    /**
+     * This URL is used to get a specific order
+     */
+    const COMPANY_ORDER = "/api/v2/orders/{ORDER_ID}";
 
     /**
      * This URL is used to get a list of company subscriptions

@@ -31,6 +31,7 @@ require_once __DIR__ . '/settings/SettingUseNoscript.php';
 require_once __DIR__ . '/settings/SettingNoscriptTitle.php';
 require_once __DIR__ . '/settings/SettingNoscriptMessage.php';
 require_once __DIR__ . '/settings/SettingAnalyticsCallback.php';
+require_once __DIR__ . '/settings/SettingFeedParagraphs.php';
 require_once __DIR__ . '/settings/SettingGACode.php';
 require_once __DIR__ . '/settings/SettingUseLogin.php';
 require_once __DIR__ . '/settings/SettingUseWPLogin.php';
@@ -121,6 +122,7 @@ class PlenigoSettingsPage
         array_push($this->settings, new \plenigo_plugin\settings\SettingNoscriptMessage());
         array_push($this->settings, new \plenigo_plugin\settings\SettingGACode());
         array_push($this->settings, new \plenigo_plugin\settings\SettingAnalyticsCallback());
+        array_push($this->settings, new \plenigo_plugin\settings\SettingFeedParagraphs());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingUseWPLogin());
         array_push($this->settings, new \plenigo_plugin\settings\SettingOverrideProfiles());

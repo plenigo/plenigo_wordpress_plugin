@@ -121,7 +121,6 @@ class PlenigoContentManager
      */
     public function __construct() {
         add_filter('the_content', array($this, 'plenigo_handle_main_content'), self::PLENIGO_CONTENT_PRIO);
-        add_filter('the_content_feed ', array($this, 'plenigo_handle_feed_content'), self::PLENIGO_CONTENT_PRIO);
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME, array());
 
         add_action('wp_footer', array($this, 'plenigo_js_snippet'));
@@ -229,29 +228,19 @@ class PlenigoContentManager
     }
 
     /**
-     * This method redirects to the content handler and set the feed flag to determine that we are in a feed renderer
-     * This method is particular to the Feed functionality (Atom, RSS, etc)
-     *
-     * @param  string $content the contents as it will be shown
-     *
-     * @return string the content filtered if needed by the plenigo paywall
-     */
-    public function plenigo_handle_feed_content($content) {
-        return $this->plenigo_filter_content($content, TRUE);
-    }
-
-    /**
      * This method handles the content itself, showing only what the author wants to show using the MORE tag
      * and then adds the plenigo curtain if not purchased. Otherwise shows the plain contents as usual.
      *
      * @param  string $content the contents as it will be shown
-     * @param  boolean $isFeed TRUE if the method is being called from a FEED filter or not
      *
      * @global WP_Post $post The Wordpress post object
      * @return string  the content filtered if needed by the plenigo paywall
      */
-    private function plenigo_filter_content($content, $isFeed = FALSE) {
+    private function plenigo_filter_content($content) {
         global $post;
+
+        $isFeed = is_feed();
+
         if ($this->plenigo_paywalled_content()) {
             $curtain_code = '';
             plenigo_log_message("ITS PAYWALLED");
@@ -1185,10 +1174,10 @@ class PlenigoContentManager
      * @return string The teaser or blank if nothing is found
      */
     private function specialTeaserSupport($content = null) {
-        $res = '';
         if (!is_null($content) && is_string($content) && trim($content) !== '') {
             $trimmedContent = trim($content);
             $fstWord = strtok($trimmedContent, ' '); //get the very first word, it should be [aesop_ or any other tag
+
             //if its a shortcode, check for allowed shortcodes and capture the teaser
             if (substr($fstWord, 0, 1) == '[') {
                 $this->addDebugLine("SHORTCODE");
@@ -1205,6 +1194,7 @@ class PlenigoContentManager
                     return $this->getTeaserText($trimmedContent, $needle);
                 }
             }
+
             //if its a html tag, check for allowed html tags and capture the teaser
             if (substr($fstWord, 0, 1) == '<') {
                 $this->addDebugLine("HTML");
@@ -1223,7 +1213,7 @@ class PlenigoContentManager
             }
         }
 
-        return $res;
+        return $this->getFirstParagrah($content);
     }
 
     /**
@@ -1253,10 +1243,28 @@ class PlenigoContentManager
     public function getFirstParagrah($content) {
         $str = wpautop($content);
         $start = strpos($str, '<p>');
+
+        $count = $this->options['feed_paragraphs'];
+
         if ($start >= 0) {
-            $str = substr($str, $start, strpos($str, '</p>') + 4);
-            $str = strip_tags($str, '<a><strong><em>');
-            return '<p>' . $str . '</p>';
+
+            if (is_feed()) {
+                $paragraphs = explode('</p>', $str);
+                $content = '';
+                $i = 0;
+                foreach ($paragraphs as $paragraph) {
+                    $content .= '<p>' . strip_tags($paragraph, '<a><strong><em>') . '</p>';
+                    $i++;
+                    if ($i >= $count) {
+                        break;
+                    }
+                }
+                return $content;
+            } else {
+                $str = substr($str, $start, strpos($str, '</p>') + 4);
+                $str = strip_tags($str, '<a><strong><em>');
+                return '<p>' . $str . '</p>';
+            }
         }
         return "";
     }
