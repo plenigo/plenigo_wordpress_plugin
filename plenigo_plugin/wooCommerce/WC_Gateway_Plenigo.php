@@ -207,7 +207,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                     }
                     plenigo_log_message("WOO: Checkout snippet:" . var_export($checkoutSnippet, true), E_USER_NOTICE);
                     echo '<div style="width:100%;text-align:right;">'
-                    . '<button class="checkout-button button alt wc-forward" onclick="' . $checkoutSnippet . '">'
+                    . '<button class="checkout-button button alt wc-forward" onclick=\'' . $checkoutSnippet . '\'>'
                     . __('Continue to plenigo checkout', self::PLENIGO_SETTINGS_GROUP)
                     . '</button></div>';
                 } else {

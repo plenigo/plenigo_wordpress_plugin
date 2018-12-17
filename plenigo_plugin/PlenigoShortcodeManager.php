@@ -841,6 +841,9 @@ class PlenigoShortcodeManager
                 $btnTitle = $this->getButtonTitle($prodId, $title, $price);
             }
             $checkoutSnippet = $this->buildCheckoutSnippet($atts, $tag, $prodId);
+
+//            $checkoutSnippet = substr_replace('"', '&quot;', $checkoutSnippet);
+
             $quantityHtml = '';
             if (!isset($atts['withQuantity']) || $atts['withQuantity'] === true) {
                 if (is_numeric($maxQuantity) && $maxQuantity > 1) {
@@ -853,7 +856,7 @@ class PlenigoShortcodeManager
             return $quantityHtml . '<input type="button" id="submit" '
                 . ' class="button button-primary ' . $cssClass . '" '
                 . ' value="' . $btnTitle . '" '
-                . ' onclick="' . $checkoutSnippet . '" data-product-data=\'' . base64_encode(json_encode($atts)) . '\''
+                . ' onclick=\'' . $checkoutSnippet . '\' data-product-data=\'' . base64_encode(json_encode($atts)) . '\''
                 . ' data-verification-hash="' . $this->buildProductHash($prodId, $price, $maxQuantity, $postId) . '" />';
         } else { //Return the content untouched
             return do_shortcode($content);
