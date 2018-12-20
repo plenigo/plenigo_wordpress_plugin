@@ -367,14 +367,13 @@ class PlenigoContentManager
             return FALSE;
         }
 
-//        var_dump(PlenigoSDKManager::get()->isPayWallEnabled());
-
         // If Paywall is disabled, we dont check anything
         if (PlenigoSDKManager::get()->isPayWallEnabled()) {
             //Checking for category IDs
             $hasAnyCatTag = $this->hasAnyCategoryTag();
             //Checking for Product IDs
             $hasAnyProdTag = $this->hasAnyProductTag();
+
             $hasProdIdList = false;
             if ($typesPluginPaywall) {
                 $plenigoGroupOne = (isset($this->options['plenigo_product_group_one_db']) ? $this->options['plenigo_product_group_one_db'] : '');

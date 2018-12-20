@@ -2,8 +2,8 @@
 Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 4.0.0
-Tested up to: 4.9.1
-Stable tag: 1.7.9
+Tested up to: 5.0.2
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -298,6 +298,10 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
+= 1.8.0 - Added Analytics Support
+- new plenigo-SDK
+- new field for feed handling
+
 = 1.7.9 - Added Analytics Support
 
 = 1.7.8 - Fixed Displaying Categories with quotes
