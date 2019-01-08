@@ -4,7 +4,7 @@
   Plugin Name: Plenigo
   Plugin URI: http://wordpress.org/plugins/plenigo/
   Description: So far, the technical implementation of paid content has been time-consuming and costly for publishing houses and media companies. plenigo puts an end to this.
-  Version: 1.8.2
+  Version: 1.8.3
   Author: Plenigo
   Author URI: https://www.plenigo.com
   Text Domain: plenigo
@@ -13,7 +13,7 @@
   WC tested up to: 5.0.2
  */
 /*
-  Copyright (C) 2017 plenigo
+  Copyright (C) 2019 plenigo
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License
@@ -29,7 +29,7 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-define('PLENIGO_VERSION', '1.8.2');
+define('PLENIGO_VERSION', '1.8.3');
 
 // Plenigo JavaScript SDK / Services
 if (!defined(PLENIGO_SVC_URL)) {

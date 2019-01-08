@@ -206,6 +206,8 @@ class PlenigoShortcodeManager
         $cssClass = $a["css_class"];
         $loginSnippet = PlenigoSDKManager::get()->getLoginSnippet();
 
+        $loginSnippet = htmlspecialchars ( $loginSnippet, ENT_QUOTES, 'UTF-8', false );
+
         if (empty($targetUrl) && isset($_GET["redirect"])) {
             $targetUrl = $_GET["redirect"];
         }
@@ -841,6 +843,8 @@ class PlenigoShortcodeManager
                 $btnTitle = $this->getButtonTitle($prodId, $title, $price);
             }
             $checkoutSnippet = $this->buildCheckoutSnippet($atts, $tag, $prodId);
+
+            $checkoutSnippet = htmlspecialchars ($checkoutSnippet, ENT_QUOTES, 'UTF-8',false);
 
 //            $checkoutSnippet = substr_replace('"', '&quot;', $checkoutSnippet);
 

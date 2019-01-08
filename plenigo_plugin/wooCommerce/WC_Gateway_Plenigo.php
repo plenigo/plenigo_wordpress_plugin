@@ -199,6 +199,8 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
                     $checkoutSnippet = '';
                     try {
                         $checkoutSnippet.= $checkoutBuilder->build($coSettings);
+                        $checkoutSnippet = htmlspecialchars ($checkoutSnippet, ENT_QUOTES, 'UTF-8',false);
+
                     } catch (Exception $exc) {
                         plenigo_log_message($exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING);
                         error_log($exc->getMessage() . ': ' . $exc->getTraceAsString());

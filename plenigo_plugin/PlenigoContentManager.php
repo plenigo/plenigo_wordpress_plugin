@@ -895,6 +895,9 @@ class PlenigoContentManager
 
                     // checkout snippet
                     $buyOnClick = $checkoutBuilder->build($coSettings, null, $useRegister);
+
+                    $buyOnClick = htmlspecialchars ( $buyOnClick, ENT_QUOTES, 'UTF-8', false );
+
                 }
                 if (stristr($html, self::REPLACE_PRODUCT_NAME) !== FALSE ||
                     stristr($html, self::REPLACE_PRODUCT_PRICE) !== FALSE ||
@@ -909,6 +912,8 @@ class PlenigoContentManager
                     } else {
                         $loginOnClick = $this->get_regular_login();
                     }
+
+                    $loginOnClick = htmlspecialchars ( $loginOnClick, ENT_QUOTES, 'UTF-8', false );
                 }
             } catch (\Exception $exc) {
                 plenigo_log_message($exc->getMessage() . ': ' . $exc->getTraceAsString(), E_USER_WARNING);
