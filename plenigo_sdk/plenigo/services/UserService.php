@@ -20,6 +20,7 @@ use plenigo\internal\ApiParams;
 use plenigo\internal\ApiResults;
 use plenigo\internal\ApiURLs;
 use plenigo\internal\Cache;
+use plenigo\internal\exceptions\RegistrationException;
 use plenigo\internal\models\Customer;
 use plenigo\internal\services\Service;
 use plenigo\internal\utils\CurlRequest;
@@ -54,6 +55,7 @@ class UserService extends Service
     const ERR_MSG_PAYWALL = "Error while determining if the paywall is enabled!";
     const ERR_USER_LOGIN = "Error while verifying user";
     const INF_MSG_ACCESS = "User tried to access an item!";
+    const ERR_MSG_ACCESS = "User can't access item";
 
     /**
      * Gets the user data using the access token provided.
@@ -134,11 +136,7 @@ class UserService extends Service
 
         try {
             $result = parent::executeRequest($LoginRequest, ApiURLs::USER_LOGIN, self::ERR_USER_LOGIN);
-            $cachedData = array(
-                'result' => $result,
-                'error'  => $error
-            );
-            Cache::set(md5($email.$password), $cachedData);
+
             return $result;
         }
         // we only catch one specific Exception
@@ -497,6 +495,51 @@ class UserService extends Service
             PlenigoManager::notice($clazz, "Product list NOT accesible!");
         }
         return $res;
+    }
+
+
+    /**
+     * Get AccessRights with their Details
+     *
+     * @see https://api.plenigo.com/#!/user/hasBoughtProductWithProducts
+     *
+     * @param $pCustomerId
+     * @param array|string $productId
+     * @param bool $useExternalCustomerId
+     * @return \stdClass
+     * @throws PlenigoException|RegistrationException|\Exception
+     */
+    public static function getProductsBoughtWithDetails($pCustomerId, $productId, $useExternalCustomerId = false)
+    {
+
+        $productIds = is_array($productId) ? implode(",", $productId) : $productId;
+
+        $params = array(
+            'customerId' => $pCustomerId,
+            'productId' => $productIds,
+            ApiParams::USE_EXTERNAL_CUSTOMER_ID => ($useExternalCustomerId ? 'true' : 'false')
+        );
+
+        $url = ApiURLs::USER_PRODUCTS_DETAILS;
+
+        $request = static::getRequest($url, false, $params);
+
+        $appTokenRequest = new static($request);
+
+        try {
+            $data = parent::executeRequest($appTokenRequest, $url, self::ERR_MSG_ACCESS);
+            return $data;
+        } catch (PlenigoException $exception) {
+            // 403 is no access and should not result in an exception
+            if (403 !== $exception->getCode()) {
+                throw $exception;
+            }
+        }
+
+        $ret = new \stdClass();
+        $ret->accessGranted = false;
+        $ret->userProducts = array();
+        return $ret;
     }
 
     /**

@@ -96,6 +96,41 @@ class CheckoutService extends Service {
 
         return true;
     }
+
+    /**
+     * Purchase a complete order. Returns orderID of purchase
+     *
+     * @example external user, pay per invoice \plenigo\services\CheckoutService::purchase(4711, [['product_id' => 'P_amrSQ6154783308456', 'title' => 'some blue shoes', 'description' => 'Size 8, special design', 'amount' => 4]], 'INVOICE', true);
+     * @example internal user (default), pay per prefered payment (default) \plenigo\services\CheckoutService::purchase('AIPM7JHMETZY', [['product_id' => 'P_amrSQ6154783308456', 'amount' => 1]], 'PREFFERED');
+     *
+     *
+     * @see https://plenigo.github.io/api_purchase_php
+     * @param string $customerId ID of plenigo-customer.
+     * @param array $order
+     * @param string $paymentMethod
+     * @param bool $useMerchantCustomerId
+     * @return string OrderID
+     * @throws PlenigoException
+     */
+    public static function purchase($customerId, $order, $paymentMethod = 'PREFFERED', $useMerchantCustomerId = false) {
+        // purchase(customer_id, [['product_id' => '1', 'title' => 'title', 'description' => '2', 'amount' => 1]], 'PREFFERED')
+
+        if (!isset($customerId)) {
+            throw new PlenigoException("CustomerID is not optional");
+        }
+
+        if (empty($order) || !is_array($order)) {
+            throw new PlenigoException("Order is not optional and should be of type array");
+        }
+
+        foreach ($order as $orderItem) {
+            if (empty($orderItem['product_id'])) {
+                throw new PlenigoException("Each orderItem needs the key product_id with a valid plenigo productID as value");
+            }
+        }
+
+        return  bin2hex(openssl_random_pseudo_bytes(15));
+    }
     
     /**
      * Executes the request to checkout a free product

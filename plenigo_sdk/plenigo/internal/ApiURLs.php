@@ -36,6 +36,11 @@ final class ApiURLs
     const PRODUCT_ACCESS_RIGHTS_ADDITION_URL = "/api/v2/access/{USER_ID}/add";
 
     /**
+     * This URL is used to add user access rights.
+     */
+    const PRODUCT_ACCESS_RIGHTS_ADDITION_WITH_DETAILS_URL = "/api/v2/access/{USER_ID}/addWithDetails";
+
+    /**
      * This URL is used to remove user access rights.
      */
     const PRODUCT_ACCESS_RIGHTS_REMOVAL_URL = "/api/v2/access/{USER_ID}/remove";
@@ -92,7 +97,11 @@ final class ApiURLs
     /**
      * This URL is used to get all the products this user has bouight
      */
-    const USER_PRODUCTS = "/api/v2/user/{USER_ID}/products";
+    const USER_PRODUCTS = "/api/v2/user/{USER_ID}/products";    /**
+
+     * This URL is used to get all the products this user has bouight with their details
+     */
+    const USER_PRODUCTS_DETAILS = "/api/v2/user/product/details";
 
     /**
      * This URL is used to retrieve category information.
@@ -234,5 +243,12 @@ final class ApiURLs
      * Execute a voucher checkout for a free product
      */
     const CHECKOUT_PRODUCT = "/api/v2/checkout/free/product/{PROD_ID}/{USER_ID}";
+
+
+    /**
+     * This URL is used to import users.
+     */
+    const USER_IMPORT_URL = "/api/v2/import/customers?useExternalCustomerId={USE_EXTERNAL_ID}";
+
 
 }
