@@ -30,7 +30,7 @@ final class EncryptionUtils
     /**
      * @var string Encryption algorithm to use
      */
-    private static $openSSLAlgorithm = 'AES-128-CTR';
+    private static $openSSLAlgorithm = 'aes-128-ctr';
 
     /**
      * Hash algorithm for HMAC and SHA512.
@@ -51,7 +51,7 @@ final class EncryptionUtils
     public static function encryptWithAES($key, $data, $customIV = null)
     {
         if (!(self::useOpenSSL() && self::hasEncryptionAlgorithm())) {
-            return MCryptUtils::encryptWithAES($key, $data, $customIV);
+            throw new EncryptionException("OpenSSL or cipher method " . self::$openSSLAlgorithm . " not installed!");
         }
 
         if (is_null($customIV)) {
@@ -80,7 +80,7 @@ final class EncryptionUtils
     public static function decryptWithAES($key, $encryptedData, $customIV = null)
     {
         if (!(self::useOpenSSL() && self::hasEncryptionAlgorithm())) {
-            return MCryptUtils::decryptWithAES($key, $encryptedData, $customIV);
+            throw new EncryptionException("OpenSSL or cipher method " . self::$openSSLAlgorithm . " not installed!");
         }
 
         $binData = hex2bin($encryptedData);
@@ -123,15 +123,12 @@ final class EncryptionUtils
      * Determines if an specific algorithm is available on the host.
      * </p>
      *
-     * @param string $algorithmName The name of the algorithm to look for.
-     * @param string $libraryDir    The path of the mcrypt library on the host.
-     *
      * @return bool Encryption method availability confirmation.
      */
     private static function hasEncryptionAlgorithm()
     {
-        $algorithms = openssl_get_cipher_methods();
-        return in_array(self::$openSSLAlgorithm, $algorithms);
+        $algorithms = openssl_get_cipher_methods(true);
+        return in_array(self::$openSSLAlgorithm, $algorithms) ?: in_array(strtoupper(self::$openSSLAlgorithm), $algorithms);
     }
 
     /**
@@ -206,10 +203,12 @@ final class EncryptionUtils
      * </p>
      * 
      * @param string $path The alternative path for the mCrypt library, NULL for default
+     * @throws EncryptionException
+     * @deprecated
      */
     public static function setMCryptLibraryPath($path)
     {
-        MCryptUtils::setMCryptLibraryPath($path);
+        throw new EncryptionException("please don't use this method anymore");
     }
 
     /**
@@ -218,10 +217,12 @@ final class EncryptionUtils
      * </p>
      * 
      * @param string $algorythm the encryption algorythm, default 'rijndael-128' if parameter is null
+     * @deprecated
+     * @throws EncryptionException
      */
     public static function setCryptoAlgorithm($algorythm = null)
     {
-        MCryptUtils::setCryptoAlgorithm($algorythm);
+        throw new EncryptionException("please don't use this method anymore");
     }
 
 }

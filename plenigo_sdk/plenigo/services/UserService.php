@@ -20,6 +20,7 @@ use plenigo\internal\ApiParams;
 use plenigo\internal\ApiResults;
 use plenigo\internal\ApiURLs;
 use plenigo\internal\Cache;
+use plenigo\internal\exceptions\EncryptionException;
 use plenigo\internal\exceptions\RegistrationException;
 use plenigo\internal\models\Customer;
 use plenigo\internal\services\Service;
@@ -27,6 +28,9 @@ use plenigo\internal\utils\CurlRequest;
 use plenigo\internal\utils\EncryptionUtils;
 use plenigo\internal\utils\SdkUtils;
 use plenigo\models\ErrorCode;
+use plenigo\models\OrderList;
+use plenigo\models\Subscription;
+use plenigo\models\SubscriptionList;
 use plenigo\models\UserData;
 use plenigo\PlenigoException;
 use plenigo\PlenigoManager;
@@ -192,7 +196,7 @@ class UserService extends Service
      *
      * @return bool TRUE if the user in the cookie has bought the product and the session is not expired, false otherwise
      *
-     * @throws \plenigo\PlenigoException whenever an error happens
+     * @throws \Exception whenever an error happens
      */
     public static function hasUserBought($productId, $customerId = null, $useExternalCustomerId = false)
     {
@@ -256,7 +260,7 @@ class UserService extends Service
      *
      * @return array
      *
-     * @throws \plenigo\PlenigoException whenever an error happens
+     * @throws \Exception whenever an error happens
      */
     public static function hasBoughtProductWithProducts($productId, $customerId = null, $useExternalCustomerId = false)
     {
@@ -314,6 +318,8 @@ class UserService extends Service
      * all product paywall should be disabled and access should be granted
      *
      * @return bool true if Paywall is enabled and we need to check for specific product buy information
+     *
+     * @throws PlenigoException
      */
     public static function isPaywallEnabled()
     {
@@ -342,6 +348,8 @@ class UserService extends Service
      * Check if the user has been logged in (cookie is found and valid)
      *
      * @return bool TRUE if the user has been logged in
+     *
+     * @throws PlenigoException
      */
     public static function isLoggedIn()
     {
@@ -358,7 +366,9 @@ class UserService extends Service
      * Retrieves the user info from the cookie.
      * @param string $pCustId The customer ID if its not logged in
      * @return Customer The Customer Information from the cookie
-     * @throws \plenigo\PlenigoException whenever an error happens
+     * @throws \Exception whenever an error happens
+     * @throws EncryptionException if there are encryption errors
+     *
      */
     public static function getCustomerInfo($pCustId = null)
     {
@@ -453,7 +463,7 @@ class UserService extends Service
      * @param string $pCustId (optional) The customer ID if its not logged in
      * @param boolean $useExternalCustomerId (optional) Flag indicating if customer id sent is the external customer id
      * @return array The associative array containing the bought products/subscriptions or an empty array
-     * @throws PlenigoException If the compay ID and/or the Secret key is rejected
+     * @throws \Exception If the company ID and/or the Secret key is rejected
      */
     public static function getProductsBought($pCustId = null, $useExternalCustomerId = false)
     {
@@ -495,6 +505,72 @@ class UserService extends Service
             PlenigoManager::notice($clazz, "Product list NOT accesible!");
         }
         return $res;
+    }
+
+
+    /**
+     * returns all Subscriptions of a given user
+     *
+     * @see https://api.plenigo.com/#!/user/getSubscriptionsBought
+     *
+     * @param string $customerId
+     * @param bool $useExternalCustomerId
+     * @return SubscriptionList
+     * @throws PlenigoException | \Exception If the company ID and/or the Secret key is rejected
+     */
+    public static function getSubscriptions($customerId = null, $useExternalCustomerId = false)
+    {
+        if (is_null($customerId)) {
+            throw new PlenigoException("CustomerID is mandatory!");
+        }
+
+        $testModeText = (PlenigoManager::get()->isTestMode()) ? 'true' : 'false';
+
+        $params = array(
+            ApiParams::TEST_MODE => $testModeText,
+            ApiParams::USE_EXTERNAL_CUSTOMER_ID => ($useExternalCustomerId ? 'true' : 'false')
+        );
+        $url = str_ireplace(ApiParams::URL_USER_ID_TAG, $customerId, ApiURLs::USER_SUBSCRIPTIONS);
+        $request = static::getRequest($url, false, $params);
+
+        $userDataRequest = new static($request);
+
+        $response = $userDataRequest->execute();
+
+        return SubscriptionList::createFromMap((array) $response);
+    }
+
+
+    /**
+     * returns all Subscriptions of a given user
+     *
+     * @see https://api.plenigo.com/#!/user/getOrders
+     *
+     * @param string $customerId
+     * @param bool $useExternalCustomerId
+     * @return OrderList
+     * @throws PlenigoException | \Exception If the company ID and/or the Secret key is rejected
+     */
+    public static function getOrders($customerId = null, $useExternalCustomerId = false)
+    {
+        if (is_null($customerId)) {
+            throw new PlenigoException("CustomerID is mandatory!");
+        }
+
+        $testModeText = (PlenigoManager::get()->isTestMode()) ? 'true' : 'false';
+
+        $params = array(
+            ApiParams::TEST_MODE => $testModeText,
+            ApiParams::USE_EXTERNAL_CUSTOMER_ID => ($useExternalCustomerId ? 'true' : 'false')
+        );
+        $url = str_ireplace(ApiParams::URL_USER_ID_TAG, $customerId, ApiURLs::USER_ORDERS);
+        $request = static::getRequest($url, false, $params);
+
+        $userDataRequest = new static($request);
+
+        $response = $userDataRequest->execute();
+
+        return OrderList::createFromMap((array) $response);
     }
 
 

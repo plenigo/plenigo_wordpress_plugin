@@ -95,10 +95,21 @@ final class ApiURLs
     const LIST_PRODUCTS_FULL_DETAILS = "/api/v2/products/search/full";
 
     /**
-     * This URL is used to get all the products this user has bouight
+     * This URL is used to get all the products this user has bought
      */
-    const USER_PRODUCTS = "/api/v2/user/{USER_ID}/products";    /**
+    const USER_PRODUCTS = "/api/v2/user/{USER_ID}/products";
 
+    /**
+     * This URL is used to get all the products this user has bought
+     */
+    const USER_SUBSCRIPTIONS = "/api/v2/user/{USER_ID}/subscriptions";
+
+    /**
+     * This URL is used to get all the order this user has bought
+     */
+    const USER_ORDERS = "/api/v2/user/{USER_ID}/orders";
+
+    /**
      * This URL is used to get all the products this user has bouight with their details
      */
     const USER_PRODUCTS_DETAILS = "/api/v2/user/product/details";
@@ -239,11 +250,15 @@ final class ApiURLs
      */
     const CHECKOUT_VOUCHER = "/api/v2/checkout/free/voucher/{VOUCHER_ID}/{USER_ID}";
 
-        /**
-     * Execute a voucher checkout for a free product
+    /**
+     * Execute checkout for a free product
      */
-    const CHECKOUT_PRODUCT = "/api/v2/checkout/free/product/{PROD_ID}/{USER_ID}";
+    const CHECKOUT_FREE_PRODUCT = "/api/v2/checkout/free/product/{PROD_ID}/{USER_ID}";
 
+    /**
+     * Execute a checkout for a non free product
+     */
+    const CHECKOUT_PRODUCT = "/api/v2/checkout";
 
     /**
      * This URL is used to import users.

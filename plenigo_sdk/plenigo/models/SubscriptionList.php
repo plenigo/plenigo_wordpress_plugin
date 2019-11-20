@@ -59,7 +59,7 @@ class SubscriptionList extends IterableBase {
     /**
      * Getter method.
      * 
-     * @return array
+     * @return Subscription[]
      */
     public function getElements() {
         return $this->elements;
@@ -82,16 +82,18 @@ class SubscriptionList extends IterableBase {
      * @return SubscriptionList instance.
      */
     public static function createFromMap(array $map) {
-        $pageNumber = isset($map['pageNumber']) ? $map['pageNumber'] : 0;
-        $size = isset($map['size']) ? $map['size'] : 10;
-        $totalElements = isset($map['totalElements']) ? $map['totalElements'] : 0;
 
         $arrElements = isset($map['elements']) ? $map['elements'] : array();
         $arrResulting = array();
+
         foreach ($arrElements as $cpnySubscription) {
             $subscription = Subscription::createFromMap((array) $cpnySubscription);
             array_push($arrResulting, $subscription);
         }
+
+        $pageNumber = $map['pageNumber'] ?? 1;
+        $size = $map['size'] ?? 100;
+        $totalElements = $map['totalElements'] ?? count($arrResulting);
 
         return new SubscriptionList($arrResulting, $pageNumber, $size, $totalElements);
     }

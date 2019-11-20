@@ -11,9 +11,12 @@ require_once __DIR__ . '/../PlenigoManager.php';
 
 use plenigo\internal\ApiParams;
 use plenigo\internal\ApiURLs;
+use plenigo\internal\exceptions\RegistrationException;
 use plenigo\internal\services\Service;
+use plenigo\exceptions\PaymentFailedException;
 use plenigo\PlenigoException;
 use plenigo\PlenigoManager;
+use plenigo\internal\utils\RestClient;
 
 /**
  * <p>
@@ -23,6 +26,7 @@ use plenigo\PlenigoManager;
 class CheckoutService extends Service {
 
     const ERR_MSG_VOUCHER = "Error during voucher checkout";
+    const ERR_MSG_CHECKOUT = "Error during checkout";
     const ERR_MSG_VPROD = "Error during free product checkout";
 
     /**
@@ -30,7 +34,6 @@ class CheckoutService extends Service {
      *
      * @param RestClient $request   The RestClient request to execute.
      *
-     * @return CheckoutService instance.
      */
     public function __construct($request) {
         parent::__construct($request);
@@ -100,21 +103,24 @@ class CheckoutService extends Service {
     /**
      * Purchase a complete order. Returns orderID of purchase
      *
-     * @example external user, pay per invoice \plenigo\services\CheckoutService::purchase(4711, [['product_id' => 'P_amrSQ6154783308456', 'title' => 'some blue shoes', 'description' => 'Size 8, special design', 'amount' => 4]], 'INVOICE', true);
-     * @example internal user (default), pay per prefered payment (default) \plenigo\services\CheckoutService::purchase('AIPM7JHMETZY', [['product_id' => 'P_amrSQ6154783308456', 'amount' => 1]], 'PREFFERED');
+     * @example external user, pay per invoice \plenigo\services\CheckoutService::purchase(4711, [['productId' => 'P_amrSQ6154783308456', 'title' => 'some blue shoes', 'description' => 'Size 8, special design', 'amount' => 4]], 'DE', 'INVOICE', true, '1.1.1.1');
+     * @example internal user (default), pay per preferred payment (default) \plenigo\services\CheckoutService::purchase('AIPM7JHMETZY', [['productId' => 'P_amrSQ6154783308456', 'amount' => 1]], 'DE', 'PREFERRED');
      *
      *
      * @see https://plenigo.github.io/api_purchase_php
      * @param string $customerId ID of plenigo-customer.
      * @param array $order
+     * @param string $customerCountry ISO-CODE of country 'DE' for example
      * @param string $paymentMethod
      * @param bool $useMerchantCustomerId
+     * @param string $ipAddress IP-Address of our customer
      * @return string OrderID
-     * @throws PlenigoException
+     * @throws RegistrationException | PlenigoException | PaymentFailedException
      */
-    public static function purchase($customerId, $order, $paymentMethod = 'PREFFERED', $useMerchantCustomerId = false) {
-        // purchase(customer_id, [['product_id' => '1', 'title' => 'title', 'description' => '2', 'amount' => 1]], 'PREFFERED')
+    public static function purchase(string $customerId, array $order, string $customerCountry, string $paymentMethod = 'PREFERRED', bool $useMerchantCustomerId = false, string $ipAddress = '') : string {
+        // purchase(customer_id, [['product_id' => '1', 'title' => 'title', 'description' => '2', 'amount' => 1]], 'DE', 'PREFERRED')
 
+        // some validating
         if (!isset($customerId)) {
             throw new PlenigoException("CustomerID is not optional");
         }
@@ -123,13 +129,66 @@ class CheckoutService extends Service {
             throw new PlenigoException("Order is not optional and should be of type array");
         }
 
+        if (empty($customerCountry) || preg_match("/[A-Z]{2}/", $customerCountry) !== 1) {
+            throw new PlenigoException("Country code is not optional and has to be of ISO-3166-1 ALPHA-2");
+        }
+
+        // validate or set ipAddress
+        if (empty($ipAddress)) {
+            $ipAddress = $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
+        } elseif (!filter_var($ipAddress, FILTER_VALIDATE_IP)) {
+            throw new PlenigoException("IP address should be of a valid format");
+        }
+
+        // validate order
         foreach ($order as $orderItem) {
-            if (empty($orderItem['product_id'])) {
-                throw new PlenigoException("Each orderItem needs the key product_id with a valid plenigo productID as value");
+            if (empty($orderItem['productId'])) {
+                throw new PlenigoException("Each orderItem needs the key 'productId' with a valid plenigo productId as value");
             }
         }
 
-        return  bin2hex(openssl_random_pseudo_bytes(15));
+        // our request body
+        $body = [
+            'customerId' => $customerId,
+            'useMerchantCustomerId' => $useMerchantCustomerId,
+            'paymentMethod' => $paymentMethod,
+            'ipAddress' => $ipAddress,
+            'order' => $order,
+            'customerCountry' => $customerCountry,
+        ];
+
+        $url = ApiURLs::CHECKOUT_PRODUCT;
+
+        $request = static::postJSONRequest($url, false, $body);
+
+        $objRequest = new static($request);
+
+        try {
+            $response = parent::executeRequest($objRequest, ApiURLs::CHECKOUT_PRODUCT, self::ERR_MSG_CHECKOUT);
+        } catch(PlenigoException $ex) {
+            switch ($ex->getCode()) {
+                case 400:
+                    throw new PlenigoException("Parameters passed are not correct.", $ex->getCode(), $ex->getPrevious());
+                case 401:
+                    throw new PlenigoException("Company id and/or company secret is not correct.", $ex->getCode(), $ex->getPrevious());
+                case 404:
+                    throw new PlenigoException("Company id, customer id or product id cannot be found.", $ex->getCode(), $ex->getPrevious());
+                case 412:
+                    throw new PlenigoException("Product is not a zero payment product.", $ex->getCode(), $ex->getPrevious());
+                case 422:
+                    throw new PaymentFailedException("Payment failed. Please try again later", $ex->getCode(), $ex->getPrevious());
+                case 500:
+                    throw new PlenigoException("Internal server error.", $ex->getCode(), $ex->getPrevious());
+                default:
+                    throw $ex;
+            }
+        }
+
+        if (!is_a($response, "\stdClass") || empty($response->value)) {
+            throw new PlenigoException("got no response from service");
+        }
+
+        return $response->value ?? '';
     }
     
     /**
@@ -161,7 +220,7 @@ class CheckoutService extends Service {
             $ipAddress = 'INVALID';
         }
 
-        $url = str_ireplace(ApiParams::URL_USER_ID_TAG, $customerId, ApiURLs::CHECKOUT_PRODUCT);
+        $url = str_ireplace(ApiParams::URL_USER_ID_TAG, $customerId, ApiURLs::CHECKOUT_FREE_PRODUCT);
         $url = str_ireplace(ApiParams::URL_PROD_ID_TAG, $productId, $url);
         $external = ($externalUserId) ? 'true' : 'false';
         $testModeText = (PlenigoManager::get()->isTestMode()) ? 'true' : 'false';
@@ -172,7 +231,7 @@ class CheckoutService extends Service {
         $objRequest = new static($request);
 
         try {
-            parent::executeRequest($objRequest, ApiURLs::CHECKOUT_PRODUCT, self::ERR_MSG_VOUCHER);
+            parent::executeRequest($objRequest, ApiURLs::CHECKOUT_FREE_PRODUCT, self::ERR_MSG_VOUCHER);
         } catch(PlenigoException $ex) {
             switch ($ex->getCode()) {
                 case 400:

@@ -9,10 +9,12 @@ require_once __DIR__ . '/../internal/server-interface/payment/Checkout.php';
 require_once __DIR__ . '/../internal/exceptions/ProductException.php';
 require_once __DIR__ . '/../internal/utils/JWT.php';
 
+use plenigo\internal\exceptions\EncryptionException;
 use plenigo\internal\models\Product;
 use plenigo\internal\serverInterface\payment\Checkout;
 use plenigo\internal\utils\JWT;
 use plenigo\PlenigoManager;
+use \DateTime;
 
 /**
  * CheckoutSnippetBuilder
@@ -36,12 +38,47 @@ class CheckoutSnippetBuilder {
     protected $product;
 
     /**
+     * @var array
+     */
+    protected $rules = [];
+
+    /**
      * This constructor takes a {@link Product} object as a parameter.
      *
      * @param Product $productToChkOut The product object to build the link from
      */
     public function __construct(Product $productToChkOut) {
         $this->product = $productToChkOut;
+    }
+
+    /**
+     * Adding a birthday to checkout to automatically fill the verification rule
+     *
+     * @param DateTime $date
+     * @return bool id rule can be added
+     * @throws \Exception
+     */
+    public function addBirthdayRule(DateTime $date) {
+
+        // should never happen because of TypeHinting
+        if (!is_a($date, "\DateTime")) {
+            throw new \Exception("Parameter has to be a DateTime");
+        }
+
+        // defining maximum and minimum of a valid birthday
+        // sorry for this oldest man alive
+        $min = new DateTime("1900-01-01");
+        $max = new DateTime("now");
+
+        // valid birthday is a valid birthday
+        if (!($min < $date) && ($date < $max)) {
+            throw new \Exception("Paramater has to be a valid birthday date. You gave " . $date->format("Y-m-d"));
+        }
+
+        array_push($this->rules, ['name' => 'birthday', 'date' => $date->format("mdY")]);
+
+        return true;
+
     }
 
     /**
@@ -58,7 +95,7 @@ class CheckoutSnippetBuilder {
      * @param string $elementId id of the element the checkout should be inserted into, if this parameter is passed the checkout will be embedded
      * 
      * @return string A Javascript snippet that is compliant with plenigo's Javascript SDK.
-     * @throws CryptographyException When an error occurs during data encoding
+     * @throws EncryptionException When an error occurs during data encoding
      */
     public function build($settings = array(), $loginToken = null, $showRegisterFirst = false, $sourceUrl = null, $targetUrl = null, $affiliateId = null, $elementId = null) {
         $clazz = get_class();
@@ -66,6 +103,14 @@ class CheckoutSnippetBuilder {
         //Add testMode SDK check
         if (PlenigoManager::get()->isTestMode() === true) {
             $settings["testMode"] = "true";
+        }
+
+        if (!empty($this->rules) && is_array($this->rules)) {
+            foreach ($this->rules as $rule) {
+                if ($rule['name'] === 'birthday' && !empty($rule['date'])) {
+                    $settings['birthdayRuleParam'] = $rule['date'];
+                }
+            }
         }
 
         $requestQuery = $this->buildCheckoutRequestQueryString($settings);
@@ -99,6 +144,7 @@ class CheckoutSnippetBuilder {
             PlenigoManager::get()->notice($clazz, "Element ID:" . $elementId);
             $checkoutParams['elementId'] = $elementId;
         }
+
 
         $strFunctionFormula = $strFunction . "(" . json_encode($checkoutParams) . ");";
         return $strFunctionFormula;
