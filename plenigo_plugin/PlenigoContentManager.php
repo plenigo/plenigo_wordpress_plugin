@@ -1035,12 +1035,12 @@ class PlenigoContentManager
         $catID = null;
         if (!isset($this->reqCache["lastCatId"])) {
             if (isset($this->reqCache["lastProdId"])) {
-                $prodID = $this->reqCache["lastProdId"];
+                $prodID = (string)$this->reqCache["lastProdId"];
             } else if (isset($this->reqCache["csvProdList"]) && !empty($this->reqCache["csvProdList"])) {
-                $prodID = $this->reqCache["csvProdList"][0];
+                $prodID = (string)$this->reqCache["csvProdList"][0];
             }
         } else {
-            $prodID = $post->ID;
+            $prodID = (string)$post->ID;
             $title = $post->post_title;
             $catID = $this->reqCache["lastCatId"];
         }

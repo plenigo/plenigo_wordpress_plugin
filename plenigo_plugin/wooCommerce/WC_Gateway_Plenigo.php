@@ -317,7 +317,7 @@ class WC_Gateway_Plenigo extends \WC_Payment_Gateway {
 
         if (!is_null($order) && ($order instanceof \WC_Order)) {
             $this->addDebugLine("There is a valid order!");
-            $prodID = $order->id;
+            $prodID = (string)$order->id;
             $this->addDebugLine("Order:" . var_export($order, true));
             $title = $this->get_order_title($order);
             $this->addDebugLine("Order Title:" . $title);
