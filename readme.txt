@@ -2,8 +2,9 @@
 Contributors: Sebastian Dieguez <s.dieguez@plenigo.com>
 Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, newspaper, media, pay-per-read, pay, plugin, donate, money, transaction, bank, visa, mastercard, credit, debit, card, widget, give, pay what you want, plenigo, payment
 Requires at least: 4.0.0
+Requires PHP: 7.0
 Tested up to: 5.0.3
-Stable tag: 1.8.9
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
