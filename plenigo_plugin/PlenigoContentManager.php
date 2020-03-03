@@ -206,7 +206,7 @@ class PlenigoContentManager
 
         $strNoScript = $this->getNoScriptTag();
         echo '<script type="text/javascript" '
-            . 'src="' . PLENIGO_JSSDK_URL . '/static_resources/javascript/'
+            . 'src="' . PLENIGO_JSSDK_URL . '/static_resources/v2/javascript/'
             . $this->options["company_id"] . '/plenigo_sdk.min.js" '
             . $disableText . $meteredURLText . $analyticsCallback. '></script>' . $strNoScript;
 
