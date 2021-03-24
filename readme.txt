@@ -4,7 +4,7 @@ Tags: paywall, e-commerce, Ecommerce, paid content software, subscriptions, news
 Requires at least: 4.0.0
 Requires PHP: 7.0
 Tested up to: 5.7
-Stable tag: 1.10.0
+Stable tag: 1.11.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -299,6 +299,8 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
+= 1.11.0 - WP updated plenigo URLs
+
 = 1.10.0 - WP version compatibility
 
 = 1.8.0 - Added Analytics Support
