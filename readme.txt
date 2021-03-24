@@ -299,6 +299,8 @@ separator, native Wordpress tag.
 /assets/screenshot-2.png
 
 == Changelog ==
+= 1.12.0 - WP updated plenigo URLs
+
 = 1.11.0 - WP updated plenigo URLs
 
 = 1.10.0 - WP version compatibility
