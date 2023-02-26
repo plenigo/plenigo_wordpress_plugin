@@ -914,7 +914,7 @@ class PlenigoShortcodeManager
         }
         $affiliate = $atts['affiliate'];
         $price = $atts['price'];
-        $quantity = 1;
+        $quantity = 0;
         if (array_key_exists("quantity", $atts)) {
             $quantity = $atts['quantity'];
         }
