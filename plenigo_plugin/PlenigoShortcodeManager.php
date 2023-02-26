@@ -60,6 +60,7 @@ class PlenigoShortcodeManager
 
     /**
      * A list of tokens that has just been created
+     *
      * @var array
      */
     private $tokenList = array();
@@ -67,7 +68,8 @@ class PlenigoShortcodeManager
     /**
      * Default constructor, called from the main php file
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->options = get_option(self::PLENIGO_SETTINGS_NAME, array());
 
         //Adding the shortcodes
@@ -102,14 +104,16 @@ class PlenigoShortcodeManager
     /**
      * Adding the editor css style for the plenigo custom tags
      */
-    function plenigo_add_editor_styles() {
+    function plenigo_add_editor_styles()
+    {
         add_editor_style(plugins_url('plenigo_css/pl_tinymce.css', dirname(__FILE__)));
     }
 
     /**
      * Add CSS imports
      */
-    public function add_scripts() {
+    public function add_scripts()
+    {
         wp_register_style('plenigo-tinymce-css', plugins_url('plenigo_css/pl_tinymce.css', dirname(__FILE__)));
         wp_enqueue_style('plenigo-tinymce-css');
     }
@@ -121,7 +125,8 @@ class PlenigoShortcodeManager
      *
      * @return array The new list of buttons
      */
-    function plenigo_register_buttons($buttons) {
+    function plenigo_register_buttons($buttons)
+    {
         // We are attempting to only allow the shortcode appearance to editors.
         if (\current_user_can('edit_posts') || \current_user_can('edit_pages')) {
             if (\get_user_option('rich_editing') == 'true') {
@@ -139,7 +144,8 @@ class PlenigoShortcodeManager
      *
      * @return mixed plugin array
      */
-    function plenigo_register_tinymce_js($plugin_array) {
+    function plenigo_register_tinymce_js($plugin_array)
+    {
         $plugin_array['plenigo'] = plugins_url('../plenigo_js/tinymce-plenigo-plugin.js', __file__);
         $plugin_array['plenigo_renew'] = plugins_url('../plenigo_js/tinymce-plenigo_renew-plugin.js', __file__);
         $plugin_array['plenigo_failed'] = plugins_url('../plenigo_js/tinymce-plenigo_failed-plugin.js', __file__);
@@ -156,13 +162,14 @@ class PlenigoShortcodeManager
      * asking the user for payment, evaluating if user has bought the product and show
      * the contents of the short code if the user has bought the product or free views are left.
      *
-     * @param  array $atts an associative array of attributes, or an empty string if no attributes are given
-     * @param  string $content the enclosed content (if the shortcode is used in its enclosing form)
-     * @param  string $tag the shortcode tag, useful for shared callback functions
+     * @param array  $atts    an associative array of attributes, or an empty string if no attributes are given
+     * @param string $content the enclosed content (if the shortcode is used in its enclosing form)
+     * @param string $tag     the shortcode tag, useful for shared callback functions
      *
      * @return string the contents of the shortcode or a button to pay for it
      */
-    public function plenigo_handle_shortcode($atts, $content = null, $tag = null) {
+    public function plenigo_handle_shortcode($atts, $content = null, $tag = null)
+    {
         $a = shortcode_atts(array(
             'title' => "",
             'prod_id' => "",
@@ -188,13 +195,14 @@ class PlenigoShortcodeManager
     /**
      * Handle login short code.
      *
-     * @param $atts attributes
+     * @param      $atts    attributes
      * @param null $content content
-     * @param null $tag shortcode tag
+     * @param null $tag     shortcode tag
      *
      * @return string rendered snippet
      */
-    public function plenigo_handle_login_shortcode($atts, $content = null, $tag = null) {
+    public function plenigo_handle_login_shortcode($atts, $content = null, $tag = null)
+    {
         $a = shortcode_atts(array(
             'title' => "Login",
             'css_class' => "",
@@ -206,7 +214,7 @@ class PlenigoShortcodeManager
         $cssClass = $a["css_class"];
         $loginSnippet = PlenigoSDKManager::get()->getLoginSnippet();
 
-        $loginSnippet = htmlspecialchars ( $loginSnippet, ENT_QUOTES, 'UTF-8', false );
+        $loginSnippet = htmlspecialchars($loginSnippet, ENT_QUOTES, 'UTF-8', false);
 
         if (empty($targetUrl) && isset($_GET["redirect"])) {
             $targetUrl = $_GET["redirect"];
@@ -221,13 +229,14 @@ class PlenigoShortcodeManager
     /**
      * Handles the shortcode content.
      *
-     * @param $atts attributes
+     * @param      $atts    attributes
      * @param null $content post content
-     * @param null $tag shortcode tag
+     * @param null $tag     shortcode tag
      *
      * @return string  the processed shortcode
      */
-    public function plenigo_handle_content_shortcode($atts, $content = null, $tag = null) {
+    public function plenigo_handle_content_shortcode($atts, $content = null, $tag = null)
+    {
         $cssClass = $atts['class'];
         $prodId = $atts['prod_id'];
         $showContent = false;
@@ -273,13 +282,14 @@ class PlenigoShortcodeManager
      * can be used to customize the message for logged out users or users that doesnt have
      * plenigo information attached to it.
      *
-     * @param  array $atts an associative array of attributes, or an empty string if no attributes are given
-     * @param  string $content the enclosed content (if the shortcode is used in its enclosing form)
-     * @param  string $tag the shortcode tag, useful for shared callback functions
+     * @param array  $atts    an associative array of attributes, or an empty string if no attributes are given
+     * @param string $content the enclosed content (if the shortcode is used in its enclosing form)
+     * @param string $tag     the shortcode tag, useful for shared callback functions
      *
      * @return string the contents of the shortcode or the user profile
      */
-    public function plenigo_handle_user_shortcode($atts, $content = null, $tag = null) {
+    public function plenigo_handle_user_shortcode($atts, $content = null, $tag = null)
+    {
         $a = shortcode_atts(array(
             'class' => "",
         ), $atts);
@@ -302,13 +312,14 @@ class PlenigoShortcodeManager
     /**
      * Handles the snippet shortcode.
      *
-     * @param $atts attributes
+     * @param      $atts    attributes
      * @param null $content content
-     * @param null $tag tag
+     * @param null $tag     tag
      *
      * @return string the processed shortcode
      */
-    public function plenigo_handle_snippet_shortcode($atts, $content = null, $tag = null) {
+    public function plenigo_handle_snippet_shortcode($atts, $content = null, $tag = null)
+    {
         if (!$this->isHomePage()) {
             $a = shortcode_atts(array(
                 'name' => "",
@@ -322,7 +333,7 @@ class PlenigoShortcodeManager
             $arr_types[] = "plenigo.Snippet.PAYMENT_METHODS";
             $arr_types[] = "plenigo.Snippet.ADDRESS_DATA";
 
-            $all_types = array_merge(array('plenigo.Snippet.BILLING_ADDRESS_DATA', 
+            $all_types = array_merge(array('plenigo.Snippet.BILLING_ADDRESS_DATA',
                 'plenigo.Snippet.DELIVERY_ADDRESS_DATA', 'plenigo.Snippet.BANK_ACCOUNT', 'plenigo.Snippet.CREDIT_CARD',
                 'plenigo.Snippet.PERSONAL_DATA_SETTINGS', 'plenigo.Snippet.PERSONAL_DATA_ADDRESS',
                 'plenigo.Snippet.PERSONAL_DATA_PROTECTION', 'plenigo.Snippet.PERSONAL_DATA_SOCIAL_MEDIA',
@@ -373,13 +384,14 @@ class PlenigoShortcodeManager
     /**
      * Draws a table with all the product bought and their Mobile Application Id
      *
-     * @param  array $atts an associative array of attributes, or an empty string if no attributes are given
-     * @param  string $content the enclosed content (if the shortcode is used in its enclosing form)
-     * @param  string $tag the shortcode tag, useful for shared callback functions
+     * @param array  $atts    an associative array of attributes, or an empty string if no attributes are given
+     * @param string $content the enclosed content (if the shortcode is used in its enclosing form)
+     * @param string $tag     the shortcode tag, useful for shared callback functions
      *
      * @return string the contents of the shortcode or the mobile administration
      */
-    public function plenigo_handle_mobile_admin($atts, $content = null, $tag = null) {
+    public function plenigo_handle_mobile_admin($atts, $content = null, $tag = null)
+    {
         plenigo_log_message("Plenigo Mobile Token Admin: START");
         $a = shortcode_atts(array(
             'class' => "",
@@ -412,7 +424,8 @@ class PlenigoShortcodeManager
     /**
      * Add mtoken required scripts.
      */
-    public function add_mtoken_scripts() {
+    public function add_mtoken_scripts()
+    {
         plenigo_log_message("Plenigo Mobile Token Admin: REGISTER SCRIPT");
         wp_register_script('plenigo-mtoken-js', plugins_url('plenigo_js/pl_mtoken.js', dirname(__FILE__)), array('jquery'), '5', true);
         wp_enqueue_script('plenigo-mtoken-js');
@@ -421,7 +434,8 @@ class PlenigoShortcodeManager
     /**
      * Adds the checkout quantity required scripts.
      */
-    public function add_checkout_quantity_scripts() {
+    public function add_checkout_quantity_scripts()
+    {
         wp_register_script('plenigo-checkout-quantity-js', plugins_url('plenigo_js/pl_checkout_quantity.js', dirname(__FILE__)), array('jquery'), '5', true);
         wp_enqueue_script('plenigo-checkout-quantity-js');
         wp_localize_script('plenigo-checkout-quantity-js', 'ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
@@ -430,14 +444,15 @@ class PlenigoShortcodeManager
     /**
      * Render mobile admin screen.
      *
-     * @param UserData $user user data
-     * @param $className class name
+     * @param UserData $user      user data
+     * @param          $className class name
      *
      * @return string
      *
      * @throws \plenigo\PlenigoException
      */
-    public function render_mobile_admin(UserData $user, $className) {
+    public function render_mobile_admin(UserData $user, $className)
+    {
         $res = '';
         $customerID = $user->getId();
         $arrProducts = UserService::getProductsBought($customerID);
@@ -536,15 +551,16 @@ class PlenigoShortcodeManager
     /**
      * Adds a moble admin row.
      *
-     * @param $idColumn id column
-     * @param $nameColumn name column
-     * @param $mobileColumn mobile column
-     * @param bool $startTable if there should be a thead end tag
-     * @param bool $endTable if there should be a tbody end tag
+     * @param      $idColumn     id column
+     * @param      $nameColumn   name column
+     * @param      $mobileColumn mobile column
+     * @param bool $startTable   if there should be a thead end tag
+     * @param bool $endTable     if there should be a tbody end tag
      *
      * @return string
      */
-    private function add_mobile_admin_row($idColumn, $nameColumn, $mobileColumn, $startTable = false, $endTable = false) {
+    private function add_mobile_admin_row($idColumn, $nameColumn, $mobileColumn, $startTable = false, $endTable = false)
+    {
         $res = "";
         $tdTag = "td";
         if ($startTable) {
@@ -569,13 +585,14 @@ class PlenigoShortcodeManager
     /**
      * Returns the mobile admin code.
      *
-     * @param $arrAppID app id
+     * @param $arrAppID   app id
      * @param $customerID customer id
-     * @param $productId product id
+     * @param $productId  product id
      *
      * @return string  retrieves  the mobile admin code
      */
-    private function get_mobile_admin_code($arrAppID, $customerID, $productId) {
+    private function get_mobile_admin_code($arrAppID, $customerID, $productId)
+    {
         $requestButton = '<button class="btn btn-success" type="button" onclick="plenigo_create_mtoken(\'' . $productId . '\',\'' . $customerID . '\');return false;">' . __("Create", self::PLENIGO_SETTINGS_GROUP) . '</button>';
         $deleteButton = '<button class="btn btn-danger" type="button" onclick="plenigo_remove_mtoken(\'' . $productId . '\',\'' . $customerID . '\',\'[REP-APP-ID]\');return false;">' . __("Remove", self::PLENIGO_SETTINGS_GROUP) . '</button>';
         $descInputName = 'plenigo_' . $productId . '_desc';
@@ -602,13 +619,14 @@ class PlenigoShortcodeManager
     /**
      * Add or delete mobile cid.
      *
-     * @param $customerID customer id
+     * @param       $customerID    customer id
      * @param array $arrProdStruct product array
      *
      * @return array array of products
      * @throws \plenigo\PlenigoException if there is an error with the SDK
      */
-    private function add_del_mobile_aid($customerID, $arrProdStruct = array()) {
+    private function add_del_mobile_aid($customerID, $arrProdStruct = array())
+    {
         $paramCID = filter_input(INPUT_GET, "mobileCID");
         $paramDEV = filter_input(INPUT_GET, "mobileDEV", FILTER_SANITIZE_SPECIAL_CHARS);
         $paramPID = filter_input(INPUT_GET, "mobilePID");
@@ -651,7 +669,8 @@ class PlenigoShortcodeManager
      *
      * @return string the button title
      */
-    private function getButtonTitle($prodId, $title, $price) {
+    private function getButtonTitle($prodId, $title, $price)
+    {
         $prodName = 'Unknown product';
         $prodPrice = '??.??';
         // get product data
@@ -687,7 +706,8 @@ class PlenigoShortcodeManager
      *
      * @return string the HTML template to be shown in the content
      */
-    private function get_profile_code($user) {
+    private function get_profile_code($user)
+    {
         $profile_file = $this->locate_plenigo_template('plenigo-user-profile.html');
         $profileTpl = 'ERROR:not found(' . $profile_file . ')';
         if (!is_null($profile_file)) {
@@ -703,11 +723,12 @@ class PlenigoShortcodeManager
     /**
      * This method locates the file in theme directories if overriden, or gets it from the template directory
      *
-     * @param  string $fileName name of the file that's needed and will be located
+     * @param string $fileName name of the file that's needed and will be located
      *
      * @return string The located filename with full path in order to read the file, NULL if there was a problem
      */
-    private function locate_plenigo_template($fileName) {
+    private function locate_plenigo_template($fileName)
+    {
         if (!is_null($fileName)) {
             $themed_template = locate_template($fileName);
             if (!is_null($themed_template) && is_string($themed_template) && $themed_template !== '') {
@@ -727,10 +748,11 @@ class PlenigoShortcodeManager
     /**
      * Replaces the profile tags with the correct user data.
      *
-     * @param string $profileTpl The template to replace Tags from
-     * @param \plenigo\models\UserData $user The UserData with the customer information
+     * @param string                   $profileTpl The template to replace Tags from
+     * @param \plenigo\models\UserData $user       The UserData with the customer information
      */
-    public function replace_profile_tags($profileTpl, $user) {
+    public function replace_profile_tags($profileTpl, $user)
+    {
         $html = $profileTpl;
 
         $html = str_ireplace(self::REPLACE_PLUGIN_DIR, plugins_url('', dirname(__FILE__)), $html);
@@ -775,22 +797,24 @@ class PlenigoShortcodeManager
      *
      * @return string formatted text
      */
-    private function elipsize($strText) {
+    private function elipsize($strText)
+    {
         return strlen($strText) > 50 ? substr($strText, 0, 47) . "..." : $strText;
     }
 
     /**
      * Returns the checkout snippet.
      *
-     * @param $atts attributes
+     * @param $atts    attributes
      * @param $content post content
-     * @param $tag shortcode tag
+     * @param $tag     shortcode tag
      *
      * @return string the checkout snippet
      *
      * @throws \plenigo\builders\CryptographyException
      */
-    public function getCheckoutSnippet($atts, $content, $tag) {
+    public function getCheckoutSnippet($atts, $content, $tag)
+    {
         $btnTitle = $atts['title'];
         $cssClass = $atts['class'];
         $hideWhenBought = $atts['hide_when_bought'];
@@ -844,7 +868,7 @@ class PlenigoShortcodeManager
             }
             $checkoutSnippet = $this->buildCheckoutSnippet($atts, $tag, $prodId);
 
-            $checkoutSnippet = htmlspecialchars ($checkoutSnippet, ENT_QUOTES, 'UTF-8',false);
+            $checkoutSnippet = htmlspecialchars($checkoutSnippet, ENT_QUOTES, 'UTF-8', false);
 
 //            $checkoutSnippet = substr_replace('"', '&quot;', $checkoutSnippet);
 
@@ -870,15 +894,16 @@ class PlenigoShortcodeManager
     /**
      * Builds a checkout snippet.
      *
-     * @param $atts attributes
-     * @param $tag tag
+     * @param $atts     attributes
+     * @param $tag      tag
      * @param $btnTitle button title
      *
      * @return string checkout snippet
      *
      * @throws \plenigo\builders\CryptographyException
      */
-    public function buildCheckoutSnippet($atts, $tag, $prodId) {
+    public function buildCheckoutSnippet($atts, $tag, $prodId)
+    {
         $regCheck = $atts['register'];
         $sourceURL = $atts['source'];
         $targetURL = $atts['target'];
@@ -889,7 +914,10 @@ class PlenigoShortcodeManager
         }
         $affiliate = $atts['affiliate'];
         $price = $atts['price'];
-        $quantity = $atts['quantity'];
+        $quantity = 1;
+        if (array_key_exists("quantity", $atts)) {
+            $quantity = $atts['quantity'];
+        }
 
         if (!isset($this->options['test_mode']) || ($this->options['test_mode'] == 1)) {
             $testMode = 'true';
@@ -1002,7 +1030,8 @@ class PlenigoShortcodeManager
     /**
      * Callback function for re-creating the checkout snippet.
      */
-    public function _ajax_fetch_checkout_snippet_callback() {
+    public function _ajax_fetch_checkout_snippet_callback()
+    {
         $encodedProductData = $_GET['product_data'];
         $quantity = $_GET['quantity'];
         $verificationHash = $_GET['verification_hash'];
@@ -1044,7 +1073,8 @@ class PlenigoShortcodeManager
      * @return string
      * @throws \plenigo\Exception
      */
-    public function buildProductHash($prodId, $price, $maxQuantity, $postId) {
+    public function buildProductHash($prodId, $price, $maxQuantity, $postId)
+    {
         return hash_hmac("sha256", "$prodId|$price|$maxQuantity|$postId", PlenigoSDKManager::get()->getPlenigoSDK()->getSecret());
     }
 
@@ -1053,7 +1083,8 @@ class PlenigoShortcodeManager
      *
      * @return bool indicating if the page is the home page or not
      */
-    private function isHomePage() {
+    private function isHomePage()
+    {
         return is_home() || is_front_page();
     }
 }
