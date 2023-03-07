@@ -124,7 +124,7 @@ class PlenigoURLManager {
         plenigo_log_message("Filtering additional:" . var_export($this->forbiddenAdditional, true), E_USER_NOTICE);
         $finalForbiddenParams = array_merge($this->forbiddenParams, $this->forbiddenAdditional);
         plenigo_log_message("Filtering these parameters:" . var_export($finalForbiddenParams, true), E_USER_NOTICE);
-        if ($arrParsedURL !== FALSE && !is_null($arrParsedURL)) {
+        if ($arrParsedURL !== FALSE && !is_null($arrParsedURL) && array_key_exists("query", $arrParsedURL)) {
             parse_str($arrParsedURL['query'], $arrParsedQuery);
             plenigo_log_message("QueryString:" . var_export($arrParsedQuery, true), E_USER_NOTICE);
             $arrFilteredQuery = array_diff_key($arrParsedQuery, array_flip($finalForbiddenParams));
