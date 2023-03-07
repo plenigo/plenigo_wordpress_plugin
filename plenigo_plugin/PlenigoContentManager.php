@@ -575,7 +575,7 @@ class PlenigoContentManager
         $categories = array();
         $categories[$id] = $id;
 
-        $cats = get_categories(array('parent' => $id));
+        $cats = get_categories(['parent' => $id]);
 
         if (empty($cats)) {
             return $categories;
