@@ -231,7 +231,6 @@ class PlenigoSettingsPage
      */
     public function create_admin_page() {
         echo '<div class="wrap">';
-        screen_icon();
         echo '<h2>plenigo integration</h2>';
         settings_errors(self::PLENIGO_SETTINGS_PAGE);
 
